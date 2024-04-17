@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'folder.dart';
+import 'package:meine_wunschliste/domain/models/models.dart';
 
 class FolderListViev extends StatelessWidget {
+  FolderListViev({super.key});
 
   final List<Folder> items = FolderList().children;
-  
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -17,7 +16,7 @@ class FolderListViev extends StatelessWidget {
         itemBuilder: (context, index) {
           final folder = items[index];
           return Container(
-            margin: EdgeInsets.symmetric(horizontal: 3),
+            margin: const EdgeInsets.symmetric(horizontal: 3),
             height: screenSize.height * 0.04,
             width: screenSize.width * 0.3,
             decoration: const BoxDecoration(
@@ -51,6 +50,4 @@ class FolderListViev extends StatelessWidget {
       ),
     );
   }
-  
-  
 }
