@@ -15,8 +15,8 @@ class FolderViev extends StatelessWidget {
       width: screenSize.width * 0.3,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(10.0),
-          bottomRight: Radius.circular(10.0),
+          bottomLeft: Radius.circular(15),
+          bottomRight: Radius.circular(15),
         ),
         color: Color(0xFFEEA434),
       ),

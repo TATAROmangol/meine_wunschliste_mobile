@@ -22,4 +22,4 @@ flutter:
   uses-material-design: true
   assets:
   - assets/icons/logo.png
-  - assets/phon.jpg
+  - assets/background.jpeg

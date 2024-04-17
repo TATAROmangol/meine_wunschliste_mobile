@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/domain/models/folder.dart';
+import '../../domain/models/models.dart';
+import 'widgets.dart';
 
 class TaskListViev extends StatelessWidget {
   TaskListViev({super.key});
@@ -8,12 +9,27 @@ class TaskListViev extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<TaskTree> tasks = TaskTreeList().tasks;
+
     return Expanded(
-      child: ListView.builder(
+      child: ReorderableListView.builder(
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          final folder = items[index];
+          return FolderViev(key: ValueKey(folder.name), folder: folder);
+        },
         itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(items[index].name),
+        onReorder: (oldIndex, newIndex) {
+          if (newIndex > oldIndex) {
+            newIndex -= 1;
+          }
+          final Folder folder = items.removeAt(oldIndex);
+          items.insert(newIndex, folder);
+        },
+        proxyDecorator: (Widget child, int index, Animation<double> animation) {
+          return Material(
+            color: Colors.transparent,
+            child: child,
           );
         },
       ),

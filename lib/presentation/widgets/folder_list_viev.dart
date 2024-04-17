@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
-import 'package:meine_wunschliste/presentation/widgets/widgets.dart';
+import 'package:meine_wunschliste/presentation/widgets/micro_components/micro_components.dart';
+
 
 class FolderListViev extends StatelessWidget {
   FolderListViev({super.key});

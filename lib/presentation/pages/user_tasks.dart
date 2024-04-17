@@ -19,7 +19,7 @@ class UserTasks extends StatelessWidget {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/phon.jpg'),
+              image: AssetImage('assets/background.jpeg'),
               fit: BoxFit.cover,
             ),
           ),
