@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meine_wunschliste/domain/models/folder.dart';
 
 class FolderViev extends StatelessWidget {
-  const FolderViev({required this.folder, Key? key}) : super(key: key);
+  const FolderViev({required this.folder, super.key});
 
   final Folder folder;
 
