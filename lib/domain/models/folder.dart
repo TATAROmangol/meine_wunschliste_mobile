@@ -1,4 +1,4 @@
-import 'package:meine_wunschliste/domain/models/task.dart';
+import 'package:meine_wunschliste/domain/models/task_tree.dart';
 
 class Folder {
   Folder(this.name);

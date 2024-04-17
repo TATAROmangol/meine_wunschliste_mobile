@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
+import 'package:meine_wunschliste/presentation/widgets/widgets.dart';
 
 class FolderListViev extends StatelessWidget {
   FolderListViev({super.key});
@@ -15,23 +16,7 @@ class FolderListViev extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           final folder = items[index];
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 3),
-            height: screenSize.height * 0.04,
-            width: screenSize.width * 0.3,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10.0),
-                bottomRight: Radius.circular(10.0),
-              ),
-              color: Color(0xFFEEA434),
-            ),
-            key: Key(folder.name),
-            child: TextButton(
-              onPressed: () {},
-              child: Text(folder.name),
-            ),
-          );
+          return FolderViev(key: ValueKey(folder.name), folder: folder);
         },
         itemCount: items.length,
         onReorder: (oldIndex, newIndex) {
