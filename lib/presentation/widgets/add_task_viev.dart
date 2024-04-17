@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AddTaskBar extends StatelessWidget {
-  const AddTaskBar({super.key});
+class AddTaskViev extends StatelessWidget {
+  const AddTaskViev({super.key});
 
   @override
   Widget build(BuildContext context) {

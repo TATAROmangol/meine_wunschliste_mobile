@@ -27,7 +27,7 @@ class UserTasks extends StatelessWidget {
             children: <Widget>[
               FolderListViev(),
               TaskListViev(),
-              const AddTaskBar(),
+              const AddTaskViev(),
             ],
           ),
         ),
