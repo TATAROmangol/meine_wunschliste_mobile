@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
-import '../../domain/models/models.dart';
-import 'widgets.dart';
+import 'package:meine_wunschliste/presentation/widgets/micro_components/micro_components.dart';
+import '../../../domain/models/models.dart';
 
-class TaskListViev extends StatelessWidget {
-  TaskListViev({super.key});
+class TaskTreeListViev extends StatelessWidget {
+  TaskTreeListViev({super.key});
 
-  final List<Folder> items = FolderList().children;
+  final List<TaskTree> items = TaskInFolderList().children;
 
   @override
   Widget build(BuildContext context) {
-    final List<TaskTree> tasks = TaskTreeList().tasks;
+    //final List<TaskTree> tasks = TaskTreeList().tasks;
 
     return Expanded(
       child: ReorderableListView.builder(
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
-          final folder = items[index];
-          return FolderViev(key: ValueKey(folder.name), folder: folder);
+          final taskChild = items[index];
+          return TaskTreeViev(key: ValueKey(taskChild.name), task: taskChild);
         },
         itemCount: items.length,
         onReorder: (oldIndex, newIndex) {
           if (newIndex > oldIndex) {
             newIndex -= 1;
           }
-          final Folder folder = items.removeAt(oldIndex);
-          items.insert(newIndex, folder);
+          final TaskTree taskChild = items.removeAt(oldIndex);
+          items.insert(newIndex, taskChild);
         },
         proxyDecorator: (Widget child, int index, Animation<double> animation) {
           return Material(

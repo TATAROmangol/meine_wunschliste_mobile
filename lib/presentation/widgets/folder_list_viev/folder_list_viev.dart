@@ -11,7 +11,8 @@ class FolderListViev extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    return SizedBox(
+    return Container(
+      margin:EdgeInsets.only(bottom: screenSize.height * 0.02),
       height: screenSize.height * 0.04,
       child: ReorderableListView.builder(
         scrollDirection: Axis.horizontal,

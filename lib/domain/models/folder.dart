@@ -1,3 +1,4 @@
+import 'package:meine_wunschliste/domain/models/enum/enum.dart';
 import 'package:meine_wunschliste/domain/models/task_tree.dart';
 
 class Folder {
@@ -11,16 +12,33 @@ class Folder {
   }
 }
 
+class TaskInFolderList {
+  List<TaskTree> children = [
+    TaskTree(name: 'me', children: [
+      TaskTree(name: 'text', step: Levels.center),
+      TaskTree(name: 'task', step: Levels.center, children: [
+        TaskTree(name: 'bottest', step: Levels.bottom),
+        TaskTree(name: 'botbl', step: Levels.bottom)
+      ]),
+      TaskTree(name: 'tree', step: Levels.center)
+    ]),
+    TaskTree(name: 'super'),
+    TaskTree(name: 'puper'),
+    TaskTree(name: 'big'),
+    TaskTree(name: 'boy')
+  ];
+}
+
 class FolderList {
   List<Folder> children = [
     Folder('me'),
     Folder('super'),
     Folder('puper'),
-    Folder('sexy'),
+    Folder('big'),
     Folder('boy'),
-    Folder('epta'),
-    Folder('naxou'),
-    Folder('blya'),
+    Folder('ema'),
+    Folder('yo'),
+    Folder('blin'),
     Folder('a eto chisto radi pricola'),
     Folder('tests')
   ];

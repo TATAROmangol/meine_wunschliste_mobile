@@ -26,7 +26,7 @@ class UserTasks extends StatelessWidget {
           child: Column(
             children: <Widget>[
               FolderListViev(),
-              TaskListViev(),
+              TaskTreeListViev(),
               const AddTaskViev(),
             ],
           ),
