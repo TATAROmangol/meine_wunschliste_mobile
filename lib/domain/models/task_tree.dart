@@ -9,7 +9,6 @@ class TaskTree {
 
   Levels step;
   String name;
-  bool showChildren = false;
   List<TaskTree> children;
 
   void addChildren(String shildName) {
