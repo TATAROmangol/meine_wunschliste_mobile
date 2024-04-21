@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:meine_wunschliste/domain/models/enum/enum.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 
