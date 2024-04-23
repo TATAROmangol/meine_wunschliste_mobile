@@ -10,6 +10,10 @@ dependencies:
   cloud_firestore:
   firebase_core:
   firebase_auth:
+  fluttertoast:
+  provider:
+  get:
+  google_sign_in: ^6.2.1
   flutter:
     sdk: flutter
 

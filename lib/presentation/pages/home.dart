@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meine_wunschliste/data/services/auth_service.dart';
 import 'package:meine_wunschliste/presentation/widgets/home_viev/home_viev.dart';
 
 class Home extends StatelessWidget {
@@ -14,14 +15,17 @@ class Home extends StatelessWidget {
         ),
         body: Expanded(
           child: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/background.jpeg'),
-                fit: BoxFit.cover,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/background.jpeg'),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: const NavigationListViev(),
-          ),
+              child: //const NavigationListViev(),
+                  GestureDetector(
+                child: Text('google'),
+                onTap: () => AuthService().signInWithGoogle(),
+              )),
         ),
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meine_wunschliste/presentation/widgets/user_tasks_viev/user_tasks_viev.dart';
 
-
 class UserTasks extends StatelessWidget {
   const UserTasks({super.key});
 
