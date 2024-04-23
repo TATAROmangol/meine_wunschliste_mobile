@@ -7,12 +7,11 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFEEA434),
-          title: const Text('Meine Wunschliste'),
+          title: const Text('main page'),
         ),
         body: Expanded(
           child: Container(

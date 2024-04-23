@@ -7,10 +7,9 @@ class Folder {
   String name;
   List<TaskTree> tasks = [];
 
-  void add(String nameTask) {
-    tasks.add(TaskTree(name: nameTask));
-  }
 }
+
+
 
 class TaskInFolderList {
   List<TaskTree> children = [
