@@ -7,8 +7,10 @@ environment:
   sdk: '>=3.3.3 <4.0.0'
 
 dependencies:
-  cloud_firestore:
   firebase_core:
+  cloud_firestore:
+  firebase_remote_config:
+  firebase_database:
   firebase_auth:
   fluttertoast:
   provider:

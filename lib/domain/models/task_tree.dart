@@ -1,4 +1,4 @@
-import 'package:meine_wunschliste/domain/models/enum/enum.dart';
+import 'package:meine_wunschliste/domain/enum/enum.dart';
 
 class TaskTree {
   TaskTree({

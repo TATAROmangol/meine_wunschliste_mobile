@@ -7,7 +7,7 @@ class AuthService{
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   
   signInWithGoogle() async{
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
 
     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
 

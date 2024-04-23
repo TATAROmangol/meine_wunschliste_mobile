@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/domain/models/enum/enum.dart';
+import 'package:meine_wunschliste/domain/enum/enum.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 
 class TaskTreeViev extends StatefulWidget {
