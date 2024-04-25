@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/data/services/auth_service.dart';
+import 'package:meine_wunschliste/services/auth_service.dart';
 import 'package:meine_wunschliste/presentation/widgets/home_viev/home_viev.dart';
 
 class Home extends StatelessWidget {

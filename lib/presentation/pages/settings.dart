@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/data/services/auth_service.dart';
+import 'package:meine_wunschliste/services/auth_service.dart';
 
-class Settings extends StatelessWidget {
-  const Settings({super.key});
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFEEA434),
           title: const Text('settings'),
@@ -27,7 +26,7 @@ class Settings extends StatelessWidget {
                 onTap: () => AuthService().logOutFromGoogle(),
               )),
         ),
-      ),
+      
     );
   }
 }
