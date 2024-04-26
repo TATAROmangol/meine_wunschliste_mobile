@@ -12,9 +12,11 @@ class Repository {
   }
 
   Future<void> addFolder(String name) async {
+    var uid = Uuid.v4().toString();
     var countItems = await getCountFolders();
-    realm.write(() => realm.add<FoldersRepository>(
-        FoldersRepository(Uuid.v4().toString(), countItems, name)));
+    await realm.write(() =>
+        realm.add<FoldersRepository>(FoldersRepository(uid, countItems, name)));
+    changeUidActiveFolder(uid);
   }
 
   Future<int> getCountFolders() async {
@@ -25,5 +27,26 @@ class Repository {
   Future<void> updateFolderOrder(Folder folderNavigation, int index) async {
     var item = realm.find<FoldersRepository>(folderNavigation.uid);
     if (item != null) realm.write(() => item.order = index);
+  }
+
+  Future<String> getUidActiveFolder() async {
+    var item = realm.all<ActiveFolder>();
+    if (item.isEmpty) {
+      await realm.write(() => realm.add<ActiveFolder>(ActiveFolder('')));
+    }
+    ;
+    var folder = realm.all<ActiveFolder>().first;
+
+    return folder.uid;
+  }
+
+  Future<void> changeUidActiveFolder(String uid) async {
+    var item = realm.all<ActiveFolder>();
+    if (item.isEmpty) {
+      await realm.write(() => realm.add<ActiveFolder>(ActiveFolder('')));
+    }
+    ;
+    var folder = realm.all<ActiveFolder>().first;
+    realm.write(() => folder.uid = uid);
   }
 }

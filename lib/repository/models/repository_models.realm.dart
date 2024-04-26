@@ -7,6 +7,59 @@ part of 'repository_models.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
+class ActiveFolder extends _ActiveFolder
+    with RealmEntity, RealmObjectBase, RealmObject {
+  ActiveFolder(
+    String uid,
+  ) {
+    RealmObjectBase.set(this, 'uid', uid);
+  }
+
+  ActiveFolder._();
+
+  @override
+  String get uid => RealmObjectBase.get<String>(this, 'uid') as String;
+  @override
+  set uid(String value) => RealmObjectBase.set(this, 'uid', value);
+
+  @override
+  Stream<RealmObjectChanges<ActiveFolder>> get changes =>
+      RealmObjectBase.getChanges<ActiveFolder>(this);
+
+  @override
+  ActiveFolder freeze() => RealmObjectBase.freezeObject<ActiveFolder>(this);
+
+  EJsonValue toEJson() {
+    return <String, dynamic>{
+      'uid': uid.toEJson(),
+    };
+  }
+
+  static EJsonValue _toEJson(ActiveFolder value) => value.toEJson();
+  static ActiveFolder _fromEJson(EJsonValue ejson) {
+    return switch (ejson) {
+      {
+        'uid': EJsonValue uid,
+      } =>
+        ActiveFolder(
+          fromEJson(uid),
+        ),
+      _ => raiseInvalidEJson(ejson),
+    };
+  }
+
+  static final schema = () {
+    RealmObjectBase.registerFactory(ActiveFolder._);
+    register(_toEJson, _fromEJson);
+    return SchemaObject(ObjectType.realmObject, ActiveFolder, 'ActiveFolder', [
+      SchemaProperty('uid', RealmPropertyType.string),
+    ]);
+  }();
+
+  @override
+  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
+}
+
 class FoldersRepository extends _FoldersRepository
     with RealmEntity, RealmObjectBase, RealmObject {
   FoldersRepository(

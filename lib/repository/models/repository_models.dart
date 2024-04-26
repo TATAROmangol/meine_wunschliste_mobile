@@ -2,6 +2,11 @@ import 'package:realm/realm.dart';
 
 part 'repository_models.realm.dart';
 
+
+@RealmModel()
+class _ActiveFolder{
+  late String uid;
+}
 @RealmModel()
 class _FoldersRepository {
   @PrimaryKey()

@@ -15,6 +15,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final config = Configuration.local([
+    ActiveFolder.schema,
     FoldersRepository.schema,
     TasksTopRepository.schema,
     TasksCenterRepository.schema,
@@ -23,7 +24,6 @@ void main() async {
   ]);
   final realm = Realm(config);
   GetIt.I.registerSingleton<Repository>(Repository(realm: realm));
-
   runApp(MaterialApp(
       home: (FirebaseAuth.instance.currentUser != null)
           ? UserTasks()
