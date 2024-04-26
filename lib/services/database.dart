@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meine_wunschliste/domain/models/folder_navigation.dart';
+import 'package:meine_wunschliste/domain/models/folder.dart';
 
 class DataBase {
   final CollectionReference _foldersCollection =

@@ -1,22 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/repository/repository.dart';
 
-class AddFolderView extends StatefulWidget {
-  const AddFolderView({required this.repository, super.key});
-
-  final Repository repository;
+class AddFolderWidget extends StatefulWidget {
+  const AddFolderWidget({super.key});
 
   @override
-  AddFolderViewState createState() =>
-      AddFolderViewState(realmRepository: repository);
+  _AddFolderWidgetState createState() =>
+      _AddFolderWidgetState();
 }
 
-class AddFolderViewState extends State<AddFolderView> {
-  AddFolderViewState({required this.realmRepository});
+class _AddFolderWidgetState extends State<AddFolderWidget> {
+  _AddFolderWidgetState();
   final TextEditingController _textController = TextEditingController();
-
-  final Repository realmRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +30,7 @@ class AddFolderViewState extends State<AddFolderView> {
         ElevatedButton(
           onPressed: () async {
             String itemName = _textController.text;
-            realmRepository.addFolderNavigation(itemName);
+            //realmRepository.addFolder(itemName);
             Navigator.of(context).pop();
             print('add $itemName');
           },

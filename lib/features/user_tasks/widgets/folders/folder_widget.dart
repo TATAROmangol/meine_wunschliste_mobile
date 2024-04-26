@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 
-class FolderNavigationView extends StatelessWidget {
-  const FolderNavigationView({required this.folderNavigation, super.key});
+class FolderWidget extends StatelessWidget {
+  const FolderWidget({required this.folder, required this.last, super.key});
 
-  final FolderNavigation folderNavigation;
+  final Folder folder;
+  final bool last;
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 3),
+      margin: last != true
+          ? const EdgeInsets.only(right: 3)
+          : const EdgeInsets.all(0),
       padding: const EdgeInsets.symmetric(horizontal: 5),
       height: screenSize.height * 0.04,
       decoration: const BoxDecoration(
@@ -21,9 +24,10 @@ class FolderNavigationView extends StatelessWidget {
         color: Color(0xFFEEA434),
       ),
       child: Center(
-        child: GestureDetector(
-          onTap: () {},
-          child: Text(folderNavigation.name),
+        child: TextButton(
+          onPressed: () {
+          },
+          child: Text(folder.name),
         ),
       ),
     );

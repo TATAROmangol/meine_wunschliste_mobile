@@ -7,9 +7,9 @@ part of 'repository_models.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
-class FolderNavigationRepository extends _FolderNavigationRepository
+class FoldersRepository extends _FoldersRepository
     with RealmEntity, RealmObjectBase, RealmObject {
-  FolderNavigationRepository(
+  FoldersRepository(
     String uid,
     int order,
     String name, {
@@ -21,7 +21,7 @@ class FolderNavigationRepository extends _FolderNavigationRepository
     RealmObjectBase.set(this, 'tasksUid', tasksUid);
   }
 
-  FolderNavigationRepository._();
+  FoldersRepository._();
 
   @override
   String get uid => RealmObjectBase.get<String>(this, 'uid') as String;
@@ -45,12 +45,12 @@ class FolderNavigationRepository extends _FolderNavigationRepository
   set tasksUid(String? value) => RealmObjectBase.set(this, 'tasksUid', value);
 
   @override
-  Stream<RealmObjectChanges<FolderNavigationRepository>> get changes =>
-      RealmObjectBase.getChanges<FolderNavigationRepository>(this);
+  Stream<RealmObjectChanges<FoldersRepository>> get changes =>
+      RealmObjectBase.getChanges<FoldersRepository>(this);
 
   @override
-  FolderNavigationRepository freeze() =>
-      RealmObjectBase.freezeObject<FolderNavigationRepository>(this);
+  FoldersRepository freeze() =>
+      RealmObjectBase.freezeObject<FoldersRepository>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -61,9 +61,8 @@ class FolderNavigationRepository extends _FolderNavigationRepository
     };
   }
 
-  static EJsonValue _toEJson(FolderNavigationRepository value) =>
-      value.toEJson();
-  static FolderNavigationRepository _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(FoldersRepository value) => value.toEJson();
+  static FoldersRepository _fromEJson(EJsonValue ejson) {
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
@@ -71,7 +70,7 @@ class FolderNavigationRepository extends _FolderNavigationRepository
         'name': EJsonValue name,
         'tasksUid': EJsonValue tasksUid,
       } =>
-        FolderNavigationRepository(
+        FoldersRepository(
           fromEJson(uid),
           fromEJson(order),
           fromEJson(name),
@@ -82,10 +81,10 @@ class FolderNavigationRepository extends _FolderNavigationRepository
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(FolderNavigationRepository._);
+    RealmObjectBase.registerFactory(FoldersRepository._);
     register(_toEJson, _fromEJson);
-    return SchemaObject(ObjectType.realmObject, FolderNavigationRepository,
-        'FolderNavigationRepository', [
+    return SchemaObject(
+        ObjectType.realmObject, FoldersRepository, 'FoldersRepository', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('order', RealmPropertyType.int),
       SchemaProperty('name', RealmPropertyType.string),

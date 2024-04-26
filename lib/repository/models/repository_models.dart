@@ -3,7 +3,7 @@ import 'package:realm/realm.dart';
 part 'repository_models.realm.dart';
 
 @RealmModel()
-class _FolderNavigationRepository {
+class _FoldersRepository {
   @PrimaryKey()
   late String uid;
   late int order;

@@ -7,24 +7,23 @@ class Repository {
 
   final Realm realm;
 
-  Future<List<FolderNavigationRepository>> getFoldersNavigatin() async {
-    return realm.write(() => realm.all<FolderNavigationRepository>()).toList();
+  Future<List<FoldersRepository>> getFolders() async {
+    return realm.write(() => realm.all<FoldersRepository>()).toList();
   }
 
-  Future<void> addFolderNavigation(String name) async {
-    var countItems = await getCountFoldersNavigation();
-    realm.write(() => realm.add<FolderNavigationRepository>(
-        FolderNavigationRepository(Uuid.v4().toString(), countItems, name)));
+  Future<void> addFolder(String name) async {
+    var countItems = await getCountFolders();
+    realm.write(() => realm.add<FoldersRepository>(
+        FoldersRepository(Uuid.v4().toString(), countItems, name)));
   }
 
-  Future<int> getCountFoldersNavigation() async {
-    var items = realm.all<FolderNavigationRepository>().toList();
+  Future<int> getCountFolders() async {
+    var items = realm.all<FoldersRepository>().toList();
     return items.length;
   }
 
-  Future<void> updateFolderNavigationOrder(
-      FolderNavigation folderNavigation, int index) async {
-    var item = realm.find<FolderNavigationRepository>(folderNavigation.uid);
+  Future<void> updateFolderOrder(Folder folderNavigation, int index) async {
+    var item = realm.find<FoldersRepository>(folderNavigation.uid);
     if (item != null) realm.write(() => item.order = index);
   }
 }

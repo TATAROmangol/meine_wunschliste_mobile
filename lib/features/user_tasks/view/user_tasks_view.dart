@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/repository/repository.dart';
-import 'package:meine_wunschliste/presentation/widgets/user_tasks_view/user_tasks_view.dart';
+import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
 
 class UserTasks extends StatelessWidget {
-  const UserTasks({required this.realmRepository, super.key});
-
-  final Repository realmRepository;
+  UserTasks({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +21,7 @@ class UserTasks extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AddFolderView(repository: realmRepository);
+                  return const AddFolderWidget();
                 },
               );
             },
@@ -38,11 +35,11 @@ class UserTasks extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
+        child: const Column(
           children: <Widget>[
-            FolderListView(realmRepository: realmRepository),
+            FolderBar(),
             //TaskListView(),
-            const AddTaskView(),
+            //const AddTaskView(),
           ],
         ),
       ),
