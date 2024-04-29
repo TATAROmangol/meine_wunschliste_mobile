@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/add_navigation_folder_bloc/folders_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
 
 class AddFolderWidget extends StatefulWidget {
   const AddFolderWidget({required this.foldersBloc, super.key});
@@ -44,7 +44,6 @@ class _AddFolderWidgetState extends State<AddFolderWidget> {
               foldersBloc.add(AddFolderEvent(name: itemName));
             }
             Navigator.of(context).pop();
-            print('add $itemName');
           },
           child: const Text('Добавить'),
         ),

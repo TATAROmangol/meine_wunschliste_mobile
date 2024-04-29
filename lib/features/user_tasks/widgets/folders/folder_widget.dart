@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
-import 'package:meine_wunschliste/repository/repository.dart';
 
 class FolderWidget extends StatelessWidget {
   FolderWidget(
       {required this.folder,
       required this.last,
-      required this.active,
+      required this.activeFolder,
+      required this.foldersBloc,
       super.key});
 
   final Folder folder;
+  final Folder? activeFolder;
   final bool last;
-  final String active;
-  final Repository repository = GetIt.I.get<Repository>();
+  final FoldersBloc foldersBloc;
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
 
-    return (folder.uid == active)
+    return (activeFolder != null && folder.uid == activeFolder!.uid)
         ? Container(
             margin: last != true
                 ? const EdgeInsets.only(right: 3)
                 : const EdgeInsets.all(0),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(15),
@@ -63,7 +64,9 @@ class FolderWidget extends StatelessWidget {
             ),
             child: Center(
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  foldersBloc.add(ChangeActiveFolder(folder: folder));
+                },
                 child: Text(folder.name),
               ),
             ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meine_wunschliste/domain/models/models.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/add_navigation_folder_bloc/folders_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/folders/folders.dart';
+import 'package:meine_wunschliste/domain/models/models.dart';
 
 class FolderBar extends StatefulWidget {
   FolderBar({super.key});
@@ -12,13 +12,21 @@ class FolderBar extends StatefulWidget {
 }
 
 class _FolderBarState extends State<FolderBar> {
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<FoldersBloc>(context).add(ShowFoldersEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final FoldersBloc _foldersBloc = BlocProvider.of<FoldersBloc>(context);
-    _foldersBloc.add(ShowFoldersEvent());
+    final FoldersBloc foldersBloc = BlocProvider.of<FoldersBloc>(context);
+    foldersBloc.add(ShowFoldersEvent());
+
     return BlocBuilder<FoldersBloc, FoldersState>(builder: (context, state) {
-      if (state is ShowFolderState) {
+      if (state is ShowFoldersState) {
         final folders = state.folders;
         return Container(
           margin: EdgeInsets.only(bottom: screenSize.height * 0.02),
@@ -29,8 +37,9 @@ class _FolderBarState extends State<FolderBar> {
               final folder = folders[index];
               return FolderWidget(
                   key: ValueKey(folder.uid),
-                  active: state.uidActiveFolder,
                   folder: folder,
+                  activeFolder: state.activeFolder,
+                  foldersBloc: foldersBloc,
                   last: index == folders.length - 1);
             },
             itemCount: folders.length,
@@ -41,7 +50,7 @@ class _FolderBarState extends State<FolderBar> {
               final Folder folderNavigation = folders.removeAt(oldIndex);
               folders.insert(newIndex, folderNavigation);
 
-              _foldersBloc.add(ChangeOrderFolderEvent(folders: folders));
+              foldersBloc.add(ChangeOrderFolderEvent(folders: folders));
             },
             proxyDecorator:
                 (Widget child, int index, Animation<double> animation) {
@@ -53,7 +62,7 @@ class _FolderBarState extends State<FolderBar> {
           ),
         );
       }
-      return Container();
+      return Container(child: Text('blya'),);
     });
   }
 }

@@ -14,3 +14,8 @@ class ChangeOrderFolderEvent extends FoldersEvent {
 
   final List<Folder> folders;
 }
+
+class ChangeActiveFolder extends FoldersEvent {
+  ChangeActiveFolder({required this.folder});
+  final Folder folder;
+}

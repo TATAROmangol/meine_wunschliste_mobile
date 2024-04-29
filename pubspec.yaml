@@ -7,13 +7,14 @@ environment:
   sdk: '>=3.3.3 <4.0.0'
 
 dependencies:
-  realm:
   firebase_core:
   cloud_firestore:
   firebase_remote_config:
   firebase_database:
   firebase_auth:
   flutter_bloc:
+  path_provider:
+  realm:
   uuid:
   get_it:
   get:

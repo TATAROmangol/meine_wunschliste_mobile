@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'repository_models.dart';
+part of 'models.dart';
 
 // **************************************************************************
 // RealmObjectGenerator
@@ -9,18 +9,19 @@ part of 'repository_models.dart';
 // ignore_for_file: type=lint
 class ActiveFolder extends _ActiveFolder
     with RealmEntity, RealmObjectBase, RealmObject {
-  ActiveFolder(
-    String uid,
-  ) {
-    RealmObjectBase.set(this, 'uid', uid);
+  ActiveFolder({
+    Folder? folder,
+  }) {
+    RealmObjectBase.set(this, 'folder', folder);
   }
 
   ActiveFolder._();
 
   @override
-  String get uid => RealmObjectBase.get<String>(this, 'uid') as String;
+  Folder? get folder => RealmObjectBase.get<Folder>(this, 'folder') as Folder?;
   @override
-  set uid(String value) => RealmObjectBase.set(this, 'uid', value);
+  set folder(covariant Folder? value) =>
+      RealmObjectBase.set(this, 'folder', value);
 
   @override
   Stream<RealmObjectChanges<ActiveFolder>> get changes =>
@@ -31,7 +32,7 @@ class ActiveFolder extends _ActiveFolder
 
   EJsonValue toEJson() {
     return <String, dynamic>{
-      'uid': uid.toEJson(),
+      'folder': folder.toEJson(),
     };
   }
 
@@ -39,10 +40,10 @@ class ActiveFolder extends _ActiveFolder
   static ActiveFolder _fromEJson(EJsonValue ejson) {
     return switch (ejson) {
       {
-        'uid': EJsonValue uid,
+        'folder': EJsonValue folder,
       } =>
         ActiveFolder(
-          fromEJson(uid),
+          folder: fromEJson(folder),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -52,7 +53,8 @@ class ActiveFolder extends _ActiveFolder
     RealmObjectBase.registerFactory(ActiveFolder._);
     register(_toEJson, _fromEJson);
     return SchemaObject(ObjectType.realmObject, ActiveFolder, 'ActiveFolder', [
-      SchemaProperty('uid', RealmPropertyType.string),
+      SchemaProperty('folder', RealmPropertyType.object,
+          optional: true, linkTarget: 'Folder'),
     ]);
   }();
 
@@ -60,9 +62,8 @@ class ActiveFolder extends _ActiveFolder
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
-class FoldersRepository extends _FoldersRepository
-    with RealmEntity, RealmObjectBase, RealmObject {
-  FoldersRepository(
+class Folder extends _Folder with RealmEntity, RealmObjectBase, RealmObject {
+  Folder(
     String uid,
     int order,
     String name, {
@@ -74,7 +75,7 @@ class FoldersRepository extends _FoldersRepository
     RealmObjectBase.set(this, 'tasksUid', tasksUid);
   }
 
-  FoldersRepository._();
+  Folder._();
 
   @override
   String get uid => RealmObjectBase.get<String>(this, 'uid') as String;
@@ -98,12 +99,11 @@ class FoldersRepository extends _FoldersRepository
   set tasksUid(String? value) => RealmObjectBase.set(this, 'tasksUid', value);
 
   @override
-  Stream<RealmObjectChanges<FoldersRepository>> get changes =>
-      RealmObjectBase.getChanges<FoldersRepository>(this);
+  Stream<RealmObjectChanges<Folder>> get changes =>
+      RealmObjectBase.getChanges<Folder>(this);
 
   @override
-  FoldersRepository freeze() =>
-      RealmObjectBase.freezeObject<FoldersRepository>(this);
+  Folder freeze() => RealmObjectBase.freezeObject<Folder>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -114,8 +114,8 @@ class FoldersRepository extends _FoldersRepository
     };
   }
 
-  static EJsonValue _toEJson(FoldersRepository value) => value.toEJson();
-  static FoldersRepository _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(Folder value) => value.toEJson();
+  static Folder _fromEJson(EJsonValue ejson) {
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
@@ -123,7 +123,7 @@ class FoldersRepository extends _FoldersRepository
         'name': EJsonValue name,
         'tasksUid': EJsonValue tasksUid,
       } =>
-        FoldersRepository(
+        Folder(
           fromEJson(uid),
           fromEJson(order),
           fromEJson(name),
@@ -134,10 +134,9 @@ class FoldersRepository extends _FoldersRepository
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(FoldersRepository._);
+    RealmObjectBase.registerFactory(Folder._);
     register(_toEJson, _fromEJson);
-    return SchemaObject(
-        ObjectType.realmObject, FoldersRepository, 'FoldersRepository', [
+    return SchemaObject(ObjectType.realmObject, Folder, 'Folder', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('order', RealmPropertyType.int),
       SchemaProperty('name', RealmPropertyType.string),
@@ -149,9 +148,9 @@ class FoldersRepository extends _FoldersRepository
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
-class TasksTopRepository extends _TasksTopRepository
+class TasksTop extends _TasksTop
     with RealmEntity, RealmObjectBase, RealmObject {
-  TasksTopRepository(
+  TasksTop(
     String uid, {
     Iterable<Task> tasks = const [],
   }) {
@@ -159,7 +158,7 @@ class TasksTopRepository extends _TasksTopRepository
     RealmObjectBase.set<RealmList<Task>>(this, 'tasks', RealmList<Task>(tasks));
   }
 
-  TasksTopRepository._();
+  TasksTop._();
 
   @override
   String get uid => RealmObjectBase.get<String>(this, 'uid') as String;
@@ -174,12 +173,11 @@ class TasksTopRepository extends _TasksTopRepository
       throw RealmUnsupportedSetError();
 
   @override
-  Stream<RealmObjectChanges<TasksTopRepository>> get changes =>
-      RealmObjectBase.getChanges<TasksTopRepository>(this);
+  Stream<RealmObjectChanges<TasksTop>> get changes =>
+      RealmObjectBase.getChanges<TasksTop>(this);
 
   @override
-  TasksTopRepository freeze() =>
-      RealmObjectBase.freezeObject<TasksTopRepository>(this);
+  TasksTop freeze() => RealmObjectBase.freezeObject<TasksTop>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -188,14 +186,14 @@ class TasksTopRepository extends _TasksTopRepository
     };
   }
 
-  static EJsonValue _toEJson(TasksTopRepository value) => value.toEJson();
-  static TasksTopRepository _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(TasksTop value) => value.toEJson();
+  static TasksTop _fromEJson(EJsonValue ejson) {
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
         'tasks': EJsonValue tasks,
       } =>
-        TasksTopRepository(
+        TasksTop(
           fromEJson(uid),
           tasks: fromEJson(tasks),
         ),
@@ -204,10 +202,9 @@ class TasksTopRepository extends _TasksTopRepository
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(TasksTopRepository._);
+    RealmObjectBase.registerFactory(TasksTop._);
     register(_toEJson, _fromEJson);
-    return SchemaObject(
-        ObjectType.realmObject, TasksTopRepository, 'TasksTopRepository', [
+    return SchemaObject(ObjectType.realmObject, TasksTop, 'TasksTop', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('tasks', RealmPropertyType.object,
           linkTarget: 'Task', collectionType: RealmCollectionType.list),
@@ -218,9 +215,9 @@ class TasksTopRepository extends _TasksTopRepository
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
-class TasksCenterRepository extends _TasksCenterRepository
+class TasksCenter extends _TasksCenter
     with RealmEntity, RealmObjectBase, RealmObject {
-  TasksCenterRepository(
+  TasksCenter(
     String uid, {
     Iterable<Task> tasks = const [],
   }) {
@@ -228,7 +225,7 @@ class TasksCenterRepository extends _TasksCenterRepository
     RealmObjectBase.set<RealmList<Task>>(this, 'tasks', RealmList<Task>(tasks));
   }
 
-  TasksCenterRepository._();
+  TasksCenter._();
 
   @override
   String get uid => RealmObjectBase.get<String>(this, 'uid') as String;
@@ -243,12 +240,11 @@ class TasksCenterRepository extends _TasksCenterRepository
       throw RealmUnsupportedSetError();
 
   @override
-  Stream<RealmObjectChanges<TasksCenterRepository>> get changes =>
-      RealmObjectBase.getChanges<TasksCenterRepository>(this);
+  Stream<RealmObjectChanges<TasksCenter>> get changes =>
+      RealmObjectBase.getChanges<TasksCenter>(this);
 
   @override
-  TasksCenterRepository freeze() =>
-      RealmObjectBase.freezeObject<TasksCenterRepository>(this);
+  TasksCenter freeze() => RealmObjectBase.freezeObject<TasksCenter>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -257,14 +253,14 @@ class TasksCenterRepository extends _TasksCenterRepository
     };
   }
 
-  static EJsonValue _toEJson(TasksCenterRepository value) => value.toEJson();
-  static TasksCenterRepository _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(TasksCenter value) => value.toEJson();
+  static TasksCenter _fromEJson(EJsonValue ejson) {
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
         'tasks': EJsonValue tasks,
       } =>
-        TasksCenterRepository(
+        TasksCenter(
           fromEJson(uid),
           tasks: fromEJson(tasks),
         ),
@@ -273,10 +269,9 @@ class TasksCenterRepository extends _TasksCenterRepository
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(TasksCenterRepository._);
+    RealmObjectBase.registerFactory(TasksCenter._);
     register(_toEJson, _fromEJson);
-    return SchemaObject(ObjectType.realmObject, TasksCenterRepository,
-        'TasksCenterRepository', [
+    return SchemaObject(ObjectType.realmObject, TasksCenter, 'TasksCenter', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('tasks', RealmPropertyType.object,
           linkTarget: 'Task', collectionType: RealmCollectionType.list),
@@ -287,9 +282,9 @@ class TasksCenterRepository extends _TasksCenterRepository
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
-class TasksBottomRepository extends _TasksBottomRepository
+class TasksBottom extends _TasksBottom
     with RealmEntity, RealmObjectBase, RealmObject {
-  TasksBottomRepository(
+  TasksBottom(
     String uid, {
     Iterable<Task> tasks = const [],
   }) {
@@ -297,7 +292,7 @@ class TasksBottomRepository extends _TasksBottomRepository
     RealmObjectBase.set<RealmList<Task>>(this, 'tasks', RealmList<Task>(tasks));
   }
 
-  TasksBottomRepository._();
+  TasksBottom._();
 
   @override
   String get uid => RealmObjectBase.get<String>(this, 'uid') as String;
@@ -312,12 +307,11 @@ class TasksBottomRepository extends _TasksBottomRepository
       throw RealmUnsupportedSetError();
 
   @override
-  Stream<RealmObjectChanges<TasksBottomRepository>> get changes =>
-      RealmObjectBase.getChanges<TasksBottomRepository>(this);
+  Stream<RealmObjectChanges<TasksBottom>> get changes =>
+      RealmObjectBase.getChanges<TasksBottom>(this);
 
   @override
-  TasksBottomRepository freeze() =>
-      RealmObjectBase.freezeObject<TasksBottomRepository>(this);
+  TasksBottom freeze() => RealmObjectBase.freezeObject<TasksBottom>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -326,14 +320,14 @@ class TasksBottomRepository extends _TasksBottomRepository
     };
   }
 
-  static EJsonValue _toEJson(TasksBottomRepository value) => value.toEJson();
-  static TasksBottomRepository _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(TasksBottom value) => value.toEJson();
+  static TasksBottom _fromEJson(EJsonValue ejson) {
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
         'tasks': EJsonValue tasks,
       } =>
-        TasksBottomRepository(
+        TasksBottom(
           fromEJson(uid),
           tasks: fromEJson(tasks),
         ),
@@ -342,10 +336,9 @@ class TasksBottomRepository extends _TasksBottomRepository
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(TasksBottomRepository._);
+    RealmObjectBase.registerFactory(TasksBottom._);
     register(_toEJson, _fromEJson);
-    return SchemaObject(ObjectType.realmObject, TasksBottomRepository,
-        'TasksBottomRepository', [
+    return SchemaObject(ObjectType.realmObject, TasksBottom, 'TasksBottom', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('tasks', RealmPropertyType.object,
           linkTarget: 'Task', collectionType: RealmCollectionType.list),
@@ -360,11 +353,13 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   Task(
     String uid,
     int order,
+    int step,
     String name, {
     String? childrenUid,
   }) {
     RealmObjectBase.set(this, 'uid', uid);
     RealmObjectBase.set(this, 'order', order);
+    RealmObjectBase.set(this, 'step', step);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'childrenUid', childrenUid);
   }
@@ -380,6 +375,11 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   int get order => RealmObjectBase.get<int>(this, 'order') as int;
   @override
   set order(int value) => RealmObjectBase.set(this, 'order', value);
+
+  @override
+  int get step => RealmObjectBase.get<int>(this, 'step') as int;
+  @override
+  set step(int value) => RealmObjectBase.set(this, 'step', value);
 
   @override
   String get name => RealmObjectBase.get<String>(this, 'name') as String;
@@ -404,6 +404,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     return <String, dynamic>{
       'uid': uid.toEJson(),
       'order': order.toEJson(),
+      'step': step.toEJson(),
       'name': name.toEJson(),
       'childrenUid': childrenUid.toEJson(),
     };
@@ -415,12 +416,14 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
       {
         'uid': EJsonValue uid,
         'order': EJsonValue order,
+        'step': EJsonValue step,
         'name': EJsonValue name,
         'childrenUid': EJsonValue childrenUid,
       } =>
         Task(
           fromEJson(uid),
           fromEJson(order),
+          fromEJson(step),
           fromEJson(name),
           childrenUid: fromEJson(childrenUid),
         ),
@@ -434,6 +437,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     return SchemaObject(ObjectType.realmObject, Task, 'Task', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('order', RealmPropertyType.int),
+      SchemaProperty('step', RealmPropertyType.int),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('childrenUid', RealmPropertyType.string, optional: true),
     ]);

@@ -6,9 +6,9 @@ class FoldersInitial extends FoldersState {
   final List<Folder> foldersNavigation = [];
 }
 
-class ShowFolderState extends FoldersState {
-  ShowFolderState({required this.folders, required this.uidActiveFolder});
+class ShowFoldersState extends FoldersState {
+  ShowFoldersState({required this.folders, required this.activeFolder});
 
   final List<Folder> folders;
-  final String uidActiveFolder;
+  final Folder? activeFolder;
 }

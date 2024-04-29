@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/add_navigation_folder_bloc/folders_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_bloc/tasks_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
-import 'package:meine_wunschliste/repository/repository.dart';
 
 class UserTasks extends StatelessWidget {
   UserTasks({super.key});
@@ -11,9 +10,12 @@ class UserTasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foldersBloc = FoldersBloc();
-    final tasksBloc = FoldersBloc();
+    final tasksBloc = TasksBloc();
     return MultiBlocProvider(
-      providers: [BlocProvider<FoldersBloc>(create: (context) => foldersBloc)],
+      providers: [
+        BlocProvider<FoldersBloc>(create: (context) => foldersBloc),
+        BlocProvider<TasksBloc>(create: (context) => tasksBloc)
+      ],
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFFF9648),
@@ -48,8 +50,23 @@ class UserTasks extends StatelessWidget {
           child: Column(
             children: <Widget>[
               FolderBar(),
-              //TaskListView(),
-              //const AddTaskView(),
+              // TaskTreeView(),
+              // Container(
+              //   height: 50,
+              //   child: IconButton(
+              //     icon: const Icon(Icons.add),
+              //     onPressed: () {
+              //       showDialog(
+              //         context: context,
+              //         builder: (BuildContext context) {
+              //           return AddTopTask(
+              //             tasksBloc: tasksBloc,
+              //           );
+              //         },
+              //       );
+              //     },
+              //   ),
+              // )
             ],
           ),
         ),
