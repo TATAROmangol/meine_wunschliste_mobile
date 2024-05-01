@@ -6,16 +6,22 @@ class Repository {
 
   final Realm realm;
 
+  Folder? activeFolder = ActiveFolder().folder;
+
   //папки
   Future<List<Folder>> getFolders() async {
-    return realm.all<Folder>().toList();
+    var folders = realm.all<Folder>().toList();
+    folders.sort((a, b) => b.order.compareTo(a.order));
+    return folders;
   }
 
   Future<void> addFolder(String name) async {
     var countItems = await getCountFolders();
-    var newFolder = Folder(Uuid.v4().toString(), countItems, name);
-    await realm.write(() => realm.add<Folder>(newFolder));
+    var uid = Uuid.v4().toString();
+    var newFolder = Folder(uid, countItems, name);
+    _createRootTasks(uid);
     await changeActiveFolder(newFolder);
+    realm.write(() => realm.add<Folder>(newFolder));
   }
 
   Future<int> getCountFolders() async {
@@ -28,51 +34,40 @@ class Repository {
     if (item != null) realm.write(() => item.order = index);
   }
 
-  Future<Folder?> getActiveFolder() async {
-    try {
-      return realm.all<ActiveFolder>().first.folder;
-    } catch (e) {
-      realm.write(() => realm.add<ActiveFolder>(ActiveFolder()));
-      return null;
-    }
-  }
-
   Future<void> changeActiveFolder(Folder newFolder) async {
-    var newActiveFolder = ActiveFolder();
-    newActiveFolder.folder = newFolder;
     realm.write(() {
-      realm.delete(realm.all<ActiveFolder>().first);
-      realm.add<ActiveFolder>(newActiveFolder);
+      realm.all<ActiveFolder>().first.folder = newFolder;
     });
   }
 
   //задачи
-  Future<List<Task>> getTopTasks() async {
-    var activeFolder = await getActiveFolder();
-    var topTasksRepository = realm.find<TasksTop>(activeFolder!.uid);
-    if (topTasksRepository != null) {
-      return topTasksRepository.tasks;
-    } else {
-      realm.write(() => realm.add<TasksTop>(TasksTop(activeFolder.uid)));
-      return [];
-    }
+  Future<void> _createRootTasks(String uid) async {
+    realm.write(() => realm.add<RootTasks>(RootTasks(uid)));
   }
 
-  // Future<void> addTopTask(String name) async {
-  //   var activeFolder = await getActiveFolder();
-  //   if (activeFolder!.uid.isNotEmpty) {
-  //     var topTasksRepository = realm.find<TasksTop>(activeFolder.uid);
-  //     if (topTasksRepository != null) {
-  //       var currentTasks = topTasksRepository.tasks;
-  //       var newTask = Task(Uuid.v4().toString(), currentTasks.length, 1, name);
-  //       currentTasks.add(newTask);
-  //       realm.write(() => topTasksRepository.tasks = currentTasks);
-  //     } else {
-  //       var newTaskTopRep = TasksTop(activeFolder.uid);
-  //       var newTask = Task(Uuid.v4().toString(), 0, 1, name);
-  //       newTaskTopRep.tasks.add(newTask);
-  //       realm.write(() => realm.add<TasksTop>(newTaskTopRep));
-  //     }
-  //   }
-  // }
+  Future<List<Task>> getTopTasks() async {
+    var rootTasks = realm.find<RootTasks>(activeFolder!.uid);
+    return rootTasks!.tasks.map((e) => e).toList();
+  }
+
+  Future<void> addTopTask(String name) async {
+    var uid = activeFolder!.uid;
+
+    realm.write(() {
+      var topTasksRepository = realm.find<RootTasks>(uid);
+      var tasks = [Task(Uuid.v4().toString(), 0, name)];
+
+      tasks.addAll(topTasksRepository!.tasks);
+      realm.delete<RootTasks>(topTasksRepository);
+    });
+  }
+
+  Future<void> changeTopTasksOrder(List<Task> tasks) async {
+    var uid = activeFolder!.uid;
+    realm.write(() {
+      var topTasksRepository = realm.find<RootTasks>(uid);
+      realm.delete<RootTasks>(topTasksRepository!);
+      realm.add<RootTasks>(RootTasks(uid, tasks: tasks));
+    });
+  }
 }

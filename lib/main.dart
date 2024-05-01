@@ -19,10 +19,10 @@ void main() async {
 
   final config = Configuration.local([
     Folder.schema,
-    TasksTop.schema,
-    TasksCenter.schema,
-    TasksBottom.schema,
     ActiveFolder.schema,
+    RootTasks.schema,
+    Subtasks.schema,
+    SubSubtasks.schema,
     Task.schema
   ]);
 

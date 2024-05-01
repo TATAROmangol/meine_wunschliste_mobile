@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_bloc/tasks_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/folders/folders.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 
@@ -23,13 +24,13 @@ class _FolderBarState extends State<FolderBar> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final FoldersBloc foldersBloc = BlocProvider.of<FoldersBloc>(context);
-    foldersBloc.add(ShowFoldersEvent());
+    final TasksBloc tasksBloc = BlocProvider.of<TasksBloc>(context);
 
     return BlocBuilder<FoldersBloc, FoldersState>(builder: (context, state) {
       if (state is ShowFoldersState) {
         final folders = state.folders;
         return Container(
-          margin: EdgeInsets.only(bottom: screenSize.height * 0.02),
+          margin: EdgeInsets.only(bottom: screenSize.height * 0.016),
           height: screenSize.height * 0.04,
           child: ReorderableListView.builder(
             scrollDirection: Axis.horizontal,
@@ -40,6 +41,7 @@ class _FolderBarState extends State<FolderBar> {
                   folder: folder,
                   activeFolder: state.activeFolder,
                   foldersBloc: foldersBloc,
+                  tasksBloc: tasksBloc,
                   last: index == folders.length - 1);
             },
             itemCount: folders.length,

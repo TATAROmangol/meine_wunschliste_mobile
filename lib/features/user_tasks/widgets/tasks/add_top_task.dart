@@ -44,7 +44,6 @@ class _AddTopTaskState extends State<AddTopTask> {
               tasksBloc.add(AddTopTaskEvent(name: itemName));
             }
             Navigator.of(context).pop();
-            print('add $itemName');
           },
           child: const Text('Добавить'),
         ),

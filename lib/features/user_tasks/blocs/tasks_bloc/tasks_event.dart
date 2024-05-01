@@ -9,7 +9,7 @@ class AddTopTaskEvent extends TasksEvent {
   final String name;
 }
 
-class ChangeAddTopTaskEvent extends TasksEvent {
-  ChangeAddTopTaskEvent({required this.tasks});
+class ChangeOrderTopTaskEvent extends TasksEvent {
+  ChangeOrderTopTaskEvent({required this.tasks});
   final List<Task> tasks;
 }
