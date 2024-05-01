@@ -352,13 +352,11 @@ class TasksBottom extends _TasksBottom
 class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   Task(
     String uid,
-    int order,
     int step,
     String name, {
     String? childrenUid,
   }) {
     RealmObjectBase.set(this, 'uid', uid);
-    RealmObjectBase.set(this, 'order', order);
     RealmObjectBase.set(this, 'step', step);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'childrenUid', childrenUid);
@@ -370,11 +368,6 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   String get uid => RealmObjectBase.get<String>(this, 'uid') as String;
   @override
   set uid(String value) => RealmObjectBase.set(this, 'uid', value);
-
-  @override
-  int get order => RealmObjectBase.get<int>(this, 'order') as int;
-  @override
-  set order(int value) => RealmObjectBase.set(this, 'order', value);
 
   @override
   int get step => RealmObjectBase.get<int>(this, 'step') as int;
@@ -403,7 +396,6 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   EJsonValue toEJson() {
     return <String, dynamic>{
       'uid': uid.toEJson(),
-      'order': order.toEJson(),
       'step': step.toEJson(),
       'name': name.toEJson(),
       'childrenUid': childrenUid.toEJson(),
@@ -415,14 +407,12 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
-        'order': EJsonValue order,
         'step': EJsonValue step,
         'name': EJsonValue name,
         'childrenUid': EJsonValue childrenUid,
       } =>
         Task(
           fromEJson(uid),
-          fromEJson(order),
           fromEJson(step),
           fromEJson(name),
           childrenUid: fromEJson(childrenUid),
@@ -436,7 +426,6 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     register(_toEJson, _fromEJson);
     return SchemaObject(ObjectType.realmObject, Task, 'Task', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
-      SchemaProperty('order', RealmPropertyType.int),
       SchemaProperty('step', RealmPropertyType.int),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('childrenUid', RealmPropertyType.string, optional: true),

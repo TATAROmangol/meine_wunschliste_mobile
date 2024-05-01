@@ -33,6 +33,7 @@ class UserTasks extends StatelessWidget {
                   builder: (BuildContext context) {
                     return AddFolderWidget(
                       foldersBloc: foldersBloc,
+                      tasksBloc: tasksBloc,
                     );
                   },
                 );
@@ -50,23 +51,23 @@ class UserTasks extends StatelessWidget {
           child: Column(
             children: <Widget>[
               FolderBar(),
-              // TaskTreeView(),
-              // Container(
-              //   height: 50,
-              //   child: IconButton(
-              //     icon: const Icon(Icons.add),
-              //     onPressed: () {
-              //       showDialog(
-              //         context: context,
-              //         builder: (BuildContext context) {
-              //           return AddTopTask(
-              //             tasksBloc: tasksBloc,
-              //           );
-              //         },
-              //       );
-              //     },
-              //   ),
-              // )
+              TaskTreeView(),
+              Container(
+                height: 50,
+                child: IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AddTopTask(
+                          tasksBloc: tasksBloc,
+                        );
+                      },
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),
