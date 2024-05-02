@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_bloc/tasks_bloc.dart';
 
 class TaskWidget extends StatefulWidget {
   TaskWidget({required this.task, super.key});
@@ -18,6 +21,8 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // final foldersBloc = BlocProvider.of<FoldersBloc>(context);
+    // final tasksBloc = BlocProvider.of<TasksBloc>(context);
     final Size screenSize = MediaQuery.of(context).size;
     return Column(
       children: [
@@ -34,7 +39,6 @@ class _TaskWidgetState extends State<TaskWidget> {
               onPressed: () {
                 setState(() {
                   watch = !watch;
-                  print(watch);
                   if (watch) childrens = [Task('0', 1, 'hello')];
                 });
               },

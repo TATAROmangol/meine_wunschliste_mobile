@@ -4,8 +4,8 @@ class TasksState {}
 
 class TasksStateInitial extends TasksState {}
 
-class ShowTopTasksState extends TasksState {
-  ShowTopTasksState({required this.tasks});
+class ShowRootTasksState extends TasksState {
+  ShowRootTasksState({required this.tasks});
 
   final List<Task> tasks;
 }

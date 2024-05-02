@@ -46,7 +46,5 @@ class _SubSubtasks implements TaskTree {
 class _Task {
   @PrimaryKey()
   late String uid;
-  late int step;
   late String name;
-  late String? childrenUid;
 }

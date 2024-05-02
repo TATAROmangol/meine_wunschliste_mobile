@@ -10,7 +10,8 @@ class FoldersBloc extends Bloc<FoldersEvent, FoldersState> {
   FoldersBloc() : super(FoldersInitial()) {
     on<ShowFoldersEvent>((event, emit) async {
       final folders = await repository.getFolders();
-      emit(ShowFoldersState(folders: folders, activeFolder: repository.activeFolder));
+      final activeFolder = await repository.getActiveFolder();
+      emit(ShowFoldersState(folders: folders, activeFolder: activeFolder));
     });
 
     on<ChangeOrderFolderEvent>((event, emit) {

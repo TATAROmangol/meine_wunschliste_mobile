@@ -24,22 +24,7 @@ class UserTasks extends StatelessWidget {
             child: const Icon(Icons.arrow_back),
             onTap: () {},
           ),
-          actions: [
-            GestureDetector(
-              child: const Icon(Icons.folder_copy_outlined),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AddFolderWidget(
-                      foldersBloc: foldersBloc,
-                      tasksBloc: tasksBloc,
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+          actions: const [AddFolderWidget()],
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -60,7 +45,7 @@ class UserTasks extends StatelessWidget {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return AddTopTask(
+                        return AddRootTask(
                           tasksBloc: tasksBloc,
                         );
                       },

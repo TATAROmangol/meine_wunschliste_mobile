@@ -2,14 +2,14 @@ part of 'tasks_bloc.dart';
 
 class TasksEvent {}
 
-class ShowTopTasksEvent extends TasksEvent {}
+class ShowRootTasksEvent extends TasksEvent {}
 
-class AddTopTaskEvent extends TasksEvent {
-  AddTopTaskEvent({required this.name});
+class AddRootTaskEvent extends TasksEvent {
+  AddRootTaskEvent({required this.name});
   final String name;
 }
 
-class ChangeOrderTopTaskEvent extends TasksEvent {
-  ChangeOrderTopTaskEvent({required this.tasks});
+class ChangeOrderRootTaskEvent extends TasksEvent {
+  ChangeOrderRootTaskEvent({required this.tasks});
   final List<Task> tasks;
 }

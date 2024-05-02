@@ -8,21 +8,21 @@ part 'tasks_state.dart';
 
 class TasksBloc extends Bloc<TasksEvent, TasksState> {
   TasksBloc() : super(TasksStateInitial()) {
-    on<ShowTopTasksEvent>((event, emit) async {   
-      try{
-      final List<Task> tasks = await repository.getTopTasks();
-      emit(ShowTopTasksState(tasks: tasks));
-      } catch (e){
-        emit(ShowTopTasksState(tasks: []));
+    on<ShowRootTasksEvent>((event, emit) async {
+      try {
+        final List<Task> tasks = await repository.getRootTasks();
+        emit(ShowRootTasksState(tasks: tasks));
+      } catch (e) {
+        emit(ShowRootTasksState(tasks: []));
       }
     });
-    on<AddTopTaskEvent>((event, emit) async {
-      repository.addTopTask(event.name);
-      add(ShowTopTasksEvent());
+    on<AddRootTaskEvent>((event, emit) async {
+      repository.addRootTask(event.name);
+      add(ShowRootTasksEvent());
     });
-    on<ChangeOrderTopTaskEvent>((event, emit) async {
-      repository.changeTopTasksOrder(event.tasks);
-      add(ShowTopTasksEvent());
+    on<ChangeOrderRootTaskEvent>((event, emit) async {
+      repository.changeRootTasksOrder(event.tasks);
+      add(ShowRootTasksEvent());
     });
   }
   final Repository repository = GetIt.I.get<Repository>();

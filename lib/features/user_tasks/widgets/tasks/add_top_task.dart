@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_bloc/tasks_bloc.dart';
 
-class AddTopTask extends StatefulWidget {
-  const AddTopTask({required this.tasksBloc, super.key});
+class AddRootTask extends StatefulWidget {
+  const AddRootTask({required this.tasksBloc, super.key});
 
   final TasksBloc tasksBloc;
 
   @override
-  _AddTopTaskState createState() =>
-      _AddTopTaskState(tasksBloc: tasksBloc);
+  _AddRootTaskState createState() => _AddRootTaskState(tasksBloc: tasksBloc);
 }
 
-class _AddTopTaskState extends State<AddTopTask> {
-  _AddTopTaskState({required this.tasksBloc});
+class _AddRootTaskState extends State<AddRootTask> {
+  _AddRootTaskState({required this.tasksBloc});
   final TextEditingController _textController = TextEditingController();
   final TasksBloc tasksBloc;
 
@@ -41,7 +40,7 @@ class _AddTopTaskState extends State<AddTopTask> {
           onPressed: () {
             String itemName = _textController.text;
             if (itemName.isNotEmpty) {
-              tasksBloc.add(AddTopTaskEvent(name: itemName));
+              tasksBloc.add(AddRootTaskEvent(name: itemName));
             }
             Navigator.of(context).pop();
           },
