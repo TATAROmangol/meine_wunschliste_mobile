@@ -21,11 +21,8 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     // final foldersBloc = BlocProvider.of<FoldersBloc>(context);
     // final tasksBloc = BlocProvider.of<TasksBloc>(context);
-=======
->>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
     final Size screenSize = MediaQuery.of(context).size;
     return Column(
       children: [

@@ -14,14 +14,8 @@ class _TaskTreeViewState extends State<TaskTreeView> {
   @override
     void initState() {
       super.initState();
-      BlocProvider.of<TasksBloc>(context).add(ShowTopTasksEvent());
+      BlocProvider.of<TasksBloc>(context).add(ShowRootTasksEvent());
     }
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<TasksBloc>(context).add(ShowRootTasksEvent());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +24,7 @@ class _TaskTreeViewState extends State<TaskTreeView> {
     return BlocBuilder<TasksBloc, TasksState>(
       builder: (context, state) {
         return Flexible(
-<<<<<<< HEAD
           child: state is ShowRootTasksState
-=======
-          child: state is ShowTopTasksState
->>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
               ? ReorderableListView.builder(
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
@@ -46,18 +36,10 @@ class _TaskTreeViewState extends State<TaskTreeView> {
                     if (newIndex > oldIndex) {
                       newIndex -= 1;
                     }
-<<<<<<< HEAD
                     final Task topTask = state.tasks.removeAt(oldIndex);
                     state.tasks.insert(newIndex, topTask);
 
                     tasksBloc.add(ChangeOrderRootTaskEvent(tasks: state.tasks));
-=======
-                    final Task topTask =
-                        state.tasks.removeAt(oldIndex);
-                    state.tasks.insert(newIndex, topTask);
-
-                    tasksBloc.add(ChangeOrderTopTaskEvent(tasks: state.tasks));
->>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
                   },
                   proxyDecorator:
                       (Widget child, int index, Animation<double> animation) {
