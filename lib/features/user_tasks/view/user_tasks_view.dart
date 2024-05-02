@@ -35,24 +35,9 @@ class UserTasks extends StatelessWidget {
           ),
           child: Column(
             children: <Widget>[
-              FolderBar(),
+              const FolderBar(),
               TaskTreeView(),
-              Container(
-                height: 50,
-                child: IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AddRootTask(
-                          tasksBloc: tasksBloc,
-                        );
-                      },
-                    );
-                  },
-                ),
-              )
+              const AddRootTask(),
             ],
           ),
         ),
