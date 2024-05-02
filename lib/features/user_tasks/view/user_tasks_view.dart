@@ -24,7 +24,26 @@ class UserTasks extends StatelessWidget {
             child: const Icon(Icons.arrow_back),
             onTap: () {},
           ),
+<<<<<<< HEAD
           actions: const [AddFolderWidget()],
+=======
+          actions: [
+            GestureDetector(
+              child: const Icon(Icons.folder_copy_outlined),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AddFolderWidget(
+                      foldersBloc: foldersBloc,
+                      tasksBloc: tasksBloc,
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+>>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -35,9 +54,30 @@ class UserTasks extends StatelessWidget {
           ),
           child: Column(
             children: <Widget>[
+<<<<<<< HEAD
               const FolderBar(),
               TaskTreeView(),
               const AddRootTask(),
+=======
+              FolderBar(),
+              TaskTreeView(),
+              Container(
+                height: 50,
+                child: IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AddTopTask(
+                          tasksBloc: tasksBloc,
+                        );
+                      },
+                    );
+                  },
+                ),
+              )
+>>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
             ],
           ),
         ),

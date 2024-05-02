@@ -9,11 +9,21 @@ class FolderWidget extends StatelessWidget {
       {required this.folder,
       required this.last,
       required this.activeFolder,
+<<<<<<< HEAD
+=======
+      required this.foldersBloc,
+      required this.tasksBloc,
+>>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
       super.key});
 
   final Folder folder;
   final Folder? activeFolder;
   final bool last;
+<<<<<<< HEAD
+=======
+  final FoldersBloc foldersBloc;
+  final TasksBloc tasksBloc;
+>>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +62,27 @@ class FolderWidget extends StatelessWidget {
                 bottomLeft: Radius.circular(15),
                 bottomRight: Radius.circular(15),
               ),
+<<<<<<< HEAD
               color: const Color(0xFFFFB26A),
               border: Border.all(
                   color: const Color.fromRGBO(0, 0, 0, 0.5), width: 1),
+=======
+              color: Color(0xFFFFB26A),
+              border: Border.all(color: const Color.fromRGBO(0, 0, 0, 0.5), width: 1),
+            ),
+            child: Center(
+              child: TextButton(
+                onPressed: () {
+                  foldersBloc.add(ChangeActiveFolder(folder: folder));
+                  foldersBloc.stream.listen((state) {
+                    if (state is ShowFoldersState) {
+                      tasksBloc.add(ShowTopTasksEvent());
+                    }
+                  });
+                },
+                child: Text(folder.name),
+              ),
+>>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
             ),
       child: Center(
         child: TextButton(

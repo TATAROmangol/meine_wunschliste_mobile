@@ -9,7 +9,12 @@ class AddRootTaskEvent extends TasksEvent {
   final String name;
 }
 
+<<<<<<< HEAD
 class ChangeOrderRootTaskEvent extends TasksEvent {
   ChangeOrderRootTaskEvent({required this.tasks});
+=======
+class ChangeOrderTopTaskEvent extends TasksEvent {
+  ChangeOrderTopTaskEvent({required this.tasks});
+>>>>>>> cf26426b94106fce844d75a22f05f36bcd2a5583
   final List<Task> tasks;
 }
