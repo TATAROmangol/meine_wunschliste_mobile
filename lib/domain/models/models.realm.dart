@@ -340,14 +340,12 @@ class SubSubtasks extends _SubSubtasks
 class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   Task(
     String uid,
+    String name,
     int step,
-    String name, {
-    String? childrenUid,
-  }) {
+  ) {
     RealmObjectBase.set(this, 'uid', uid);
-    RealmObjectBase.set(this, 'step', step);
     RealmObjectBase.set(this, 'name', name);
-    RealmObjectBase.set(this, 'childrenUid', childrenUid);
+    RealmObjectBase.set(this, 'step', step);
   }
 
   Task._();
@@ -358,21 +356,14 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   set uid(String value) => RealmObjectBase.set(this, 'uid', value);
 
   @override
-  int get step => RealmObjectBase.get<int>(this, 'step') as int;
-  @override
-  set step(int value) => RealmObjectBase.set(this, 'step', value);
-
-  @override
   String get name => RealmObjectBase.get<String>(this, 'name') as String;
   @override
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  String? get childrenUid =>
-      RealmObjectBase.get<String>(this, 'childrenUid') as String?;
+  int get step => RealmObjectBase.get<int>(this, 'step') as int;
   @override
-  set childrenUid(String? value) =>
-      RealmObjectBase.set(this, 'childrenUid', value);
+  set step(int value) => RealmObjectBase.set(this, 'step', value);
 
   @override
   Stream<RealmObjectChanges<Task>> get changes =>
@@ -384,9 +375,8 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   EJsonValue toEJson() {
     return <String, dynamic>{
       'uid': uid.toEJson(),
-      'step': step.toEJson(),
       'name': name.toEJson(),
-      'childrenUid': childrenUid.toEJson(),
+      'step': step.toEJson(),
     };
   }
 
@@ -395,15 +385,13 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
-        'step': EJsonValue step,
         'name': EJsonValue name,
-        'childrenUid': EJsonValue childrenUid,
+        'step': EJsonValue step,
       } =>
         Task(
           fromEJson(uid),
-          fromEJson(step),
           fromEJson(name),
-          childrenUid: fromEJson(childrenUid),
+          fromEJson(step),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -414,9 +402,8 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     register(_toEJson, _fromEJson);
     return SchemaObject(ObjectType.realmObject, Task, 'Task', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
-      SchemaProperty('step', RealmPropertyType.int),
       SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('childrenUid', RealmPropertyType.string, optional: true),
+      SchemaProperty('step', RealmPropertyType.int),
     ]);
   }();
 

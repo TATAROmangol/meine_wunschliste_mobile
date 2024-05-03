@@ -15,28 +15,22 @@ class _Folder {
   late String name;
 }
 
-abstract class TaskTree {
-  String get uid;
-  List<_Task> get tasks;
-}
-
-
 @RealmModel()
-class _RootTasks implements TaskTree {
+class _RootTasks {
   @PrimaryKey()
   late String uid;
   late List<_Task> tasks;
 }
 
 @RealmModel()
-class _Subtasks implements TaskTree {
+class _Subtasks {
   @PrimaryKey()
   late String uid;
   late List<_Task> tasks;
 }
 
 @RealmModel()
-class _SubSubtasks implements TaskTree {
+class _SubSubtasks{
   @PrimaryKey()
   late String uid;
   late List<_Task> tasks;
@@ -47,4 +41,5 @@ class _Task {
   @PrimaryKey()
   late String uid;
   late String name;
+  late int step;
 }

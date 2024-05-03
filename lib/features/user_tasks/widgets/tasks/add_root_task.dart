@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_bloc/tasks_bloc.dart';
+import 'package:meine_wunschliste/domain/models/steps.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/root_tasks_bloc/root_tasks_bloc.dart';
 
 class AddRootTask extends StatefulWidget {
   const AddRootTask({super.key});
@@ -20,7 +21,7 @@ class _AddRootTaskState extends State<AddRootTask> {
 
   @override
   Widget build(BuildContext context) {
-    final tasksBloc = BlocProvider.of<TasksBloc>(context);
+    final tasksBloc = BlocProvider.of<RootTasksBloc>(context);
     return SizedBox(
       height: 50,
       child: IconButton(

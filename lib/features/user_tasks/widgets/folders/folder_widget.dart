@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_bloc/tasks_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/root_tasks_bloc/root_tasks_bloc.dart';
 
 class FolderWidget extends StatelessWidget {
   FolderWidget(
@@ -18,7 +18,7 @@ class FolderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foldersBloc = BlocProvider.of<FoldersBloc>(context);
-    final tasksBloc = BlocProvider.of<TasksBloc>(context);
+    final tasksBloc = BlocProvider.of<RootTasksBloc>(context);
 
     return Container(
       margin: last != true

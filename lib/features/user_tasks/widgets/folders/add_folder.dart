@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_bloc/tasks_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/root_tasks_bloc/root_tasks_bloc.dart';
 
 class AddFolderWidget extends StatefulWidget {
   const AddFolderWidget({super.key});
@@ -13,7 +13,7 @@ class AddFolderWidget extends StatefulWidget {
 class _AddFolderWidgetState extends State<AddFolderWidget> {
   final TextEditingController textController = TextEditingController();
 
-   @override
+  @override
   void dispose() {
     textController.dispose();
     super.dispose();
@@ -22,7 +22,7 @@ class _AddFolderWidgetState extends State<AddFolderWidget> {
   @override
   Widget build(BuildContext context) {
     final foldersBloc = BlocProvider.of<FoldersBloc>(context);
-    final tasksBloc = BlocProvider.of<TasksBloc>(context);
+    final tasksBloc = BlocProvider.of<RootTasksBloc>(context);
     return GestureDetector(
       child: const Icon(Icons.folder_copy_outlined),
       onTap: () {
