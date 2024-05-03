@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/steps.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/root_tasks_bloc/root_tasks_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
 
 class AddRootTask extends StatefulWidget {
   const AddRootTask({super.key});
@@ -21,7 +21,7 @@ class _AddRootTaskState extends State<AddRootTask> {
 
   @override
   Widget build(BuildContext context) {
-    final tasksBloc = BlocProvider.of<RootTasksBloc>(context);
+    final tasksTreeBloc = BlocProvider.of<TasksTreesBloc>(context);
     return SizedBox(
       height: 50,
       child: IconButton(
@@ -48,7 +48,7 @@ class _AddRootTaskState extends State<AddRootTask> {
                     onPressed: () {
                       String itemName = textController.text;
                       if (itemName.isNotEmpty) {
-                        tasksBloc.add(AddRootTaskEvent(name: itemName));
+                        tasksTreeBloc.add(AddTasksTreeEvent(name: itemName));
                       }
                       textController.clear();
                       Navigator.of(context).pop();

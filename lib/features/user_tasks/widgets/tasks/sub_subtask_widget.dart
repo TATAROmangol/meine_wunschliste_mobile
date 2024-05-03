@@ -4,14 +4,15 @@ import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/domain/models/steps.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/tasks/tasks_buttons_bar.dart';
 
-import '../../blocs/sub_subtasks_bloc/sub_subtasks_bloc.dart';
-import '../../blocs/subtasks_bloc/subtasks_bloc.dart';
+import '../../blocs/sub_subtask_bloc/sub_subtask_bloc.dart';
+import '../../blocs/subtask_bloc/subtask_bloc.dart';
 
 class SubSubtaskWidget extends StatefulWidget {
-  SubSubtaskWidget({required this.task,required this.subSubtasksBloc, super.key});
+  SubSubtaskWidget(
+      {required this.task, required this.subSubtasksBloc, super.key});
 
   final Task task;
-  final SubSubtasksBloc subSubtasksBloc;
+  final SubSubtaskBloc subSubtasksBloc;
 
   @override
   _SubSubtaskWidgetState createState() => _SubSubtaskWidgetState();

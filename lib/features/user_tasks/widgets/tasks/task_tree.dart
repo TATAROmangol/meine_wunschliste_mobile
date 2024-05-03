@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/root_tasks_bloc/root_tasks_bloc.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/subtasks_bloc/subtasks_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_trees_bloc/tasks_trees_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
-
-import '../../blocs/sub_subtasks_bloc/sub_subtasks_bloc.dart';
 
 class TaskTreeView extends StatefulWidget {
   @override
@@ -16,19 +14,20 @@ class _TaskTreeViewState extends State<TaskTreeView> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<RootTasksBloc>(context).add(ShowRootTasksEvent());
+    BlocProvider.of<TasksTreesBloc>(context).add(ShowTasksTreesEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    final RootTasksBloc rootTasksBloc = BlocProvider.of<RootTasksBloc>(context);
-    final subtasksBloc = BlocProvider.of<SubtasksBloc>(context);
-    final subSubtasksBloc = BlocProvider.of<SubSubtasksBloc>(context);
+    final tasksTreesBloc = BlocProvider.of<TasksTreesBloc>(context);
+    final rootTasksBloc = BlocProvider.of<RootTaskBloc>(context);
+    final subtasksBloc = BlocProvider.of<SubtaskBloc>(context);
+    final subSubtasksBloc = BlocProvider.of<SubSubtaskBloc>(context);
 
-    return BlocBuilder<RootTasksBloc, RootTasksState>(
+    return BlocBuilder<TasksTreesBloc, TasksTreesState>(
       builder: (context, state) {
         return Flexible(
-          child: state is ShowRootTasksState
+          child: state is ShowTasksTreesState
               ? ReorderableListView.builder(
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
@@ -36,6 +35,7 @@ class _TaskTreeViewState extends State<TaskTreeView> {
                     return RootTaskWidget(
                       key: ValueKey(task.uid),
                       task: task,
+                      rootTasksBloc: rootTasksBloc,
                       subSubtasksBloc: subSubtasksBloc,
                       subtasksBloc: subtasksBloc,
                     );
@@ -48,7 +48,8 @@ class _TaskTreeViewState extends State<TaskTreeView> {
                     final Task topTask = state.tasks.removeAt(oldIndex);
                     state.tasks.insert(newIndex, topTask);
 
-                    rootTasksBloc.add(ChangeOrderRootTaskEvent(tasks: state.tasks));
+                    tasksTreesBloc
+                        .add(ChangeOrderTasksTreesEvent(tasks: state.tasks));
                   },
                   proxyDecorator:
                       (Widget child, int index, Animation<double> animation) {

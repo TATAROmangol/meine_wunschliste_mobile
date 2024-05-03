@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/root_tasks_bloc/root_tasks_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
 
 class AddFolderWidget extends StatefulWidget {
   const AddFolderWidget({super.key});
@@ -22,7 +21,7 @@ class _AddFolderWidgetState extends State<AddFolderWidget> {
   @override
   Widget build(BuildContext context) {
     final foldersBloc = BlocProvider.of<FoldersBloc>(context);
-    final tasksBloc = BlocProvider.of<RootTasksBloc>(context);
+    final tasksTreeBloc = BlocProvider.of<TasksTreesBloc>(context);
     return GestureDetector(
       child: const Icon(Icons.folder_copy_outlined),
       onTap: () {
@@ -50,7 +49,7 @@ class _AddFolderWidgetState extends State<AddFolderWidget> {
                       foldersBloc.add(AddFolderEvent(name: itemName));
                       foldersBloc.stream.listen((state) {
                         if (state is ShowFoldersState) {
-                          tasksBloc.add(ShowRootTasksEvent());
+                          tasksTreeBloc.add(ShowTasksTreesEvent());
                         }
                       });
                     }

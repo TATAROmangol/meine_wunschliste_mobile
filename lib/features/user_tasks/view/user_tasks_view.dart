@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/root_tasks_bloc/root_tasks_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/root_task_bloc/root_task_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_trees_bloc/tasks_trees_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
 
-import '../blocs/sub_subtasks_bloc/sub_subtasks_bloc.dart';
-import '../blocs/subtasks_bloc/subtasks_bloc.dart';
+import '../blocs/sub_subtask_bloc/sub_subtask_bloc.dart';
+import '../blocs/subtask_bloc/subtask_bloc.dart';
 
 class UserTasks extends StatelessWidget {
   UserTasks({super.key});
@@ -13,15 +14,17 @@ class UserTasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foldersBloc = FoldersBloc();
-    final tasksBloc = RootTasksBloc();
-    final subtasksBloc = SubtasksBloc();
-    final subSubtasksBloc = SubSubtasksBloc();
+    final tasksBloc = RootTaskBloc();
+    final subtasksBloc = SubtaskBloc();
+    final subSubtasksBloc = SubSubtaskBloc();
+    final tasksTreeBloc = TasksTreesBloc();
     return MultiBlocProvider(
       providers: [
         BlocProvider<FoldersBloc>(create: (context) => foldersBloc),
-        BlocProvider<RootTasksBloc>(create: (context) => tasksBloc),
-        BlocProvider<SubtasksBloc>(create: (context) => subtasksBloc),
-        BlocProvider<SubSubtasksBloc>(create: (context) => subSubtasksBloc)
+        BlocProvider<RootTaskBloc>(create: (context) => tasksBloc),
+        BlocProvider<SubtaskBloc>(create: (context) => subtasksBloc),
+        BlocProvider<SubSubtaskBloc>(create: (context) => subSubtasksBloc),
+        BlocProvider<TasksTreesBloc>(create: (context) => tasksTreeBloc)
       ],
       child: Scaffold(
         appBar: AppBar(

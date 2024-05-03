@@ -2,22 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/domain/models/steps.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/root_task_bloc/root_task_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/tasks/tasks_buttons_bar.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
 
-import '../../blocs/sub_subtasks_bloc/sub_subtasks_bloc.dart';
-import '../../blocs/subtasks_bloc/subtasks_bloc.dart';
+import '../../blocs/sub_subtask_bloc/sub_subtask_bloc.dart';
+import '../../blocs/subtask_bloc/subtask_bloc.dart';
 
 class RootTaskWidget extends StatefulWidget {
   RootTaskWidget(
       {required this.task,
+      required this.rootTasksBloc,
       required this.subtasksBloc,
       required this.subSubtasksBloc,
       super.key});
 
   final Task task;
-  final SubtasksBloc subtasksBloc;
-  final SubSubtasksBloc subSubtasksBloc;
+  final RootTaskBloc rootTasksBloc;
+  final SubtaskBloc subtasksBloc;
+  final SubSubtaskBloc subSubtasksBloc;
 
   @override
   _RootTaskWidgetState createState() => _RootTaskWidgetState();
