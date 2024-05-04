@@ -20,9 +20,6 @@ class _TaskTreeViewState extends State<TaskTreeView> {
   @override
   Widget build(BuildContext context) {
     final tasksTreesBloc = BlocProvider.of<TasksTreesBloc>(context);
-    final rootTasksBloc = BlocProvider.of<RootTaskBloc>(context);
-    final subtasksBloc = BlocProvider.of<SubtaskBloc>(context);
-    final subSubtasksBloc = BlocProvider.of<SubSubtaskBloc>(context);
 
     return BlocBuilder<TasksTreesBloc, TasksTreesState>(
       builder: (context, state) {
@@ -32,12 +29,12 @@ class _TaskTreeViewState extends State<TaskTreeView> {
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
                     final task = state.tasks[index];
-                    return RootTaskWidget(
+                    return BlocProvider<RootTaskBloc>(
                       key: ValueKey(task.uid),
-                      task: task,
-                      rootTasksBloc: rootTasksBloc,
-                      subSubtasksBloc: subSubtasksBloc,
-                      subtasksBloc: subtasksBloc,
+                      create: (context) => RootTaskBloc(),
+                      child: RootTaskWidget(
+                        task: task,
+                      ),
                     );
                   },
                   itemCount: state.tasks.length,

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/domain/models/steps.dart';
 import 'package:realm/realm.dart';
@@ -84,43 +83,52 @@ class Repository {
 
   Future<void> addTask(Steps step, String parentUid, String name) async {
     var tasks = [Task(Uuid.v4().toString(), name, step.index)];
-    if (step == Steps.rootTask) {
-      realm.write(() {
-        var topTasksRepository = realm.find<RootTasks>(parentUid);
-        if (topTasksRepository != null) {
-          tasks.addAll(topTasksRepository.tasks);
-          realm.delete<RootTasks>(topTasksRepository);
-        }
-        realm.add<RootTasks>(RootTasks(parentUid, tasks: tasks));
-      });
-    } else if (step == Steps.subtask) {
-      realm.write(() {
-        var topTasksRepository = realm.find<Subtasks>(parentUid);
-        if (topTasksRepository != null) {
-          tasks.addAll(topTasksRepository.tasks);
-          realm.delete<Subtasks>(topTasksRepository);
-        }
-        realm.add<Subtasks>(Subtasks(parentUid, tasks: tasks));
-      });
-    } else {
-      realm.write(() {
-        var topTasksRepository = realm.find<SubSubtasks>(parentUid);
-        if (topTasksRepository != null) {
-          tasks.addAll(topTasksRepository.tasks);
-          realm.delete<SubSubtasks>(topTasksRepository);
-        }
-        realm.add<SubSubtasks>(SubSubtasks(parentUid, tasks: tasks));
-      });
-    }
+    step == Steps.rootTask
+        ? realm.write(() {
+            var topTasksRepository = realm.find<RootTasks>(parentUid);
+            if (topTasksRepository != null) {
+              tasks.addAll(topTasksRepository.tasks);
+              realm.delete<RootTasks>(topTasksRepository);
+            }
+            realm.add<RootTasks>(RootTasks(parentUid, tasks: tasks));
+          })
+        : step == Steps.subtask
+            ? realm.write(() {
+                var topTasksRepository = realm.find<Subtasks>(parentUid);
+                if (topTasksRepository != null) {
+                  tasks.addAll(topTasksRepository.tasks);
+                  realm.delete<Subtasks>(topTasksRepository);
+                }
+                realm.add<Subtasks>(Subtasks(parentUid, tasks: tasks));
+              })
+            : realm.write(() {
+                var topTasksRepository = realm.find<SubSubtasks>(parentUid);
+                if (topTasksRepository != null) {
+                  tasks.addAll(topTasksRepository.tasks);
+                  realm.delete<SubSubtasks>(topTasksRepository);
+                }
+                realm.add<SubSubtasks>(SubSubtasks(parentUid, tasks: tasks));
+              });
   }
 
-  Future<void> changeRootTasksOrder(List<Task> tasks) async {
-    var activeFolder = await getActiveFolder();
-    var uid = activeFolder!.uid;
-    realm.write(() {
-      var topTasksRepository = realm.find<RootTasks>(uid);
-      realm.delete<RootTasks>(topTasksRepository!);
-      realm.add<RootTasks>(RootTasks(uid, tasks: tasks));
-    });
+  Future<void> changeTasksOrder(
+      List<Task> tasks, Steps step, String parentUid) async {
+    step == Steps.rootTask
+        ? realm.write(() {
+            var topTasksRepository = realm.find<RootTasks>(parentUid);
+            realm.delete<RootTasks>(topTasksRepository!);
+            realm.add<RootTasks>(RootTasks(parentUid, tasks: tasks));
+          })
+        : step == Steps.subtask
+            ? realm.write(() {
+                var topTasksRepository = realm.find<Subtasks>(parentUid);
+                realm.delete<Subtasks>(topTasksRepository!);
+                realm.add<Subtasks>(Subtasks(parentUid, tasks: tasks));
+              })
+            : realm.write(() {
+                var topTasksRepository = realm.find<SubSubtasks>(parentUid);
+                realm.delete<SubSubtasks>(topTasksRepository!);
+                realm.add<SubSubtasks>(SubSubtasks(parentUid, tasks: tasks));
+              });
   }
 }

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meine_wunschliste/domain/models/steps.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
 
-class AddRootTask extends StatefulWidget {
-  const AddRootTask({super.key});
+class AddTasksTree extends StatefulWidget {
+  const AddTasksTree({super.key});
 
   @override
-  _AddRootTaskState createState() => _AddRootTaskState();
+  _AddTasksTreeState createState() => _AddTasksTreeState();
 }
 
-class _AddRootTaskState extends State<AddRootTask> {
+class _AddTasksTreeState extends State<AddTasksTree> {
   final TextEditingController textController = TextEditingController();
 
   @override

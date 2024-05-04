@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:meine_wunschliste/domain/models/models.dart';
+import 'package:meine_wunschliste/features/user_tasks/widgets/tasks/tasks.dart';
 
 class TasksButtonsBar extends StatelessWidget {
-  const TasksButtonsBar({super.key});
+  const TasksButtonsBar({required this.bloc, required this.task ,super.key});
+
+  final bloc;
+  final Task task;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class TasksButtonsBar extends StatelessWidget {
       height: screenSize.height * 0.05,
       width: screenSize.width * 0.5,
       child: Row(children: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+        AddTaskButton(bloc: bloc, parentUid: task.uid),
         IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
         IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
         IconButton(onPressed: () {}, icon: Icon(Icons.comment)),

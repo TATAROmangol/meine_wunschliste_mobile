@@ -22,7 +22,9 @@ class TasksTreesBloc extends Bloc<TasksTreesEvent, TasksTreesState> {
       add(ShowTasksTreesEvent());
     });
     on<ChangeOrderTasksTreesEvent>((event, emit) async {
-      repository.changeRootTasksOrder(event.tasks);
+      var activeFolder = await repository.getActiveFolder();
+      repository.changeTasksOrder(
+          event.tasks, Steps.rootTask, activeFolder!.uid);
       add(ShowTasksTreesEvent());
     });
   }

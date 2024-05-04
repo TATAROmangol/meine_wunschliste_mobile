@@ -4,7 +4,7 @@ class SubtaskState {}
 
 class SubtaskStateInitial extends SubtaskState {}
 
-class ShowSubtaskState extends SubtaskState {
-  ShowSubtaskState({required this.tasks});
-  final List<Task> tasks;
+class ShowSubtaskChildrenState extends SubtaskState {
+  ShowSubtaskChildrenState({required this.childrens});
+  final List<Task> childrens;
 }
