@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/root_task_bloc/root_task_bloc.dart';
 
 class AddTaskButton extends StatefulWidget {
-  const AddTaskButton({required this.bloc, required this.parentUid, super.key});
+  const AddTaskButton({required this.bloc, required this.task, super.key});
 
   final bloc;
-  final String parentUid;
+  final Task task;
 
   @override
   _AddTaskButtonState createState() => _AddTaskButtonState();
@@ -51,10 +52,9 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                       if (itemName.isNotEmpty) {
                         widget.bloc is RootTaskBloc
                             ? widget.bloc.add(AddRootTaskChildEvent(
-                                name: itemName, parentUid: widget.parentUid))
+                                name: itemName, parentUid: widget.task.uid))
                             : widget.bloc.add(AddSubtaskChildEvent(
-                                    name: itemName,
-                                    parentUid: widget.parentUid));
+                                name: itemName, parentUid: widget.task.uid));
                       }
                       textController.clear();
                       Navigator.of(context).pop();

@@ -14,7 +14,8 @@ class TasksTreesBloc extends Bloc<TasksTreesEvent, TasksTreesState> {
       final List<Task> tasks = acriveFolder == null
           ? []
           : await repository.getTasks(Steps.rootTask, acriveFolder.uid);
-      emit(ShowTasksTreesState(tasks: tasks));
+      emit(ShowTasksTreesState(
+          activeChildUid: event.activeChildUid, children: tasks));
     });
     on<AddTasksTreeEvent>((event, emit) async {
       var activeFolder = await repository.getActiveFolder();
@@ -24,7 +25,12 @@ class TasksTreesBloc extends Bloc<TasksTreesEvent, TasksTreesState> {
     on<ChangeOrderTasksTreesEvent>((event, emit) async {
       var activeFolder = await repository.getActiveFolder();
       repository.changeTasksOrder(
-          event.tasks, Steps.rootTask, activeFolder!.uid);
+          event.children, Steps.rootTask, activeFolder!.uid);
+      add(ShowTasksTreesEvent());
+    });
+    on<DeleteTasksTreeChildEvent>((event, emit) async {
+      var activeFolder = await repository.getActiveFolder();
+      repository.deleteTask(activeFolder!.uid, Steps.rootTask, event.task);
       add(ShowTasksTreesEvent());
     });
   }

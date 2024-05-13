@@ -30,7 +30,7 @@ class _Subtasks {
 }
 
 @RealmModel()
-class _SubSubtasks{
+class _SubSubtasks {
   @PrimaryKey()
   late String uid;
   late List<_Task> tasks;
@@ -41,5 +41,5 @@ class _Task {
   @PrimaryKey()
   late String uid;
   late String name;
-  late int step;
+  late String? comment;
 }

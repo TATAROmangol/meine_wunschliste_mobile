@@ -6,10 +6,10 @@ class AddTasksTree extends StatefulWidget {
   const AddTasksTree({super.key});
 
   @override
-  _AddTasksTreeState createState() => _AddTasksTreeState();
+  AddTasksTreeState createState() => AddTasksTreeState();
 }
 
-class _AddTasksTreeState extends State<AddTasksTree> {
+class AddTasksTreeState extends State<AddTasksTree> {
   final TextEditingController textController = TextEditingController();
 
   @override
@@ -20,7 +20,8 @@ class _AddTasksTreeState extends State<AddTasksTree> {
 
   @override
   Widget build(BuildContext context) {
-    final tasksTreeBloc = BlocProvider.of<TasksTreesBloc>(context);
+    final TasksTreesBloc tasksTreeBloc =
+        BlocProvider.of<TasksTreesBloc>(context);
     return SizedBox(
       height: 50,
       child: IconButton(

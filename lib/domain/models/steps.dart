@@ -1,1 +1,5 @@
-enum Steps { rootTask, subtask, subSubtask }
+enum Steps {
+  rootTask,
+  subtask,
+  subSubtask,
+}

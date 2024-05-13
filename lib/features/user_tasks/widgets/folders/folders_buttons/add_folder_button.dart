@@ -6,10 +6,10 @@ class AddFolderWidget extends StatefulWidget {
   const AddFolderWidget({super.key});
 
   @override
-  _AddFolderWidgetState createState() => _AddFolderWidgetState();
+  AddFolderWidgetState createState() => AddFolderWidgetState();
 }
 
-class _AddFolderWidgetState extends State<AddFolderWidget> {
+class AddFolderWidgetState extends State<AddFolderWidget> {
   final TextEditingController textController = TextEditingController();
 
   @override

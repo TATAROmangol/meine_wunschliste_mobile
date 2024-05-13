@@ -2,19 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_trees_bloc/tasks_trees_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
 
 class TaskTreeView extends StatefulWidget {
   @override
-  _TaskTreeViewState createState() => _TaskTreeViewState();
+  TaskTreeViewState createState() => TaskTreeViewState();
 }
 
-class _TaskTreeViewState extends State<TaskTreeView> {
+class TaskTreeViewState extends State<TaskTreeView> {
   @override
   void initState() {
     super.initState();
     BlocProvider.of<TasksTreesBloc>(context).add(ShowTasksTreesEvent());
+  }
+
+  List<Widget> getRootTasksWidgets(
+      ShowTasksTreesState state, TasksTreesBloc tasksTreesBloc) {
+    return state.children.map(
+      (e) {
+        var isActive = state.activeChildUid == e.uid;
+        return BlocProvider<RootTaskBloc>(
+          key: ValueKey(e.uid),
+          create: (context) => RootTaskBloc(),
+          child: BlocBuilder<RootTaskBloc, RootTaskState>(
+            key: ValueKey(e.uid),
+            builder: (context, state) {
+              return RootTaskWidget(
+                task: e,
+                isActive: isActive,
+                currentBloc: BlocProvider.of<RootTaskBloc>(context),
+                parentBloc: tasksTreesBloc,
+              );
+            },
+          ),
+        );
+      },
+    ).toList();
   }
 
   @override
@@ -22,43 +45,44 @@ class _TaskTreeViewState extends State<TaskTreeView> {
     final tasksTreesBloc = BlocProvider.of<TasksTreesBloc>(context);
 
     return BlocBuilder<TasksTreesBloc, TasksTreesState>(
+      bloc: tasksTreesBloc,
       builder: (context, state) {
-        return Flexible(
-          child: state is ShowTasksTreesState
-              ? ReorderableListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    final task = state.tasks[index];
-                    return BlocProvider<RootTaskBloc>(
-                      key: ValueKey(task.uid),
-                      create: (context) => RootTaskBloc(),
-                      child: RootTaskWidget(
-                        task: task,
-                      ),
-                    );
-                  },
-                  itemCount: state.tasks.length,
-                  onReorder: (oldIndex, newIndex) {
-                    if (newIndex > oldIndex) {
-                      newIndex -= 1;
-                    }
-                    final Task topTask = state.tasks.removeAt(oldIndex);
-                    state.tasks.insert(newIndex, topTask);
+        if( state is ShowTasksTreesState)
+        {
+        final children = getRootTasksWidgets(state, tasksTreesBloc);
+            return Flexible(
+                child: state.activeChildUid == ''
+                    ? ReorderableListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, index) {
+                          return children[index];
+                        },
+                        itemCount: state.children.length,
+                        onReorder: (oldIndex, newIndex) {
+                          if (newIndex > oldIndex) {
+                            newIndex -= 1;
+                          }
+                          final Task topTask = state.children.removeAt(oldIndex);
+                          state.children.insert(newIndex, topTask);
 
-                    tasksTreesBloc
-                        .add(ChangeOrderTasksTreesEvent(tasks: state.tasks));
-                  },
-                  proxyDecorator:
-                      (Widget child, int index, Animation<double> animation) {
-                    return Material(
-                      color: Colors.transparent,
-                      child: child,
-                    );
-                  },
-                )
-              : Container(
-                  height: 100, color: Colors.white, child: Text('hello')),
-        );
+                          tasksTreesBloc.add(ChangeOrderTasksTreesEvent(
+                              children: state.children));
+                        },
+                        proxyDecorator: (Widget child, int index,
+                            Animation<double> animation) {
+                          return Material(
+                            color: Colors.transparent,
+                            child: child,
+                          );
+                        },
+                      )
+                    : ListView(
+                        children: children
+                      ));
+        } else{
+          return Container();
+        }
+            
       },
     );
   }

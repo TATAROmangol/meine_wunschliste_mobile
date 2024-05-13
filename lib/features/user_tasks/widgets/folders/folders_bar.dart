@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/folders_bloc/folders_bloc.dart';
+import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_trees_bloc/tasks_trees_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/folders/folders.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 
@@ -22,6 +23,8 @@ class _FolderBarState extends State<FolderBar> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final FoldersBloc foldersBloc = BlocProvider.of<FoldersBloc>(context);
+    final TasksTreesBloc tasksTreesBloc =
+        BlocProvider.of<TasksTreesBloc>(context);
 
     return BlocBuilder<FoldersBloc, FoldersState>(builder: (context, state) {
       if (state is ShowFoldersState) {
@@ -33,11 +36,17 @@ class _FolderBarState extends State<FolderBar> {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final folder = folders[index];
-              return FolderWidget(
+              return MultiBlocProvider(
+                  providers: [
+                    BlocProvider<FoldersBloc>(create: (context) => foldersBloc),
+                    BlocProvider<TasksTreesBloc>(
+                        create: (context) => tasksTreesBloc)
+                  ],
                   key: ValueKey(folder.uid),
-                  folder: folder,
-                  activeFolder: state.activeFolder,
-                  last: index == folders.length - 1);
+                  child: FolderWidget(
+                      folder: folder,
+                      activeFolder: state.activeFolder,
+                      last: index == folders.length - 1));
             },
             itemCount: folders.length,
             onReorder: (oldIndex, newIndex) {

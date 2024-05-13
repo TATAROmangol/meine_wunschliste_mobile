@@ -5,16 +5,16 @@ import 'package:meine_wunschliste/features/user_tasks/blocs/tasks_trees_bloc/tas
 import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
 
 class UserTasks extends StatelessWidget {
-  UserTasks({super.key});
+  const UserTasks({super.key});
 
   @override
   Widget build(BuildContext context) {
     final foldersBloc = FoldersBloc();
-    final tasksTreeBloc = TasksTreesBloc();
+    final tasksTreesBloc = TasksTreesBloc();
     return MultiBlocProvider(
       providers: [
         BlocProvider<FoldersBloc>(create: (context) => foldersBloc),
-        BlocProvider<TasksTreesBloc>(create: (context) => tasksTreeBloc)
+        BlocProvider<TasksTreesBloc>(create: (context) => tasksTreesBloc)
       ],
       child: Scaffold(
         appBar: AppBar(

@@ -10,13 +10,23 @@ part 'subtask_state.dart';
 class SubtaskBloc extends Bloc<SubtaskEvent, SubtaskState> {
   SubtaskBloc() : super(SubtaskStateInitial()) {
     on<ShowSubtaskChildrenEvent>((event, emit) async {
-      final tasks =
+      final children =
           await repository.getTasks(Steps.subSubtask, event.parentUid);
-      emit(ShowSubtaskChildrenState(childrens: tasks));
+
+      emit(ShowSubtaskChildrenState(
+          children: children, activeChildUid: event.activeChildUid));
+    });
+    on<CloseSubtaskChildEvent>((event, emit) async {
+      emit(CloseSubtaskChildrenState());
     });
     on<AddSubtaskChildEvent>((event, emit) async {
       repository.addTask(Steps.subSubtask, event.parentUid, event.name);
       add(ShowSubtaskChildrenEvent(parentUid: event.parentUid));
+    });
+    on<EndChangeSubtaskOrderChildrenEvent>((event, emit) async {
+      repository.changeTasksOrder(
+          event.children, Steps.subSubtask, event.parentUid);
+      //add(ShowSubtaskChildrenEvent(parentUid: event.parentUid));
     });
   }
   final Repository repository = GetIt.I.get<Repository>();

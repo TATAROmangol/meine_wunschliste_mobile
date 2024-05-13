@@ -2,7 +2,10 @@ part of 'tasks_trees_bloc.dart';
 
 class TasksTreesEvent {}
 
-class ShowTasksTreesEvent extends TasksTreesEvent {}
+class ShowTasksTreesEvent extends TasksTreesEvent {
+  ShowTasksTreesEvent({this.activeChildUid = ''});
+  final String activeChildUid;
+}
 
 class AddTasksTreeEvent extends TasksTreesEvent {
   AddTasksTreeEvent({required this.name});
@@ -10,6 +13,11 @@ class AddTasksTreeEvent extends TasksTreesEvent {
 }
 
 class ChangeOrderTasksTreesEvent extends TasksTreesEvent {
-  ChangeOrderTasksTreesEvent({required this.tasks});
-  final List<Task> tasks;
+  ChangeOrderTasksTreesEvent({required this.children});
+  final List<Task> children;
+}
+
+class DeleteTasksTreeChildEvent extends TasksTreesEvent {
+  DeleteTasksTreeChildEvent({required this.task});
+  final Task task;
 }

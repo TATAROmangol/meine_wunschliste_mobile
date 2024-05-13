@@ -4,8 +4,18 @@ class TasksTreesState {}
 
 class TasksTreeStatesInitial extends TasksTreesState {}
 
-class ShowTasksTreesState extends TasksTreesState {
-  ShowTasksTreesState({required this.tasks});
+class CloseChildrenTasksTreesState extends TasksTreesState{
+  CloseChildrenTasksTreesState({required this.children});
+  final List<Task> children;
+}
 
-  final List<Task> tasks;
+class OrderTasksTreesState extends TasksTreesState{
+  OrderTasksTreesState({required this.children});
+  final List<Task> children;
+}
+
+class ShowTasksTreesState extends TasksTreesState {
+  ShowTasksTreesState({required this.activeChildUid, required this.children});
+  final String activeChildUid;
+  final List<Task> children;
 }

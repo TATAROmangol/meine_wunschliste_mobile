@@ -44,7 +44,7 @@ void main() async {
 
   runApp(MaterialApp(
     home: (FirebaseAuth.instance.currentUser != null)
-        ? UserTasks()
+        ? const UserTasks()
         : const Auth(),
   ));
 }

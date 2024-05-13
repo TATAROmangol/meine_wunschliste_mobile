@@ -340,12 +340,12 @@ class SubSubtasks extends _SubSubtasks
 class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   Task(
     String uid,
-    String name,
-    int step,
-  ) {
+    String name, {
+    String? comment,
+  }) {
     RealmObjectBase.set(this, 'uid', uid);
     RealmObjectBase.set(this, 'name', name);
-    RealmObjectBase.set(this, 'step', step);
+    RealmObjectBase.set(this, 'comment', comment);
   }
 
   Task._();
@@ -361,9 +361,10 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  int get step => RealmObjectBase.get<int>(this, 'step') as int;
+  String? get comment =>
+      RealmObjectBase.get<String>(this, 'comment') as String?;
   @override
-  set step(int value) => RealmObjectBase.set(this, 'step', value);
+  set comment(String? value) => RealmObjectBase.set(this, 'comment', value);
 
   @override
   Stream<RealmObjectChanges<Task>> get changes =>
@@ -376,7 +377,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     return <String, dynamic>{
       'uid': uid.toEJson(),
       'name': name.toEJson(),
-      'step': step.toEJson(),
+      'comment': comment.toEJson(),
     };
   }
 
@@ -386,12 +387,12 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
       {
         'uid': EJsonValue uid,
         'name': EJsonValue name,
-        'step': EJsonValue step,
+        'comment': EJsonValue comment,
       } =>
         Task(
           fromEJson(uid),
           fromEJson(name),
-          fromEJson(step),
+          comment: fromEJson(comment),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -403,7 +404,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     return SchemaObject(ObjectType.realmObject, Task, 'Task', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('step', RealmPropertyType.int),
+      SchemaProperty('comment', RealmPropertyType.string, optional: true),
     ]);
   }();
 
