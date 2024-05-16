@@ -48,7 +48,7 @@ class AddTasksTreeState extends State<AddTasksTree> {
                     onPressed: () {
                       String itemName = textController.text;
                       if (itemName.isNotEmpty) {
-                        tasksTreeBloc.add(AddTasksTreeEvent(name: itemName));
+                        tasksTreeBloc.add(AddTasksTreeEvent(name: itemName, comment: ''));
                       }
                       textController.clear();
                       Navigator.of(context).pop();

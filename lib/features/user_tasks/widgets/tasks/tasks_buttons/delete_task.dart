@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
 
 class DeleteTaskButton extends StatefulWidget {
-  const DeleteTaskButton({required this.bloc, required this.task, super.key});
+  const DeleteTaskButton(
+      {required this.parentBloc,
+      required this.task,
+      required this.parentUid,
+      super.key});
 
-  final bloc;
+  final Bloc parentBloc;
   final Task task;
+  final String parentUid;
 
   @override
   DeleteTaskButtonState createState() => DeleteTaskButtonState();
@@ -34,8 +40,16 @@ class DeleteTaskButtonState extends State<DeleteTaskButton> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      widget.bloc
-                          .add(DeleteTasksTreeChildEvent(task: widget.task));
+                      widget.parentBloc is TasksTreesBloc
+                          ? widget.parentBloc
+                              .add(DeleteTasksTreeChildEvent(task: widget.task))
+                          : widget.parentBloc is RootTaskBloc
+                              ? widget.parentBloc.add(DeleteRootTaskChildEvent(
+                                  parentUid: widget.parentUid,
+                                  task: widget.task))
+                              : widget.parentBloc.add(DeleteSubtaskChildEvent(
+                                  parentUid: widget.parentUid,
+                                  task: widget.task));
                       Navigator.of(context).pop();
                     },
                     child: const Text('Удалить'),

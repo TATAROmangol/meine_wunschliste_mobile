@@ -9,6 +9,14 @@ class AddFolderEvent extends FoldersEvent {
   final String name;
 }
 
+class DeleteActiveFolderEvent extends FoldersEvent {
+}
+
+class RenameActiveFolderEvent extends FoldersEvent {
+  RenameActiveFolderEvent({required this.name});
+  final String name;
+}
+
 class ChangeOrderFolderEvent extends FoldersEvent {
   ChangeOrderFolderEvent({required this.folders});
 

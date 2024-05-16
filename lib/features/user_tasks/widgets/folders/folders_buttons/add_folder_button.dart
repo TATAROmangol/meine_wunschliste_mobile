@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
 
-class AddFolderWidget extends StatefulWidget {
-  const AddFolderWidget({super.key});
+class AddFolderButton extends StatefulWidget {
+  const AddFolderButton({super.key});
 
   @override
-  AddFolderWidgetState createState() => AddFolderWidgetState();
+  AddFolderButtonState createState() => AddFolderButtonState();
 }
 
-class AddFolderWidgetState extends State<AddFolderWidget> {
+class AddFolderButtonState extends State<AddFolderButton> {
   final TextEditingController textController = TextEditingController();
 
   @override

@@ -340,9 +340,9 @@ class SubSubtasks extends _SubSubtasks
 class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   Task(
     String uid,
-    String name, {
-    String? comment,
-  }) {
+    String name,
+    String comment,
+  ) {
     RealmObjectBase.set(this, 'uid', uid);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'comment', comment);
@@ -361,10 +361,9 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  String? get comment =>
-      RealmObjectBase.get<String>(this, 'comment') as String?;
+  String get comment => RealmObjectBase.get<String>(this, 'comment') as String;
   @override
-  set comment(String? value) => RealmObjectBase.set(this, 'comment', value);
+  set comment(String value) => RealmObjectBase.set(this, 'comment', value);
 
   @override
   Stream<RealmObjectChanges<Task>> get changes =>
@@ -392,7 +391,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
         Task(
           fromEJson(uid),
           fromEJson(name),
-          comment: fromEJson(comment),
+          fromEJson(comment),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -404,7 +403,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     return SchemaObject(ObjectType.realmObject, Task, 'Task', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('comment', RealmPropertyType.string, optional: true),
+      SchemaProperty('comment', RealmPropertyType.string),
     ]);
   }();
 

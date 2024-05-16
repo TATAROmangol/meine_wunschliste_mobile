@@ -8,9 +8,7 @@ part 'sub_subtask_state.dart';
 
 class SubSubtaskBloc extends Bloc<SubSubtaskEvent, SubSubtaskState> {
   SubSubtaskBloc() : super(SubSubtaskStateInitial()) {
-    on<DeleteSubSubtaskEvent>((event, emit) async {
-      
-    });
+    
   }
   final Repository repository = GetIt.I.get<Repository>();
 }

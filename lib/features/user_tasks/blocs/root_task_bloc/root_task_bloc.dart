@@ -21,7 +21,8 @@ class RootTaskBloc extends Bloc<RootTaskEvent, RootTaskState> {
       emit(CloseRootTaskChildrenState());
     });
     on<AddRootTaskChildEvent>((event, emit) async {
-      repository.addTask(Steps.subtask, event.parentUid, event.name);
+      repository.addTask(
+          Steps.subtask, event.parentUid, event.name, event.comment);
       add(ShowRootTaskChildrenEvent(parentUid: event.parentUid));
     });
     on<EndChangeRootTaskOrderChildrenEvent>((event, emit) async {
@@ -29,11 +30,15 @@ class RootTaskBloc extends Bloc<RootTaskEvent, RootTaskState> {
           event.children, Steps.subtask, event.parentUid);
       add(ShowRootTaskChildrenEvent(parentUid: event.parentUid));
     });
-    on<DeleteRootTaskEvent>((event, emit) async {
-      repository.deleteTask(event.parentUid, Steps.subSubtask, event.task);
+    on<DeleteRootTaskChildEvent>((event, emit) async {
+      repository.deleteTask(event.parentUid, Steps.subtask, event.task);
       add(ShowRootTaskChildrenEvent(parentUid: event.parentUid));
     });
-    on<RenameTaskEvent>((event, emit) async {});
+    on<CorrectingRootTaskChildEvent>((event, emit) async {
+      repository.correctingTask(event.parentUid, Steps.subtask, event.task,
+          event.name, event.comment);
+      add(ShowRootTaskChildrenEvent(parentUid: event.parentUid));
+    });
   }
   final Repository repository = GetIt.I.get<Repository>();
 }

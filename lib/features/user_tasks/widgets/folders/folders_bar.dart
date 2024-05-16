@@ -36,16 +36,20 @@ class _FolderBarState extends State<FolderBar> {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final folder = folders[index];
+              final isActive = state.activeFolder == null
+                  ? false
+                  : state.activeFolder == folder
+                      ? true
+                      : false;
               return MultiBlocProvider(
                   providers: [
-                    BlocProvider<FoldersBloc>(create: (context) => foldersBloc),
-                    BlocProvider<TasksTreesBloc>(
-                        create: (context) => tasksTreesBloc)
+                    BlocProvider.value(value: foldersBloc),
+                    BlocProvider.value(value: tasksTreesBloc),
                   ],
                   key: ValueKey(folder.uid),
                   child: FolderWidget(
                       folder: folder,
-                      activeFolder: state.activeFolder,
+                      isActive: isActive,
                       last: index == folders.length - 1));
             },
             itemCount: folders.length,

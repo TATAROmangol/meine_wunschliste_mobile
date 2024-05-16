@@ -15,7 +15,10 @@ class OrderTasksTreesState extends TasksTreesState{
 }
 
 class ShowTasksTreesState extends TasksTreesState {
-  ShowTasksTreesState({required this.activeChildUid, required this.children});
-  final String activeChildUid;
+  ShowTasksTreesState({required this.children,
+      required this.parentUid,
+      required this.activeChildUid});
   final List<Task> children;
+  final String parentUid;
+  final String activeChildUid;
 }

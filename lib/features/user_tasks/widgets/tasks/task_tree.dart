@@ -5,6 +5,8 @@ import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
 
 class TaskTreeView extends StatefulWidget {
+  const TaskTreeView({super.key});
+
   @override
   TaskTreeViewState createState() => TaskTreeViewState();
 }
@@ -21,6 +23,7 @@ class TaskTreeViewState extends State<TaskTreeView> {
     return state.children.map(
       (e) {
         var isActive = state.activeChildUid == e.uid;
+        var parentUid = state.parentUid;
         return BlocProvider<RootTaskBloc>(
           key: ValueKey(e.uid),
           create: (context) => RootTaskBloc(),
@@ -29,6 +32,7 @@ class TaskTreeViewState extends State<TaskTreeView> {
             builder: (context, state) {
               return RootTaskWidget(
                 task: e,
+                parentUid: parentUid,
                 isActive: isActive,
                 currentBloc: BlocProvider.of<RootTaskBloc>(context),
                 parentBloc: tasksTreesBloc,

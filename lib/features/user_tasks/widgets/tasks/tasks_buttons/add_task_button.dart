@@ -1,29 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/root_task_bloc/root_task_bloc.dart';
 
-class AddTaskButton extends StatefulWidget {
-  const AddTaskButton({required this.bloc, required this.task, super.key});
+class AddChildTaskButton extends StatefulWidget {
+  const AddChildTaskButton(
+      {required this.currentBloc, required this.task, super.key});
 
-  final bloc;
+  final Bloc currentBloc;
   final Task task;
 
   @override
-  _AddTaskButtonState createState() => _AddTaskButtonState();
+  AddChildTaskButtonState createState() => AddChildTaskButtonState();
 }
 
-class _AddTaskButtonState extends State<AddTaskButton> {
-  final TextEditingController textController = TextEditingController();
+class AddChildTaskButtonState extends State<AddChildTaskButton> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController commentController = TextEditingController();
 
   @override
   void dispose() {
-    textController.dispose();
+    nameController.dispose();
+    commentController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
     return SizedBox(
       height: 50,
       child: IconButton(
@@ -34,10 +38,23 @@ class _AddTaskButtonState extends State<AddTaskButton> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Добавить Задачу'),
-                content: TextField(
-                  controller: textController,
-                  decoration:
-                      const InputDecoration(labelText: 'Введите название'),
+                content: SizedBox(
+                  width: screenSize.width * 0.8,
+                  height: screenSize.width * 0.8,
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: nameController,
+                        decoration: const InputDecoration(
+                            labelText: 'Введите название'),
+                      ),
+                      TextField(
+                        controller: commentController,
+                        decoration: const InputDecoration(
+                            labelText: 'Введите описание'),
+                      ),
+                    ],
+                  ),
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -48,15 +65,21 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      String itemName = textController.text;
-                      if (itemName.isNotEmpty) {
-                        widget.bloc is RootTaskBloc
-                            ? widget.bloc.add(AddRootTaskChildEvent(
-                                name: itemName, parentUid: widget.task.uid))
-                            : widget.bloc.add(AddSubtaskChildEvent(
-                                name: itemName, parentUid: widget.task.uid));
+                      String taskName = nameController.text;
+                      String taskComment = commentController.text;
+                      if (taskName.isNotEmpty) {
+                        widget.currentBloc is RootTaskBloc
+                            ? widget.currentBloc.add(AddRootTaskChildEvent(
+                                name: taskName,
+                                comment: taskComment,
+                                parentUid: widget.task.uid))
+                            : widget.currentBloc.add(AddSubtaskChildEvent(
+                                name: taskName,
+                                comment: taskComment,
+                                parentUid: widget.task.uid));
                       }
-                      textController.clear();
+                      nameController.clear();
+                      commentController.clear();
                       Navigator.of(context).pop();
                     },
                     child: const Text('Добавить'),

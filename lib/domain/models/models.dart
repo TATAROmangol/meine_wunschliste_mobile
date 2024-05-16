@@ -41,5 +41,5 @@ class _Task {
   @PrimaryKey()
   late String uid;
   late String name;
-  late String? comment;
+  late String comment;
 }

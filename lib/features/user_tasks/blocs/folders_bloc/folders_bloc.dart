@@ -31,6 +31,16 @@ class FoldersBloc extends Bloc<FoldersEvent, FoldersState> {
       repository.changeActiveFolder(event.folder);
       add(ShowFoldersEvent());
     });
+
+    on<DeleteActiveFolderEvent>((event, emit) async {
+      repository.deleteActiveFolder();
+      add(ShowFoldersEvent());
+    });
+
+    on<RenameActiveFolderEvent>((event, emit) async {
+      repository.renameActiveFolder(event.name);
+      add(ShowFoldersEvent());
+    });
   }
 
   final Repository repository = GetIt.I.get<Repository>();

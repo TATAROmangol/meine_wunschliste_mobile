@@ -11,6 +11,7 @@ class UserTasks extends StatelessWidget {
   Widget build(BuildContext context) {
     final foldersBloc = FoldersBloc();
     final tasksTreesBloc = TasksTreesBloc();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<FoldersBloc>(create: (context) => foldersBloc),
@@ -19,12 +20,7 @@ class UserTasks extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFFF9648),
-          title: const Text('Meine Wunschliste'),
-          leading: GestureDetector(
-            child: const Icon(Icons.arrow_back),
-            onTap: () {},
-          ),
-          actions: const [AddFolderWidget()],
+          title: const Text('Мои мечты'),
         ),
         body: Container(
           decoration: const BoxDecoration(
@@ -33,11 +29,11 @@ class UserTasks extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          child: Column(
+          child: const Column(
             children: <Widget>[
-              const FolderBar(),
+              FolderBar(),
               TaskTreeView(),
-              const AddTasksTree(),
+              AddTasksTree(),
             ],
           ),
         ),

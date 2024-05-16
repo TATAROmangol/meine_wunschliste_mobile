@@ -3,18 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
 
-class ChangeTasksOrderButton extends StatefulWidget {
-  const ChangeTasksOrderButton(
-      {required this.task, required this.bloc, super.key});
+class ChangeChildrenTasksOrderButton extends StatefulWidget {
+  const ChangeChildrenTasksOrderButton(
+      {required this.task, required this.currentBloc, super.key});
 
   final Task task;
-  final Bloc bloc;
+  final Bloc currentBloc;
 
   @override
-  ChangeTasksOrderButtonState createState() => ChangeTasksOrderButtonState();
+  ChangeChildrenTasksOrderButtonState createState() =>
+      ChangeChildrenTasksOrderButtonState();
 }
 
-class ChangeTasksOrderButtonState extends State<ChangeTasksOrderButton> {
+class ChangeChildrenTasksOrderButtonState
+    extends State<ChangeChildrenTasksOrderButton> {
   final TextEditingController textController = TextEditingController();
 
   @override
@@ -34,19 +36,22 @@ class ChangeTasksOrderButtonState extends State<ChangeTasksOrderButton> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              
               return AlertDialog(
                   title: Container(
                       child: Row(children: [
                     IconButton(
                         onPressed: () {
-                          widget.bloc is RootTaskBloc
-                          ? widget.bloc.add(EndChangeRootTaskOrderChildrenEvent(
-                              children: widget.bloc.state.children,
-                              parentUid: widget.task.uid))
-                          :widget.bloc.add(EndChangeSubtaskOrderChildrenEvent(
-                              children: widget.bloc.state.children,
-                              parentUid: widget.task.uid));
+                          widget.currentBloc is RootTaskBloc
+                              ? widget.currentBloc.add(
+                                  EndChangeRootTaskOrderChildrenEvent(
+                                      children:
+                                          widget.currentBloc.state.children,
+                                      parentUid: widget.task.uid))
+                              : widget.currentBloc.add(
+                                  EndChangeSubtaskOrderChildrenEvent(
+                                      children:
+                                          widget.currentBloc.state.children,
+                                      parentUid: widget.task.uid));
                           Navigator.of(context).pop();
                         },
                         icon: const Icon(Icons.edit_note)),
@@ -62,7 +67,7 @@ class ChangeTasksOrderButtonState extends State<ChangeTasksOrderButton> {
                     child: ReorderableListView.builder(
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
-                        final task = widget.bloc.state.children[index];
+                        final task = widget.currentBloc.state.children[index];
                         return Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
@@ -76,14 +81,15 @@ class ChangeTasksOrderButtonState extends State<ChangeTasksOrderButton> {
                           child: Text(task.name),
                         );
                       },
-                      itemCount: widget.bloc.state.children.length,
+                      itemCount: widget.currentBloc.state.children.length,
                       onReorder: (oldIndex, newIndex) {
                         if (newIndex > oldIndex) {
                           newIndex -= 1;
                         }
-                        final Task topTask =
-                            widget.bloc.state.children.removeAt(oldIndex);
-                        widget.bloc.state.children.insert(newIndex, topTask);
+                        final Task topTask = widget.currentBloc.state.children
+                            .removeAt(oldIndex);
+                        widget.currentBloc.state.children
+                            .insert(newIndex, topTask);
                       },
                       proxyDecorator: (Widget child, int index,
                           Animation<double> animation) {

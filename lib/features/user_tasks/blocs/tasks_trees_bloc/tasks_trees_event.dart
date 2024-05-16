@@ -8,8 +8,22 @@ class ShowTasksTreesEvent extends TasksTreesEvent {
 }
 
 class AddTasksTreeEvent extends TasksTreesEvent {
-  AddTasksTreeEvent({required this.name});
+  AddTasksTreeEvent({required this.name, required this.comment});
   final String name;
+  final String comment;
+}
+
+class CorrectingTasksTreeChildEvent extends TasksTreesEvent {
+  CorrectingTasksTreeChildEvent({
+    required this.name,
+    required this.comment,
+    required this.task,
+    required this.parentUid,
+  });
+  final String name;
+  final String comment;
+  final Task task;
+  final String parentUid;
 }
 
 class ChangeOrderTasksTreesEvent extends TasksTreesEvent {
