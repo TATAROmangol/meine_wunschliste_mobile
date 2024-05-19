@@ -20,7 +20,7 @@ class UserTasks extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFFF9648),
-          title: const Text('Мои мечты'),
+          title: const AddFolderButton(),
         ),
         body: Container(
           decoration: const BoxDecoration(

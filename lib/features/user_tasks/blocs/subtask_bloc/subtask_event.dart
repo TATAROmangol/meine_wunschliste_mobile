@@ -2,12 +2,14 @@ part of 'subtask_bloc.dart';
 
 class SubtaskEvent {}
 
-class CloseSubtaskChildEvent extends SubtaskEvent {}
+class CloseSubtaskEvent extends SubtaskEvent {}
 
-class ShowSubtaskChildrenEvent extends SubtaskEvent {
-  ShowSubtaskChildrenEvent({required this.parentUid, this.activeChildUid = ''});
+class ShowSubtaskEvent extends SubtaskEvent {
+  ShowSubtaskEvent({required this.parentUid, this.activeChildUid = '', this.showComment = false});
+  
   final String parentUid;
   final String activeChildUid;
+  final bool showComment;
 }
 
 class EndChangeSubtaskOrderChildrenEvent extends SubtaskEvent {
@@ -36,6 +38,18 @@ class CorrectingSubtaskChildEvent extends SubtaskEvent {
   final String comment;
   final Task task;
   final String parentUid;
+}
+
+class CompleteSubtaskaskChildEvent extends SubtaskEvent{
+  CompleteSubtaskaskChildEvent({required this.parentUid, required this.task});
+  final String parentUid;
+  final Task task;
+}
+
+class UncompleteSubtaskaskChildEvent extends SubtaskEvent{
+  UncompleteSubtaskaskChildEvent({required this.parentUid, required this.task});
+  final String parentUid;
+  final Task task;
 }
 
 class DeleteSubtaskChildEvent extends SubtaskEvent {

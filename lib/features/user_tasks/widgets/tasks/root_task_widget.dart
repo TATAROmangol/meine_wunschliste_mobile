@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
-import 'package:meine_wunschliste/features/user_tasks/widgets/tasks/more_buttons_widget.dart';
+import 'package:meine_wunschliste/features/user_tasks/widgets/tasks/buttons_bars/buttons_bar_widget.dart';
 import 'package:meine_wunschliste/features/user_tasks/widgets/widgets.dart';
 
 class RootTaskWidget extends StatefulWidget {
@@ -25,14 +25,11 @@ class RootTaskWidget extends StatefulWidget {
 }
 
 class RootTaskWidgetState extends State<RootTaskWidget> {
-  bool watchMoreButtons = false;
-
   @override
   void initState() {
     widget.isActive
-        ? widget.currentBloc
-            .add(ShowRootTaskChildrenEvent(parentUid: widget.task.uid))
-        : widget.currentBloc.add(CloseRootTaskChildrenEvent());
+        ? widget.currentBloc.add(ShowRootTaskEvent(parentUid: widget.task.uid))
+        : widget.currentBloc.add(CloseRootTaskEvent());
     super.initState();
   }
 
@@ -44,91 +41,82 @@ class RootTaskWidgetState extends State<RootTaskWidget> {
       bloc: widget.parentBloc,
       listener: (context, state) {
         if (state is ShowTasksTreesState) {
-          if (state.activeChildUid == widget.task.uid) {
-            widget.currentBloc
-                .add(ShowRootTaskChildrenEvent(parentUid: widget.task.uid));
-          } else {
-            widget.currentBloc.add(CloseRootTaskChildrenEvent());
-            watchMoreButtons = false;
-          }
+          state.activeChildUid == widget.task.uid
+              ? widget.currentBloc
+                  .add(ShowRootTaskEvent(parentUid: widget.task.uid))
+              : widget.currentBloc.add(CloseRootTaskEvent());
         }
       },
       child: BlocBuilder<RootTaskBloc, RootTaskState>(
         bloc: widget.currentBloc,
         builder: (context, state) {
-          if (state is ShowRootTaskChildrenState &&
-              state.activeChildUid != '') {
-            watchMoreButtons = false;
-          }
-          return Column(children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                color: Color(0xFFFFFF).withOpacity(0.5),
-              ),
-              height: screenSize.height * 0.09,
-              width: screenSize.width * 0.91,
-              margin: EdgeInsets.only(bottom: screenSize.height * 0.013),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                        onPressed: () {
-                          widget.isActive
-                              ? widget.parentBloc.add(ShowTasksTreesEvent())
-                              : widget.parentBloc.add(ShowTasksTreesEvent(
+          return Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Color(0xFFFFFF).withOpacity(0.5),
+                ),
+                height: screenSize.height * 0.09,
+                width: screenSize.width * 0.91,
+                margin: EdgeInsets.only(
+                  bottom: screenSize.height * 0.013,
+                  left: screenSize.width * 0.045,
+                  right: screenSize.width * 0.045,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                          onPressed: () {
+                            if (state is ShowRootTaskState &&
+                                state.activeChildUid != '') {
+                              widget.parentBloc.add(ShowTasksTreesEvent(
                                   activeChildUid: widget.task.uid));
-                        },
-                        child: Text(widget.task.name)),
-                  ),
-                  SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: widget.isActive
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  watchMoreButtons = !watchMoreButtons;
-                                  widget.currentBloc.add(
-                                      ShowRootTaskChildrenEvent(
-                                          parentUid: widget.task.uid));
-                                });
-                              },
-                              icon: const Icon(Icons.more))
-                          : Container())
-                ],
+                            } else if (state is ShowRootTaskState) {
+                              widget.parentBloc.add(ShowTasksTreesEvent());
+                            } else {
+                              widget.parentBloc.add(ShowTasksTreesEvent(
+                                  activeChildUid: widget.task.uid));
+                            }
+                          },
+                          child: Text(widget.task.name)),
+                    )
+                  ],
+                ),
               ),
-            ),
-            if (watchMoreButtons)
-              MoreButtonsWidget(
-                  parentUid: widget.parentUid,
-                  task: widget.task,
-                  parentBloc: widget.parentBloc,
-                  currentBloc: widget.currentBloc),
-            if (state is ShowRootTaskChildrenState)
-              Column(
-                children: state.children.map(
-                  (e) {
-                    var isActive = state.activeChildUid == e.uid;
-                    return BlocProvider<SubtaskBloc>(
-                      key: ValueKey(e.uid),
-                      create: (context) => SubtaskBloc(),
-                      child: BlocBuilder<SubtaskBloc, SubtaskState>(
-                        builder: (context, state) {
-                          return SubtaskWidget(
-                            task: e,
-                            parentUid: widget.task.uid,
-                            isActive: isActive,
-                            currentBloc: BlocProvider.of<SubtaskBloc>(context),
-                            parentBloc: widget.currentBloc,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ).toList(),
-              ),
-          ]);
+              if (state is ShowRootTaskState && state.activeChildUid == '')
+                ButtonsBarwidget(
+                    parentUid: widget.parentUid,
+                    task: widget.task,
+                    parentBloc: widget.parentBloc,
+                    currentBloc: widget.currentBloc,
+                    childrenComplete: state.childrenComplete),
+                    
+              if (state is ShowRootTaskState)
+                Column(
+                  children: state.children.map(
+                    (e) {
+                      return BlocProvider<SubtaskBloc>(
+                        key: ValueKey(e.uid),
+                        create: (context) => SubtaskBloc(),
+                        child: BlocBuilder<SubtaskBloc, SubtaskState>(
+                          builder: (context, state) {
+                            return SubtaskWidget(
+                              task: e,
+                              parentTask: widget.task,
+                              currentBloc:
+                                  BlocProvider.of<SubtaskBloc>(context),
+                              parentBloc: widget.currentBloc,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+            ],
+          );
         },
       ),
     );

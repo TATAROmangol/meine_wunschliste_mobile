@@ -6,14 +6,14 @@ class RootTaskStateInitial extends RootTaskState {}
 
 class CloseRootTaskChildrenState extends RootTaskState {}
 
-class ShowRootTaskChildrenState extends RootTaskState {
-  ShowRootTaskChildrenState(
+class ShowRootTaskState extends RootTaskState {
+  ShowRootTaskState(
       {required this.children,
       required this.activeChildUid,
-      required this.showMoreBar});
+      required this.childrenComplete});
   final List<Task> children;
   final String activeChildUid;
-  final bool showMoreBar;
+  final bool childrenComplete;
 }
 
 class EndChangeOrderRootTaskChildrenState extends RootTaskState {

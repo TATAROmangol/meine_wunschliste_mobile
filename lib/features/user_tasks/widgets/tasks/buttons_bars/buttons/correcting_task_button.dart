@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/user_tasks/blocs/blocs.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/root_task_bloc/root_task_bloc.dart';
-import 'package:meine_wunschliste/features/user_tasks/blocs/subtask_bloc/subtask_bloc.dart';
 
 class CorrectingTaskButton extends StatefulWidget {
   const CorrectingTaskButton(
@@ -17,15 +15,10 @@ class CorrectingTaskButton extends StatefulWidget {
   final Bloc parentBloc;
 
   @override
-  CorrectingTaskButtonState createState() =>
-      CorrectingTaskButtonState();
+  CorrectingTaskButtonState createState() => CorrectingTaskButtonState();
 }
 
 class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
-
-  
-
-
   @override
   Widget build(BuildContext context) {
     final TextEditingController nameController =
@@ -74,16 +67,17 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
                             comment: taskComment,
                             task: widget.task))
                         : widget.parentBloc is RootTaskBloc
-                        ? widget.parentBloc.add(CorrectingRootTaskChildEvent(
-                            parentUid: widget.parentUid,
-                            name: taskName,
-                            comment: taskComment,
-                            task: widget.task))
-                        : widget.parentBloc.add(CorrectingSubtaskChildEvent(
-                            parentUid: widget.parentUid,
-                            name: taskName,
-                            comment: taskComment,
-                            task: widget.task));
+                            ? widget.parentBloc.add(
+                                CorrectingRootTaskChildEvent(
+                                    parentUid: widget.parentUid,
+                                    name: taskName,
+                                    comment: taskComment,
+                                    task: widget.task))
+                            : widget.parentBloc.add(CorrectingSubtaskChildEvent(
+                                parentUid: widget.parentUid,
+                                name: taskName,
+                                comment: taskComment,
+                                task: widget.task));
 
                     nameController.clear();
                     commentController.clear();

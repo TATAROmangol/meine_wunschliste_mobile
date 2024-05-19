@@ -26,6 +26,11 @@ class CorrectingTasksTreeChildEvent extends TasksTreesEvent {
   final String parentUid;
 }
 
+class CompleteTasksTreeChildEvent extends TasksTreesEvent{
+  CompleteTasksTreeChildEvent({required this.task});
+  final Task task;
+}
+
 class ChangeOrderTasksTreesEvent extends TasksTreesEvent {
   ChangeOrderTasksTreesEvent({required this.children});
   final List<Task> children;

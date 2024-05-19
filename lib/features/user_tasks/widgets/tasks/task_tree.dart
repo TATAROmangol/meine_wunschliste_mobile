@@ -51,42 +51,39 @@ class TaskTreeViewState extends State<TaskTreeView> {
     return BlocBuilder<TasksTreesBloc, TasksTreesState>(
       bloc: tasksTreesBloc,
       builder: (context, state) {
-        if( state is ShowTasksTreesState)
-        {
-        final children = getRootTasksWidgets(state, tasksTreesBloc);
-            return Flexible(
-                child: state.activeChildUid == ''
-                    ? ReorderableListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          return children[index];
-                        },
-                        itemCount: state.children.length,
-                        onReorder: (oldIndex, newIndex) {
-                          if (newIndex > oldIndex) {
-                            newIndex -= 1;
-                          }
-                          final Task topTask = state.children.removeAt(oldIndex);
-                          state.children.insert(newIndex, topTask);
+        if (state is ShowTasksTreesState) {
+          final children = getRootTasksWidgets(state, tasksTreesBloc);
+          return Flexible(
+            child: state.activeChildUid == ''
+                ? ReorderableListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      return children[index];
+                    },
+                    itemCount: state.children.length,
+                    onReorder: (oldIndex, newIndex) {
+                      if (newIndex > oldIndex) {
+                        newIndex -= 1;
+                      }
+                      final Task topTask = state.children.removeAt(oldIndex);
+                      state.children.insert(newIndex, topTask);
 
-                          tasksTreesBloc.add(ChangeOrderTasksTreesEvent(
-                              children: state.children));
-                        },
-                        proxyDecorator: (Widget child, int index,
-                            Animation<double> animation) {
-                          return Material(
-                            color: Colors.transparent,
-                            child: child,
-                          );
-                        },
-                      )
-                    : ListView(
-                        children: children
-                      ));
-        } else{
+                      tasksTreesBloc.add(
+                          ChangeOrderTasksTreesEvent(children: state.children));
+                    },
+                    proxyDecorator:
+                        (Widget child, int index, Animation<double> animation) {
+                      return Material(
+                        color: Colors.transparent,
+                        child: child,
+                      );
+                    },
+                  )
+                : ListView(children: children),
+          );
+        } else {
           return Container();
         }
-            
       },
     );
   }

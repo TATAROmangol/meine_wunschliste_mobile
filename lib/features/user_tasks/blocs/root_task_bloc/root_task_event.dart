@@ -2,11 +2,10 @@ part of 'root_task_bloc.dart';
 
 class RootTaskEvent {}
 
-class CloseRootTaskChildrenEvent extends RootTaskEvent {}
+class CloseRootTaskEvent extends RootTaskEvent {}
 
-class ShowRootTaskChildrenEvent extends RootTaskEvent {
-  ShowRootTaskChildrenEvent(
-      {required this.parentUid, this.activeChildUid = ''});
+class ShowRootTaskEvent extends RootTaskEvent {
+  ShowRootTaskEvent({required this.parentUid, this.activeChildUid = ''});
   final String parentUid;
   final String activeChildUid;
 }
@@ -28,6 +27,18 @@ class AddRootTaskChildEvent extends RootTaskEvent {
 
 class DeleteRootTaskChildEvent extends RootTaskEvent {
   DeleteRootTaskChildEvent({required this.parentUid, required this.task});
+  final String parentUid;
+  final Task task;
+}
+
+class CompleteRootTaskChildEvent extends RootTaskEvent{
+  CompleteRootTaskChildEvent({required this.parentUid, required this.task});
+  final String parentUid;
+  final Task task;
+}
+
+class UncompleteRootTaskChildEvent extends RootTaskEvent{
+  UncompleteRootTaskChildEvent({required this.parentUid, required this.task});
   final String parentUid;
   final Task task;
 }

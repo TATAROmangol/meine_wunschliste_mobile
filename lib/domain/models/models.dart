@@ -26,6 +26,7 @@ class _RootTasks {
 class _Subtasks {
   @PrimaryKey()
   late String uid;
+  late bool allComplete;
   late List<_Task> tasks;
 }
 
@@ -33,6 +34,7 @@ class _Subtasks {
 class _SubSubtasks {
   @PrimaryKey()
   late String uid;
+  late bool allComplete;
   late List<_Task> tasks;
 }
 
@@ -42,4 +44,5 @@ class _Task {
   late String uid;
   late String name;
   late String comment;
+  late bool isComplete;
 }

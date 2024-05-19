@@ -4,14 +4,16 @@ class SubtaskState {}
 
 class SubtaskStateInitial extends SubtaskState {}
 
-class CloseSubtaskChildrenState extends SubtaskState {}
+class CloseSubtaskState extends SubtaskState {}
 
-class ShowSubtaskChildrenState extends SubtaskState {
-  ShowSubtaskChildrenState(
+class ShowSubtaskState extends SubtaskState {
+  ShowSubtaskState(
       {required this.children,
-      required this.activeChildUid});
+      required this.activeChildUid,
+      required this.childrenComplete});
   final List<Task> children;
   final String activeChildUid;
+  final bool childrenComplete;
 }
 
 class EndChangeOrderSubtaskChildrenState extends SubtaskState {
