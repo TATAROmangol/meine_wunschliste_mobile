@@ -8,6 +8,11 @@ class _ActiveFolder {
 }
 
 @RealmModel()
+class _CompleteTasks {
+  late List<Task> tasks;
+}
+
+@RealmModel()
 class _Folder {
   @PrimaryKey()
   late String uid;

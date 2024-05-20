@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:meine_wunschliste/features/user_tasks/view/user_tasks_view.dart';
+import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/view/user_tasks_folders_view.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/domain/repository.dart';
 import 'package:meine_wunschliste/services/firebase_options.dart';
@@ -44,7 +44,7 @@ void main() async {
 
   runApp(MaterialApp(
     home: (FirebaseAuth.instance.currentUser != null)
-        ? const UserTasks()
+        ? const UserTasksFolders()
         : const Auth(),
   ));
 }
