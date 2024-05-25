@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/view/view.dart';
-import 'package:meine_wunschliste/presentation/pages/home.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar({super.key});
+class CustomBottomNavigationBar extends StatelessWidget {
+  final int currentIndex;
+  final Function(int, TasksTreesBloc) onInit;
+  final Function(int, TasksTreesBloc) onReload;
 
-  @override
-  CustomBottomNavigationBarState createState() =>
-      CustomBottomNavigationBarState();
-}
+  const CustomBottomNavigationBar({
+    required this.currentIndex,
+    required this.onInit,
+    required this.onReload,
+    Key? key,
+  }) : super(key: key);
 
-class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
+    final reloadBloc = BlocProvider.of<TasksTreesBloc>(context);
     final Size screenSize = MediaQuery.of(context).size;
     return ClipPath(
       clipper: BottomAppBarClipper(),
@@ -25,24 +29,16 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => onReload(2, reloadBloc),
+              ),
+              IconButton(
                 icon: Icon(Icons.menu),
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => const SettingsPage()),
-                  // );
-                  print('Menu button pressed');
-                },
+                onPressed: () => onInit(1, reloadBloc),
               ),
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const UserTasksFolders()),
-                  );
-                },
+                onPressed: () => onInit(0, reloadBloc),
               ),
             ],
           ),
@@ -55,7 +51,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 class BottomAppBarClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    const double radius = 20.0; // Радиус скругления
+    const double radius = 20.0;
     final Path path = Path()
       ..moveTo(0, radius)
       ..quadraticBezierTo(0, 0, radius, 0)

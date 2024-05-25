@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
-import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/tasks/buttons_bar/buttons_bar_widget.dart';
-import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/widgets.dart';
+import 'package:meine_wunschliste/features/tasks_and_folders/complete_tasks/widgets/widgets.dart';
 
 class CompleteSubtaskWidget extends StatefulWidget {
   const CompleteSubtaskWidget(
@@ -23,7 +22,6 @@ class CompleteSubtaskWidget extends StatefulWidget {
 }
 
 class CompleteSubtaskWidgetState extends State<CompleteSubtaskWidget> {
-
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -54,35 +52,30 @@ class CompleteSubtaskWidgetState extends State<CompleteSubtaskWidget> {
                         color: Color(0xFFF4E5).withOpacity(0.5),
                         border: const Border(
                           left: BorderSide(
-                            color: Colors.black,
+                            color: Colors.green,
                             width: 2.0,
                           ),
                           right: BorderSide(
-                            color: Colors.black,
+                            color: Colors.green,
                             width: 3.0,
                           ),
                           bottom: BorderSide(
-                            color: Colors.black,
+                            color: Colors.green,
                             width: 3.0,
                           ),
                           top: BorderSide(
-                            color: Colors.black,
+                            color: Colors.green,
                             width: 2.0,
                           ),
                         ),
                       ),
                 height: screenSize.height * 0.08,
                 width: screenSize.width * 0.87,
-                margin: state is ShowSubtaskState && state.activeChildUid == ''
-                    ? EdgeInsets.only(
-                        left: screenSize.width * 0.065,
-                        right: screenSize.width * 0.045,
-                      )
-                    : EdgeInsets.only(
-                        bottom: screenSize.height * 0.013,
-                        left: screenSize.width * 0.065,
-                        right: screenSize.width * 0.045,
-                      ),
+                margin: EdgeInsets.only(
+                  top: screenSize.height * 0.013,
+                  left: screenSize.width * 0.085,
+                  right: screenSize.width * 0.045,
+                ),
                 child: widget.parentTask.isComplete
                     ? Center(child: Text(widget.task.name))
                     : Row(
@@ -118,11 +111,9 @@ class CompleteSubtaskWidgetState extends State<CompleteSubtaskWidget> {
                         create: (context) => SubSubtaskBloc(),
                         child: BlocBuilder<SubSubtaskBloc, SubSubtaskState>(
                           builder: (context, state) {
-                            return SubSubtaskWidget(
+                            return CompleteSubSubtaskWidget(
                               task: e,
                               parentTask: widget.task,
-                              currentBloc:
-                                  BlocProvider.of<SubSubtaskBloc>(context),
                               parentBloc: widget.currentBloc,
                             );
                           },

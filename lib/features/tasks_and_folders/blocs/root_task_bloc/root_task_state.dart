@@ -4,6 +4,7 @@ class RootTaskState {}
 
 class RootTaskStateInitial extends RootTaskState {}
 
+
 class CloseRootTaskChildrenState extends RootTaskState {}
 
 class ShowRootTaskState extends RootTaskState {

@@ -8,16 +8,16 @@ class _ActiveFolder {
 }
 
 @RealmModel()
-class _CompleteTasks {
-  late List<Task> tasks;
-}
-
-@RealmModel()
 class _Folder {
   @PrimaryKey()
   late String uid;
   late int order;
   late String name;
+}
+
+@RealmModel()
+class _CompleteTasks {
+  late List<_Task> tasks;
 }
 
 @RealmModel()
@@ -31,7 +31,7 @@ class _RootTasks {
 class _Subtasks {
   @PrimaryKey()
   late String uid;
-  late bool allComplete;
+  late int countCompleteTasks;
   late List<_Task> tasks;
 }
 
@@ -39,7 +39,7 @@ class _Subtasks {
 class _SubSubtasks {
   @PrimaryKey()
   late String uid;
-  late bool allComplete;
+  late int countCompleteTasks;
   late List<_Task> tasks;
 }
 

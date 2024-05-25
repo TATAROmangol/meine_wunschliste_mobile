@@ -57,9 +57,7 @@ class FolderWidgetState extends State<FolderWidget> {
           constraints: BoxConstraints(
             minWidth: screenSize.width * 0.25,
           ),
-          margin: widget.last != true
-              ? const EdgeInsets.only(left: 3, right: 5)
-              : const EdgeInsets.only(right: 5),
+          margin: const EdgeInsets.only(left: 3, right: 2),
           decoration: (widget.isActive)
               ? const BoxDecoration(
                   borderRadius: BorderRadius.only(

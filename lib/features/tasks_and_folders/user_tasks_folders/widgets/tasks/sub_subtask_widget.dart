@@ -41,43 +41,44 @@ class SubSubtaskWidgetState extends State<SubSubtaskWidget> {
           return Column(
             children: [
               Container(
-                decoration: state is! ShowSubSubtaskState
-                    ? BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Color(0xFFE0C3).withOpacity(0.5),
-                      )
-                    : BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Color(0xFFE0C3).withOpacity(0.5),
-                        border: const Border(
-                          left: BorderSide(
-                            color: Colors.black,
-                            width: 2.0,
+                decoration:
+                    state is ShowSubSubtaskState || widget.parentTask.isComplete
+                        ? BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: Color(0xFFE0C3).withOpacity(0.5),
+                            border: const Border(
+                              left: BorderSide(
+                                color: Colors.black,
+                                width: 2.0,
+                              ),
+                              right: BorderSide(
+                                color: Colors.black,
+                                width: 3.0,
+                              ),
+                              bottom: BorderSide(
+                                color: Colors.black,
+                                width: 3.0,
+                              ),
+                              top: BorderSide(
+                                color: Colors.black,
+                                width: 2.0,
+                              ),
+                            ),
+                          )
+                        : BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: Color(0xFFE0C3).withOpacity(0.5),
                           ),
-                          right: BorderSide(
-                            color: Colors.black,
-                            width: 3.0,
-                          ),
-                          bottom: BorderSide(
-                            color: Colors.black,
-                            width: 3.0,
-                          ),
-                          top: BorderSide(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
                 height: screenSize.height * 0.07,
                 width: screenSize.width * 0.84,
                 margin: state is ShowSubSubtaskState
                     ? EdgeInsets.only(
-                        left: screenSize.width * 0.065,
+                        left: screenSize.width * 0.115,
                         right: screenSize.width * 0.045,
                       )
                     : EdgeInsets.only(
                         bottom: screenSize.height * 0.013,
-                        left: screenSize.width * 0.065,
+                        left: screenSize.width * 0.115,
                         right: screenSize.width * 0.045,
                       ),
                 child: widget.parentTask.isComplete

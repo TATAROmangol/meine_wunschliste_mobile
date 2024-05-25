@@ -65,12 +65,12 @@ class ButtonsBarwidgetState extends State<ButtonsBarwidget> {
           : widget.currentBloc is SubtaskBloc
               ? EdgeInsets.only(
                   bottom: screenSize.height * 0.013,
-                  left: screenSize.width * 0.10,
-                  right: screenSize.width * 0.08,
+                  left: screenSize.width * 0.13,
+                  right: screenSize.width * 0.09,
                 )
               : EdgeInsets.only(
                   bottom: screenSize.height * 0.013,
-                  left: screenSize.width * 0.11,
+                  left: screenSize.width * 0.16,
                   right: screenSize.width * 0.09,
                 ),
       child: widget.task.isComplete

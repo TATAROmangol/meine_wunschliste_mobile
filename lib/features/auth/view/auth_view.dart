@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meine_wunschliste/services/auth_service.dart';
 
-class Auth extends StatelessWidget {
-  const Auth({super.key});
+class AuthView extends StatelessWidget {
+  const AuthView({super.key});
 
   @override
   Widget build(BuildContext context) {

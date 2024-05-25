@@ -76,12 +76,12 @@ class SubtaskWidgetState extends State<SubtaskWidget> {
                 width: screenSize.width * 0.87,
                 margin: state is ShowSubtaskState && state.activeChildUid == ''
                     ? EdgeInsets.only(
-                        left: screenSize.width * 0.065,
+                        left: screenSize.width * 0.085,
                         right: screenSize.width * 0.045,
                       )
                     : EdgeInsets.only(
                         bottom: screenSize.height * 0.013,
-                        left: screenSize.width * 0.065,
+                        left: screenSize.width * 0.085,
                         right: screenSize.width * 0.045,
                       ),
                 child: widget.parentTask.isComplete

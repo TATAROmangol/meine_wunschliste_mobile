@@ -16,6 +16,8 @@ class ShowSubtaskState extends SubtaskState {
   final bool childrenComplete;
 }
 
+
+
 class EndChangeOrderSubtaskChildrenState extends SubtaskState {
   EndChangeOrderSubtaskChildrenState({required this.children});
   final List<Task> children;

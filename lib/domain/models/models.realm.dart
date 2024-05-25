@@ -136,6 +136,63 @@ class Folder extends _Folder with RealmEntity, RealmObjectBase, RealmObject {
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
+class CompleteTasks extends _CompleteTasks
+    with RealmEntity, RealmObjectBase, RealmObject {
+  CompleteTasks({
+    Iterable<Task> tasks = const [],
+  }) {
+    RealmObjectBase.set<RealmList<Task>>(this, 'tasks', RealmList<Task>(tasks));
+  }
+
+  CompleteTasks._();
+
+  @override
+  RealmList<Task> get tasks =>
+      RealmObjectBase.get<Task>(this, 'tasks') as RealmList<Task>;
+  @override
+  set tasks(covariant RealmList<Task> value) =>
+      throw RealmUnsupportedSetError();
+
+  @override
+  Stream<RealmObjectChanges<CompleteTasks>> get changes =>
+      RealmObjectBase.getChanges<CompleteTasks>(this);
+
+  @override
+  CompleteTasks freeze() => RealmObjectBase.freezeObject<CompleteTasks>(this);
+
+  EJsonValue toEJson() {
+    return <String, dynamic>{
+      'tasks': tasks.toEJson(),
+    };
+  }
+
+  static EJsonValue _toEJson(CompleteTasks value) => value.toEJson();
+  static CompleteTasks _fromEJson(EJsonValue ejson) {
+    return switch (ejson) {
+      {
+        'tasks': EJsonValue tasks,
+      } =>
+        CompleteTasks(
+          tasks: fromEJson(tasks),
+        ),
+      _ => raiseInvalidEJson(ejson),
+    };
+  }
+
+  static final schema = () {
+    RealmObjectBase.registerFactory(CompleteTasks._);
+    register(_toEJson, _fromEJson);
+    return SchemaObject(
+        ObjectType.realmObject, CompleteTasks, 'CompleteTasks', [
+      SchemaProperty('tasks', RealmPropertyType.object,
+          linkTarget: 'Task', collectionType: RealmCollectionType.list),
+    ]);
+  }();
+
+  @override
+  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
+}
+
 class RootTasks extends _RootTasks
     with RealmEntity, RealmObjectBase, RealmObject {
   RootTasks(
@@ -207,11 +264,11 @@ class Subtasks extends _Subtasks
     with RealmEntity, RealmObjectBase, RealmObject {
   Subtasks(
     String uid,
-    bool allComplete, {
+    int countCompleteTasks, {
     Iterable<Task> tasks = const [],
   }) {
     RealmObjectBase.set(this, 'uid', uid);
-    RealmObjectBase.set(this, 'allComplete', allComplete);
+    RealmObjectBase.set(this, 'countCompleteTasks', countCompleteTasks);
     RealmObjectBase.set<RealmList<Task>>(this, 'tasks', RealmList<Task>(tasks));
   }
 
@@ -223,11 +280,11 @@ class Subtasks extends _Subtasks
   set uid(String value) => RealmObjectBase.set(this, 'uid', value);
 
   @override
-  bool get allComplete =>
-      RealmObjectBase.get<bool>(this, 'allComplete') as bool;
+  int get countCompleteTasks =>
+      RealmObjectBase.get<int>(this, 'countCompleteTasks') as int;
   @override
-  set allComplete(bool value) =>
-      RealmObjectBase.set(this, 'allComplete', value);
+  set countCompleteTasks(int value) =>
+      RealmObjectBase.set(this, 'countCompleteTasks', value);
 
   @override
   RealmList<Task> get tasks =>
@@ -246,7 +303,7 @@ class Subtasks extends _Subtasks
   EJsonValue toEJson() {
     return <String, dynamic>{
       'uid': uid.toEJson(),
-      'allComplete': allComplete.toEJson(),
+      'countCompleteTasks': countCompleteTasks.toEJson(),
       'tasks': tasks.toEJson(),
     };
   }
@@ -256,12 +313,12 @@ class Subtasks extends _Subtasks
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
-        'allComplete': EJsonValue allComplete,
+        'countCompleteTasks': EJsonValue countCompleteTasks,
         'tasks': EJsonValue tasks,
       } =>
         Subtasks(
           fromEJson(uid),
-          fromEJson(allComplete),
+          fromEJson(countCompleteTasks),
           tasks: fromEJson(tasks),
         ),
       _ => raiseInvalidEJson(ejson),
@@ -273,7 +330,7 @@ class Subtasks extends _Subtasks
     register(_toEJson, _fromEJson);
     return SchemaObject(ObjectType.realmObject, Subtasks, 'Subtasks', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
-      SchemaProperty('allComplete', RealmPropertyType.bool),
+      SchemaProperty('countCompleteTasks', RealmPropertyType.int),
       SchemaProperty('tasks', RealmPropertyType.object,
           linkTarget: 'Task', collectionType: RealmCollectionType.list),
     ]);
@@ -287,11 +344,11 @@ class SubSubtasks extends _SubSubtasks
     with RealmEntity, RealmObjectBase, RealmObject {
   SubSubtasks(
     String uid,
-    bool allComplete, {
+    int countCompleteTasks, {
     Iterable<Task> tasks = const [],
   }) {
     RealmObjectBase.set(this, 'uid', uid);
-    RealmObjectBase.set(this, 'allComplete', allComplete);
+    RealmObjectBase.set(this, 'countCompleteTasks', countCompleteTasks);
     RealmObjectBase.set<RealmList<Task>>(this, 'tasks', RealmList<Task>(tasks));
   }
 
@@ -303,11 +360,11 @@ class SubSubtasks extends _SubSubtasks
   set uid(String value) => RealmObjectBase.set(this, 'uid', value);
 
   @override
-  bool get allComplete =>
-      RealmObjectBase.get<bool>(this, 'allComplete') as bool;
+  int get countCompleteTasks =>
+      RealmObjectBase.get<int>(this, 'countCompleteTasks') as int;
   @override
-  set allComplete(bool value) =>
-      RealmObjectBase.set(this, 'allComplete', value);
+  set countCompleteTasks(int value) =>
+      RealmObjectBase.set(this, 'countCompleteTasks', value);
 
   @override
   RealmList<Task> get tasks =>
@@ -326,7 +383,7 @@ class SubSubtasks extends _SubSubtasks
   EJsonValue toEJson() {
     return <String, dynamic>{
       'uid': uid.toEJson(),
-      'allComplete': allComplete.toEJson(),
+      'countCompleteTasks': countCompleteTasks.toEJson(),
       'tasks': tasks.toEJson(),
     };
   }
@@ -336,12 +393,12 @@ class SubSubtasks extends _SubSubtasks
     return switch (ejson) {
       {
         'uid': EJsonValue uid,
-        'allComplete': EJsonValue allComplete,
+        'countCompleteTasks': EJsonValue countCompleteTasks,
         'tasks': EJsonValue tasks,
       } =>
         SubSubtasks(
           fromEJson(uid),
-          fromEJson(allComplete),
+          fromEJson(countCompleteTasks),
           tasks: fromEJson(tasks),
         ),
       _ => raiseInvalidEJson(ejson),
@@ -353,7 +410,7 @@ class SubSubtasks extends _SubSubtasks
     register(_toEJson, _fromEJson);
     return SchemaObject(ObjectType.realmObject, SubSubtasks, 'SubSubtasks', [
       SchemaProperty('uid', RealmPropertyType.string, primaryKey: true),
-      SchemaProperty('allComplete', RealmPropertyType.bool),
+      SchemaProperty('countCompleteTasks', RealmPropertyType.int),
       SchemaProperty('tasks', RealmPropertyType.object,
           linkTarget: 'Task', collectionType: RealmCollectionType.list),
     ]);

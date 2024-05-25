@@ -22,6 +22,11 @@ class TasksTreesBloc extends Bloc<TasksTreesEvent, TasksTreesState> {
               children:
                   await repository.getTasks(Steps.rootTask, acriveFolder.uid)));
     });
+    on<ShowCompleteTasksTreesEvent>((event, emit) async {
+      final tasks = await repository.getCompleteTrees();
+      emit(ShowCompleteTasksTreesState(
+          children: tasks, activeChildUid: event.activeChildUid));
+    });
     on<AddTasksTreeEvent>((event, emit) async {
       var activeFolder = await repository.getActiveFolder();
       repository.addTask(
@@ -48,9 +53,13 @@ class TasksTreesBloc extends Bloc<TasksTreesEvent, TasksTreesState> {
 
     on<CompleteTasksTreeChildEvent>((event, emit) async {
       var activeFolder = await repository.getActiveFolder();
-      repository.correctingTask(activeFolder!.uid, Steps.rootTask, event.task,
-          event.task.name, event.task.comment, true);
-      add(ShowTasksTreesEvent(activeChildUid: event.task.uid));
+      await repository.moveToCompleteRootTask(activeFolder!.uid, event.task);
+      emit(ReloadStatisticRootState());
+      add(ShowTasksTreesEvent());
+    });
+
+    on<ReloadStatisticRootEvent>((event, emit) async {
+      emit(ReloadStatisticRootState());
     });
   }
   final Repository repository = GetIt.I.get<Repository>();

@@ -7,6 +7,11 @@ class ShowTasksTreesEvent extends TasksTreesEvent {
   final String activeChildUid;
 }
 
+class ShowCompleteTasksTreesEvent extends TasksTreesEvent{
+  ShowCompleteTasksTreesEvent({this.activeChildUid = ''});
+  final String activeChildUid;
+}
+
 class AddTasksTreeEvent extends TasksTreesEvent {
   AddTasksTreeEvent({required this.name, required this.comment});
   final String name;
@@ -25,6 +30,8 @@ class CorrectingTasksTreeChildEvent extends TasksTreesEvent {
   final Task task;
   final String parentUid;
 }
+
+class ReloadStatisticRootEvent extends TasksTreesEvent{}
 
 class CompleteTasksTreeChildEvent extends TasksTreesEvent{
   CompleteTasksTreeChildEvent({required this.task});

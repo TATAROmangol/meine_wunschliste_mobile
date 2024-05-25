@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:meine_wunschliste/features/auth/view/auth_view.dart';
+import 'package:meine_wunschliste/features/main_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,7 +10,6 @@ import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/domain/repository.dart';
 import 'package:meine_wunschliste/services/firebase_options.dart';
-import 'package:meine_wunschliste/presentation/pages/pages.dart';
 import 'package:realm/realm.dart';
 
 void main() async {
@@ -23,6 +24,7 @@ void main() async {
     RootTasks.schema,
     Subtasks.schema,
     SubSubtasks.schema,
+    CompleteTasks.schema,
     Task.schema
   ]);
 
@@ -44,7 +46,7 @@ void main() async {
 
   runApp(MaterialApp(
     home: (FirebaseAuth.instance.currentUser != null)
-        ? const UserTasksFolders()
-        : const Auth(),
+        ? const MainScreen()
+        : const AuthView(),
   ));
 }

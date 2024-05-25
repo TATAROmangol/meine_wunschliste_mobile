@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/domain/models/models.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
-import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/tasks/buttons_bar/buttons_bar_widget.dart';
-import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/widgets.dart';
+import 'package:meine_wunschliste/features/tasks_and_folders/complete_tasks/widgets/widgets.dart';
 
 class CompleteRootTaskWidget extends StatefulWidget {
   const CompleteRootTaskWidget(
       {required this.task,
-      required this.parentUid,
       required this.isActive,
       required this.currentBloc,
       required this.parentBloc,
       super.key});
 
   final Task task;
-  final String parentUid;
   final bool isActive;
   final RootTaskBloc currentBloc;
   final TasksTreesBloc parentBloc;
@@ -40,7 +37,7 @@ class CompleteRootTaskWidgetState extends State<CompleteRootTaskWidget> {
     return BlocListener<TasksTreesBloc, TasksTreesState>(
       bloc: widget.parentBloc,
       listener: (context, state) {
-        if (state is ShowTasksTreesState) {
+        if (state is ShowCompleteTasksTreesState) {
           state.activeChildUid == widget.task.uid
               ? widget.currentBloc
                   .add(ShowRootTaskEvent(parentUid: widget.task.uid))
@@ -65,51 +62,41 @@ class CompleteRootTaskWidgetState extends State<CompleteRootTaskWidget> {
                             color: Color(0xFFFFFF).withOpacity(0.5),
                             border: const Border(
                               left: BorderSide(
-                                color: Colors.black,
+                                color: Colors.green,
                                 width: 2.0,
                               ),
                               right: BorderSide(
-                                color: Colors.black,
+                                color: Colors.green,
                                 width: 3.0,
                               ),
                               bottom: BorderSide(
-                                color: Colors.black,
+                                color: Colors.green,
                                 width: 3.0,
                               ),
                               top: BorderSide(
-                                color: Colors.black,
+                                color: Colors.green,
                                 width: 2.0,
                               ),
                             ),
                           ),
                     height: screenSize.height * 0.09,
                     width: screenSize.width * 0.91,
-                    margin:
-                        state is ShowRootTaskState && state.activeChildUid == ''
-                            ? EdgeInsets.only(
-                                left: screenSize.width * 0.045,
-                                right: screenSize.width * 0.045,
-                              )
-                            : EdgeInsets.only(
-                                bottom: screenSize.height * 0.013,
-                                left: screenSize.width * 0.045,
-                                right: screenSize.width * 0.045,
-                              ),
+                    margin: EdgeInsets.only(
+                      top: screenSize.height * 0.013,
+                      left: screenSize.width * 0.045,
+                      right: screenSize.width * 0.045,
+                    ),
                     child: Row(
                       children: [
                         Expanded(
                           child: TextButton(
                               onPressed: () {
-                                if (state is ShowRootTaskState &&
-                                    state.activeChildUid != '') {
-                                  widget.parentBloc.add(ShowTasksTreesEvent(
-                                      activeChildUid: widget.task.uid));
-                                } else if (state is ShowRootTaskState) {
-                                  widget.parentBloc.add(ShowTasksTreesEvent());
-                                } else {
-                                  widget.parentBloc.add(ShowTasksTreesEvent(
-                                      activeChildUid: widget.task.uid));
-                                }
+                                state is ShowRootTaskState
+                                    ? widget.parentBloc
+                                        .add(ShowCompleteTasksTreesEvent())
+                                    : widget.parentBloc.add(
+                                        ShowCompleteTasksTreesEvent(
+                                            activeChildUid: widget.task.uid));
                               },
                               child: Text(widget.task.name)),
                         )
@@ -127,7 +114,7 @@ class CompleteRootTaskWidgetState extends State<CompleteRootTaskWidget> {
                         create: (context) => SubtaskBloc(),
                         child: BlocBuilder<SubtaskBloc, SubtaskState>(
                           builder: (context, state) {
-                            return SubtaskWidget(
+                            return CompleteSubtaskWidget(
                               task: e,
                               parentTask: widget.task,
                               currentBloc:
