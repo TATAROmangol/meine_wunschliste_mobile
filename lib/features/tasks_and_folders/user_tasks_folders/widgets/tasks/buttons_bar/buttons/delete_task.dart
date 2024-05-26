@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meine_wunschliste/domain/models/models.dart';
+import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 
 class DeleteTaskButton extends StatefulWidget {

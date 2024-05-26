@@ -1,6 +1,6 @@
 import 'package:realm/realm.dart';
 
-part 'models.realm.dart';
+part 'realm_models.realm.dart';
 
 @RealmModel()
 class _ActiveFolder {

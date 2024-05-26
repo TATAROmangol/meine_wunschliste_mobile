@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meine_wunschliste/domain/models/models.dart';
+import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/tasks/buttons_bar/buttons_bar_widget.dart';
 

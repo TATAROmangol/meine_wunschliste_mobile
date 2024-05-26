@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/folders_bloc/folders_bloc.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/tasks_trees_bloc/tasks_trees_bloc.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/folders/folders.dart';
-import 'package:meine_wunschliste/domain/models/models.dart';
+import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 
 class FolderBar extends StatefulWidget {
   const FolderBar({super.key});

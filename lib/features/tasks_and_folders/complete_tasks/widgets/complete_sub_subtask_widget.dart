@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/domain/models/models.dart';
+import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 
 class CompleteSubSubtaskWidget extends StatefulWidget {

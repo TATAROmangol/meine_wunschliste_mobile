@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meine_wunschliste/domain/models/models.dart';
+import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 
 class Comment extends StatelessWidget {
   const Comment({required this.task, super.key});

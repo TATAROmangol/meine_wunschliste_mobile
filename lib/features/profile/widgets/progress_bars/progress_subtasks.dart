@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:meine_wunschliste/domain/models/steps.dart';
+import 'package:meine_wunschliste/domain/repository_models/steps.dart';
 import 'package:meine_wunschliste/domain/repository.dart';
 
 class ProgressSubtaskWidget extends StatelessWidget {

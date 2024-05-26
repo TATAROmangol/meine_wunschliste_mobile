@@ -1,5 +1,5 @@
-import 'package:meine_wunschliste/domain/models/models.dart';
-import 'package:meine_wunschliste/domain/models/steps.dart';
+import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/repository_models/steps.dart';
 import 'package:realm/realm.dart';
 
 class Repository {
@@ -65,20 +65,23 @@ class Repository {
   }
 
   Future<void> deleteActiveFolder() async {
-    final tasks = await getTasks(Steps.rootTask, activeFolder.folder!.uid);
+    final currentFolder = realm.find<Folder>(activeFolder.folder!.uid)!;
+    final tasks = await getTasks(Steps.rootTask, currentFolder.uid);
+    final rootTasksRepository = realm.find<RootTasks>(currentFolder.uid);
 
     for (var task in tasks) {
-      _deleteRootTask(activeFolder.folder!.uid, Steps.rootTask, task,
-          all: true);
+      _deleteRootTask(currentFolder.uid, Steps.rootTask, task, all: true);
     }
 
     realm.write(() {
-      var rootTasksRepository = realm.find<RootTasks>(activeFolder.folder!.uid);
-      realm.delete<RootTasks>(rootTasksRepository!);
+      if (rootTasksRepository != null) {
+        realm.delete<RootTasks>(rootTasksRepository);
+      }
+
       final currentFolder = realm.find<Folder>(activeFolder.folder!.uid)!;
-      realm.delete<Folder>(currentFolder);
       realm.all<ActiveFolder>().first.folder = null;
       activeFolder.folder = null;
+      realm.delete<Folder>(currentFolder);
     });
   }
 
@@ -90,8 +93,8 @@ class Repository {
     if (step == Steps.rootTask) {
       final repositoryAll = realm.all<RootTasks>();
       for (var root in repositoryAll) {
-          countAll += root.tasks.length;
-        }
+        countAll += root.tasks.length;
+      }
       final repositoryComplete = await getCompleteTrees();
       countComplete = repositoryComplete.length;
       countAll += repositoryComplete.length;
@@ -329,25 +332,23 @@ class Repository {
 
   Future<void> _deleteRootTask(String parentUid, Steps step, Task deleteTask,
       {bool all = false}) async {
-    var rootTasksRepository = realm.find<RootTasks>(parentUid);
-    if (rootTasksRepository != null) {
-      var subtasksRepository = realm.find<Subtasks>(deleteTask.uid);
-      if (subtasksRepository != null) {
-        for (var task in subtasksRepository.tasks) {
-          await _deleteSubtaskTask(deleteTask.uid, Steps.subtask, task,
-              all: true);
-        }
-
-        realm.write(() {
-          realm.delete<Subtasks>(subtasksRepository);
-        });
+    var subtasksRepository = realm.find<Subtasks>(deleteTask.uid);
+    if (subtasksRepository != null) {
+      for (var task in subtasksRepository.tasks) {
+        await _deleteSubtaskTask(deleteTask.uid, Steps.subtask, task,
+            all: true);
       }
 
-      if (!all) {
-        var tasks = rootTasksRepository.tasks.map((e) => e).toList();
-        tasks.remove(deleteTask);
-        changeTasksOrder(tasks, step, parentUid);
-      }
+      realm.write(() {
+        realm.delete<Subtasks>(subtasksRepository);
+      });
+    }
+
+    if (!all) {
+      var rootTasksRepository = realm.find<RootTasks>(parentUid)!;
+      var tasks = rootTasksRepository.tasks.map((e) => e).toList();
+      tasks.remove(deleteTask);
+      changeTasksOrder(tasks, step, parentUid);
     }
   }
 
@@ -359,7 +360,10 @@ class Repository {
         var tasks = subtasksRepository.tasks;
         final subSubtasksRepository = realm.find<SubSubtasks>(deleteTask.uid);
         if (subSubtasksRepository != null) {
-          realm.delete<SubSubtasks>(subSubtasksRepository);
+          for (var task in subSubtasksRepository.tasks) {
+            _deleteSubSubtaskTask(deleteTask.uid, Steps.subtask, task,
+                all: true);
+          }
         }
 
         if (!all) {
@@ -371,10 +375,25 @@ class Repository {
   }
 
   Future<void> _deleteSubSubtaskTask(
-      String parentUid, Steps step, Task deleteTask) async {
+      String parentUid, Steps step, Task deleteTask,
+      {bool all = false}) async {
     realm.write(() {
       var tasks = realm.find<SubSubtasks>(parentUid)!.tasks;
-      tasks.remove(deleteTask);
+      if (!all) {
+        tasks.remove(deleteTask);
+      }
+    });
+  }
+
+  Future<void> goClearRepository() async {
+    realm.write(() {
+      realm.deleteAll<Task>();
+      realm.deleteAll<SubSubtasks>();
+      realm.deleteAll<Subtasks>();
+      realm.deleteAll<RootTasks>();
+      realm.deleteAll<CompleteTasks>();
+      realm.deleteAll<ActiveFolder>();
+      realm.deleteAll<Folder>();
     });
   }
 }

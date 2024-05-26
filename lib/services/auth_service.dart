@@ -5,31 +5,29 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  signInWithGoogle() async {
-    final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
+  Future<User?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
 
-    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+      if (gUser == null) {
+        return null;
+      }
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken,
-    );
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
 
-    return await _firebaseAuth.signInWithCredential(credential);
+      final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(credential);
+      return userCredential.user;
+    } catch (e) {
+      print('Error during Google sign-in: $e');
+      return null;
+    }
   }
-
-  // signInWithIos() async {
-  //   final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
-
-  //   final GoogleSignInAuthentication gAuth = await gUser!.authentication;
-
-  //   final credential = GoogleAuthProvider.credential(
-  //     accessToken: gAuth.accessToken,
-  //     idToken: gAuth.idToken,
-  //   );
-
-  //   return await _firebaseAuth.signInWithCredential(credential);
-  // }
 
   logOut() async {
     await _firebaseAuth.signOut();
