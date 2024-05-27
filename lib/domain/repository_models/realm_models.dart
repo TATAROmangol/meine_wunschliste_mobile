@@ -8,6 +8,14 @@ class _ActiveFolder {
 }
 
 @RealmModel()
+class _UserTheme{
+  late int? blocsColor;
+  late int? borderColor;
+  late int? textColor;
+  late int? appBarsColor;
+}
+
+@RealmModel()
 class _Folder {
   @PrimaryKey()
   late String uid;

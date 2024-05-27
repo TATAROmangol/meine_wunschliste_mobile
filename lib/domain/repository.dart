@@ -394,6 +394,7 @@ class Repository {
       realm.deleteAll<CompleteTasks>();
       realm.deleteAll<ActiveFolder>();
       realm.deleteAll<Folder>();
+      activeFolder = ActiveFolder();
     });
   }
 }

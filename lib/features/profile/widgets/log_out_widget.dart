@@ -3,9 +3,10 @@ import 'package:get_it/get_it.dart';
 import 'package:meine_wunschliste/domain/repository.dart';
 import 'package:meine_wunschliste/services/auth_service.dart';
 import 'package:meine_wunschliste/features/auth/view/auth_view.dart';
+import 'package:meine_wunschliste/services/sync_service/sync_service.dart';
 
 class LogOutWidget extends StatelessWidget {
-  final Repository repository = GetIt.I.get<Repository>();
+  final SyncService syncService = GetIt.I.get<SyncService>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +26,8 @@ class LogOutWidget extends StatelessWidget {
       ),
       child: TextButton(
         onPressed: () async {
-          await repository.goClearRepository();
-          await AuthService().logOut();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => AuthView()),
-          );
+          await AuthService().logOut(context, syncService);
+          
         },
         child: const Text("Сменить аккаунт"),
       ),

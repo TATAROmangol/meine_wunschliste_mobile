@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:meine_wunschliste/features/sync_view.dart';
+import 'package:meine_wunschliste/features/features.dart';
 import 'package:meine_wunschliste/services/auth_service.dart';
 import 'package:meine_wunschliste/services/sync_service/sync_service.dart';
 
@@ -28,17 +28,13 @@ class AuthView extends StatelessWidget {
             child: Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  final user = await AuthService().signInWithGoogle();
+                  final user =
+                      await AuthService().signInWithGoogle(syncService);
                   if (user != null) {
-                    await syncService.loadDataFromFirebaseToRealm();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SyncView()),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to sign in with Google')),
+                          builder: (context) => MainScreen()),
                     );
                   }
                 },

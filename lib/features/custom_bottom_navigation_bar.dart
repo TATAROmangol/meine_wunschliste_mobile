@@ -30,7 +30,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             children: [
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () => onReload(2, reloadBloc),
+                onPressed: () => onReload(0, reloadBloc),
               ),
               IconButton(
                 icon: Icon(Icons.menu),
@@ -38,7 +38,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               ),
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed: () => onInit(0, reloadBloc),
+                onPressed: () => onInit(2, reloadBloc),
               ),
             ],
           ),

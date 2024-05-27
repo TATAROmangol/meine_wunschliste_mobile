@@ -17,9 +17,9 @@ class MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
+    const ProfileView(),
     const UserTasksFolders(),
     const CompleteTasksView(),
-    const ProfileView(),
   ];
 
   void _onTabTappedInit(int index, TasksTreesBloc initBloc) {
