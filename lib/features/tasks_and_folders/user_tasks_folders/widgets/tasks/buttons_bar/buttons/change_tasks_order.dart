@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:meine_wunschliste/domain/repository.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 
 class ChangeChildrenTasksOrderButton extends StatefulWidget {
@@ -20,16 +24,13 @@ class ChangeChildrenTasksOrderButton extends StatefulWidget {
 
 class ChangeChildrenTasksOrderButtonState
     extends State<ChangeChildrenTasksOrderButton> {
-  final TextEditingController textController = TextEditingController();
-
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
-  }
+  final UserTheme theme = GetIt.I.get<UserTheme>();
+  final Repository repository = GetIt.I.get<Repository>();
 
   @override
   Widget build(BuildContext context) {
+  final taskData = repository.getNotification(widget.task.uid.hashCode);
+
     final Size screenSize = MediaQuery.of(context).size;
     return GestureDetector(
       child: SizedBox(
@@ -49,39 +50,14 @@ class ChangeChildrenTasksOrderButtonState
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      if (widget.currentBloc is RootTaskBloc) {
-                        widget.currentBloc.add(
-                          EndChangeRootTaskOrderChildrenEvent(
-                            children: widget.currentBloc.state.children,
-                            parentUid: widget.task.uid,
-                          ),
-                        );
-                      } else {
-                        widget.currentBloc.add(
-                          EndChangeSubtaskOrderChildrenEvent(
-                            children: widget.currentBloc.state.children,
-                            parentUid: widget.task.uid,
-                          ),
-                        );
-                      }
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.edit_note),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
+              title: const Text('Изменить порядок'),
+              backgroundColor: theme.accentColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(35.0),
+                side: BorderSide(color: theme.borderColor, width: 2.0),
               ),
               content: Container(
-                height: screenSize.height * 0.8,
+                height: screenSize.height * 0.6,
                 width: screenSize.width * 0.9,
                 child: ReorderableListView.builder(
                   scrollDirection: Axis.vertical,
@@ -89,15 +65,41 @@ class ChangeChildrenTasksOrderButtonState
                     final task = widget.currentBloc.state.children[index];
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: const Color(0xFFFFFF).withOpacity(0.5),
-                      ),
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: theme.blocsColor,
+                            border: Border(
+                              left: BorderSide(
+                                color: theme.borderColor,
+                                width: 1.0,
+                              ),
+                              right: BorderSide(
+                                color: theme.borderColor,
+                                width: 2.0,
+                              ),
+                              bottom: BorderSide(
+                                color: theme.borderColor,
+                                width: 2.0,
+                              ),
+                              top: BorderSide(
+                                color: theme.borderColor,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
                       height: screenSize.height * 0.09,
                       width: screenSize.width * 0.87,
                       margin:
                           EdgeInsets.only(bottom: screenSize.height * 0.013),
                       key: ValueKey(task.uid),
-                      child: Text(task.name),
+                      child: Padding(
+                                padding: EdgeInsets.only(left: screenSize.width * 0.05, right: screenSize.width * 0.05),
+                                child: Center( child: Row(
+                                  children: [
+                                    Text(widget.task.name),
+                                    Spacer(),
+                                    if(taskData != null)
+                                      Text('${DateFormat('yyyy-MM-dd').format(taskData.scheduledDate!)}')
+                                  ],),),),
                     );
                   },
                   itemCount: widget.currentBloc.state.children.length,
@@ -118,6 +120,35 @@ class ChangeChildrenTasksOrderButtonState
                   },
                 ),
               ),
+              actions: <Widget>[
+                  TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Отмена'),
+                ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (widget.currentBloc is RootTaskBloc) {
+                        widget.currentBloc.add(
+                          EndChangeRootTaskOrderChildrenEvent(
+                            children: widget.currentBloc.state.children,
+                            parentUid: widget.task.uid,
+                          ),
+                        );
+                      } else {
+                        widget.currentBloc.add(
+                          EndChangeSubtaskOrderChildrenEvent(
+                            children: widget.currentBloc.state.children,
+                            parentUid: widget.task.uid,
+                          ),
+                        );
+                      }
+                      Navigator.of(context).pop();
+                    },
+                  child: const Text('Изменить'),
+                  )
+              ],
             );
           },
         );

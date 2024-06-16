@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:meine_wunschliste/domain/repository.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
@@ -25,6 +27,7 @@ class SubSubtaskWidget extends StatefulWidget {
 
 class SubSubtaskWidgetState extends State<SubSubtaskWidget> {
   final UserTheme theme = GetIt.I.get<UserTheme>();
+  final Repository repository = GetIt.I.get<Repository>();
 
   Color subSubColor(Color color) {
     int green = (color.green - 12).clamp(0, 255);
@@ -37,6 +40,7 @@ class SubSubtaskWidgetState extends State<SubSubtaskWidget> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final Color currentColor = subSubColor(theme.blocsColor);
+    final taskData = repository.getNotification(widget.task.uid.hashCode);
 
     return BlocListener<SubtaskBloc, SubtaskState>(
       bloc: widget.parentBloc,
@@ -53,34 +57,40 @@ class SubSubtaskWidgetState extends State<SubSubtaskWidget> {
           return Column(
             children: [
               Container(
-                decoration:
-                    state is ShowSubSubtaskState || widget.parentTask.isComplete
-                        ? BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0),
-                            color: currentColor,
-                            border: Border(
-                              left: BorderSide(
-                                color: theme.borderColor,
-                                width: 2.0,
-                              ),
-                              right: BorderSide(
-                                color: theme.borderColor,
-                                width: 3.0,
-                              ),
-                              bottom: BorderSide(
-                                color: theme.borderColor,
-                                width: 3.0,
-                              ),
-                              top: BorderSide(
-                                color: theme.borderColor,
-                                width: 2.0,
-                              ),
-                            ),
-                          )
-                        : BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0),
-                            color: currentColor,
-                          ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: currentColor,
+                  border: Border(
+                    left: BorderSide(
+                      color: !(state is ShowSubSubtaskState ||
+                              widget.parentTask.isComplete)
+                          ? theme.borderColor.withOpacity(0.5)
+                          : theme.borderColor,
+                      width: 2.0,
+                    ),
+                    right: BorderSide(
+                      color: !(state is ShowSubSubtaskState ||
+                              widget.parentTask.isComplete)
+                          ? theme.borderColor.withOpacity(0.5)
+                          : theme.borderColor,
+                      width: 3.0,
+                    ),
+                    bottom: BorderSide(
+                      color: !(state is ShowSubSubtaskState ||
+                              widget.parentTask.isComplete)
+                          ? theme.borderColor.withOpacity(0.5)
+                          : theme.borderColor,
+                      width: 3.0,
+                    ),
+                    top: BorderSide(
+                      color: !(state is ShowSubSubtaskState ||
+                              widget.parentTask.isComplete)
+                          ? theme.borderColor.withOpacity(0.5)
+                          : theme.borderColor,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
                 height: screenSize.height * 0.07,
                 width: screenSize.width * 0.84,
                 margin: state is ShowSubSubtaskState
@@ -94,7 +104,32 @@ class SubSubtaskWidgetState extends State<SubSubtaskWidget> {
                         right: screenSize.width * 0.045,
                       ),
                 child: widget.parentTask.isComplete
-                    ? Center(child: Text(widget.task.name))
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            left: screenSize.width * 0.05,
+                            right: screenSize.width * 0.05),
+                        child: Center(
+                          child: Row(
+                            children: [
+                              Text(widget.task.name,
+                              style: 
+                                    widget.task.isComplete
+                                    ?  const TextStyle(
+                                      decoration: TextDecoration.lineThrough)
+                                    : const TextStyle(),),
+                              const Spacer(),
+                              if (taskData != null)
+                                Text(
+                                    '${DateFormat('dd-MM-yyyy').format(taskData.scheduledDate!)}',
+                                    style: 
+                                    widget.task.isComplete
+                                    ?  const TextStyle(
+                                      decoration: TextDecoration.lineThrough)
+                                    : const TextStyle(),)
+                            ],
+                          ),
+                        ),
+                      )
                     : TextButton(
                         onPressed: () {
                           state is ShowSubSubtaskState
@@ -104,7 +139,36 @@ class SubSubtaskWidgetState extends State<SubSubtaskWidget> {
                                   parentUid: widget.parentTask.uid,
                                   activeChildUid: widget.task.uid));
                         },
-                        child: Text(widget.task.name)),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: screenSize.width * 0.05,
+                              right: screenSize.width * 0.05),
+                          child: Center(
+                            child: Row(
+                              children: [
+                                Text(
+                                  widget.task.name,
+                                  style: 
+                                    widget.task.isComplete
+                                    ?  const TextStyle(
+                                      decoration: TextDecoration.lineThrough)
+                                    : const TextStyle(),
+                                ),
+                                Spacer(),
+                                if (taskData != null)
+                                  Text(
+                                    '${DateFormat('dd-MM-yyyy').format(taskData.scheduledDate!)}',
+                                    style: 
+                                    widget.task.isComplete
+                                    ?  const TextStyle(
+                                      decoration: TextDecoration.lineThrough)
+                                    : const TextStyle(),
+                                  )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
               ),
               if (state is ShowSubSubtaskState && !widget.parentTask.isComplete)
                 ButtonsBarwidget(

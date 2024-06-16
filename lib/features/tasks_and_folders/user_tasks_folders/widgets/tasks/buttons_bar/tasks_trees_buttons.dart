@@ -20,6 +20,7 @@ class TasksTreesButtonsState extends State<TasksTreesButtons> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final tasksTreesBloc = BlocProvider.of<TasksTreesBloc>(context);
+    repository.getActiveFolder();
 
     return BlocBuilder<TasksTreesBloc, TasksTreesState>(
       bloc: tasksTreesBloc,
@@ -27,12 +28,12 @@ class TasksTreesButtonsState extends State<TasksTreesButtons> {
         return (state is ShowTasksTreesState && state.activeChildUid == '')
             ? Column(
                 children: [
-                  state.children.length > 1
+                  state.children.length > 1 
                       ? ChangeTreesOrderButton(tasksTreesBloc: tasksTreesBloc)
                       : Container(
                           height: screenSize.height * 0.045,
                           margin: const EdgeInsets.only(bottom: 5)),
-                  repository.activeFolder.folder != null
+                  state.parentUid != ''
                       ? const AddTasksTreeButton()
                       : Container(
                           height: screenSize.height * 0.045,

@@ -7,18 +7,109 @@ part of 'realm_models.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
+class UserNotification extends _UserNotification
+    with RealmEntity, RealmObjectBase, RealmObject {
+  UserNotification(
+    int id,
+    String title,
+    String body, {
+    DateTime? scheduledDate,
+  }) {
+    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'title', title);
+    RealmObjectBase.set(this, 'body', body);
+    RealmObjectBase.set(this, 'scheduledDate', scheduledDate);
+  }
+
+  UserNotification._();
+
+  @override
+  int get id => RealmObjectBase.get<int>(this, 'id') as int;
+  @override
+  set id(int value) => RealmObjectBase.set(this, 'id', value);
+
+  @override
+  String get title => RealmObjectBase.get<String>(this, 'title') as String;
+  @override
+  set title(String value) => RealmObjectBase.set(this, 'title', value);
+
+  @override
+  String get body => RealmObjectBase.get<String>(this, 'body') as String;
+  @override
+  set body(String value) => RealmObjectBase.set(this, 'body', value);
+
+  @override
+  DateTime? get scheduledDate =>
+      RealmObjectBase.get<DateTime>(this, 'scheduledDate') as DateTime?;
+  @override
+  set scheduledDate(DateTime? value) =>
+      RealmObjectBase.set(this, 'scheduledDate', value);
+
+  @override
+  Stream<RealmObjectChanges<UserNotification>> get changes =>
+      RealmObjectBase.getChanges<UserNotification>(this);
+
+  @override
+  UserNotification freeze() =>
+      RealmObjectBase.freezeObject<UserNotification>(this);
+
+  EJsonValue toEJson() {
+    return <String, dynamic>{
+      'id': id.toEJson(),
+      'title': title.toEJson(),
+      'body': body.toEJson(),
+      'scheduledDate': scheduledDate.toEJson(),
+    };
+  }
+
+  static EJsonValue _toEJson(UserNotification value) => value.toEJson();
+  static UserNotification _fromEJson(EJsonValue ejson) {
+    return switch (ejson) {
+      {
+        'id': EJsonValue id,
+        'title': EJsonValue title,
+        'body': EJsonValue body,
+        'scheduledDate': EJsonValue scheduledDate,
+      } =>
+        UserNotification(
+          fromEJson(id),
+          fromEJson(title),
+          fromEJson(body),
+          scheduledDate: fromEJson(scheduledDate),
+        ),
+      _ => raiseInvalidEJson(ejson),
+    };
+  }
+
+  static final schema = () {
+    RealmObjectBase.registerFactory(UserNotification._);
+    register(_toEJson, _fromEJson);
+    return SchemaObject(
+        ObjectType.realmObject, UserNotification, 'UserNotification', [
+      SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
+      SchemaProperty('title', RealmPropertyType.string),
+      SchemaProperty('body', RealmPropertyType.string),
+      SchemaProperty('scheduledDate', RealmPropertyType.timestamp,
+          optional: true),
+    ]);
+  }();
+
+  @override
+  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
+}
+
 class CustomUserTheme extends _CustomUserTheme
     with RealmEntity, RealmObjectBase, RealmObject {
   CustomUserTheme({
     int? blocsColor,
     int? borderColor,
-    int? backgroundColor,
+    String? imagePath,
     int? textColor,
     int? accentColor,
   }) {
     RealmObjectBase.set(this, 'blocsColor', blocsColor);
     RealmObjectBase.set(this, 'borderColor', borderColor);
-    RealmObjectBase.set(this, 'backgroundColor', backgroundColor);
+    RealmObjectBase.set(this, 'imagePath', imagePath);
     RealmObjectBase.set(this, 'textColor', textColor);
     RealmObjectBase.set(this, 'accentColor', accentColor);
   }
@@ -37,11 +128,10 @@ class CustomUserTheme extends _CustomUserTheme
       RealmObjectBase.set(this, 'borderColor', value);
 
   @override
-  int? get backgroundColor =>
-      RealmObjectBase.get<int>(this, 'backgroundColor') as int?;
+  String? get imagePath =>
+      RealmObjectBase.get<String>(this, 'imagePath') as String?;
   @override
-  set backgroundColor(int? value) =>
-      RealmObjectBase.set(this, 'backgroundColor', value);
+  set imagePath(String? value) => RealmObjectBase.set(this, 'imagePath', value);
 
   @override
   int? get textColor => RealmObjectBase.get<int>(this, 'textColor') as int?;
@@ -66,7 +156,7 @@ class CustomUserTheme extends _CustomUserTheme
     return <String, dynamic>{
       'blocsColor': blocsColor.toEJson(),
       'borderColor': borderColor.toEJson(),
-      'backgroundColor': backgroundColor.toEJson(),
+      'imagePath': imagePath.toEJson(),
       'textColor': textColor.toEJson(),
       'accentColor': accentColor.toEJson(),
     };
@@ -78,14 +168,14 @@ class CustomUserTheme extends _CustomUserTheme
       {
         'blocsColor': EJsonValue blocsColor,
         'borderColor': EJsonValue borderColor,
-        'backgroundColor': EJsonValue backgroundColor,
+        'imagePath': EJsonValue imagePath,
         'textColor': EJsonValue textColor,
         'accentColor': EJsonValue accentColor,
       } =>
         CustomUserTheme(
           blocsColor: fromEJson(blocsColor),
           borderColor: fromEJson(borderColor),
-          backgroundColor: fromEJson(backgroundColor),
+          imagePath: fromEJson(imagePath),
           textColor: fromEJson(textColor),
           accentColor: fromEJson(accentColor),
         ),
@@ -100,7 +190,7 @@ class CustomUserTheme extends _CustomUserTheme
         ObjectType.realmObject, CustomUserTheme, 'CustomUserTheme', [
       SchemaProperty('blocsColor', RealmPropertyType.int, optional: true),
       SchemaProperty('borderColor', RealmPropertyType.int, optional: true),
-      SchemaProperty('backgroundColor', RealmPropertyType.int, optional: true),
+      SchemaProperty('imagePath', RealmPropertyType.string, optional: true),
       SchemaProperty('textColor', RealmPropertyType.int, optional: true),
       SchemaProperty('accentColor', RealmPropertyType.int, optional: true),
     ]);
@@ -528,12 +618,14 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     String uid,
     String name,
     String comment,
-    bool isComplete,
-  ) {
+    bool isComplete, {
+    DateTime? closeData,
+  }) {
     RealmObjectBase.set(this, 'uid', uid);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'comment', comment);
     RealmObjectBase.set(this, 'isComplete', isComplete);
+    RealmObjectBase.set(this, 'closeData', closeData);
   }
 
   Task._();
@@ -559,6 +651,13 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   set isComplete(bool value) => RealmObjectBase.set(this, 'isComplete', value);
 
   @override
+  DateTime? get closeData =>
+      RealmObjectBase.get<DateTime>(this, 'closeData') as DateTime?;
+  @override
+  set closeData(DateTime? value) =>
+      RealmObjectBase.set(this, 'closeData', value);
+
+  @override
   Stream<RealmObjectChanges<Task>> get changes =>
       RealmObjectBase.getChanges<Task>(this);
 
@@ -571,6 +670,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
       'name': name.toEJson(),
       'comment': comment.toEJson(),
       'isComplete': isComplete.toEJson(),
+      'closeData': closeData.toEJson(),
     };
   }
 
@@ -582,12 +682,14 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
         'name': EJsonValue name,
         'comment': EJsonValue comment,
         'isComplete': EJsonValue isComplete,
+        'closeData': EJsonValue closeData,
       } =>
         Task(
           fromEJson(uid),
           fromEJson(name),
           fromEJson(comment),
           fromEJson(isComplete),
+          closeData: fromEJson(closeData),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -601,6 +703,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('comment', RealmPropertyType.string),
       SchemaProperty('isComplete', RealmPropertyType.bool),
+      SchemaProperty('closeData', RealmPropertyType.timestamp, optional: true),
     ]);
   }();
 

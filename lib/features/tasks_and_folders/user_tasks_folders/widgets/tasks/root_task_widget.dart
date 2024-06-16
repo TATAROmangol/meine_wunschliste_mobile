@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:get_it/get_it.dart';
+import 'package:meine_wunschliste/domain/repository.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
@@ -29,6 +31,8 @@ class RootTaskWidget extends StatefulWidget {
 class RootTaskWidgetState extends State<RootTaskWidget> {
   final UserTheme theme = GetIt.I.get<UserTheme>();
 
+  final Repository repository = GetIt.I.get<Repository>();
+
   @override
   void initState() {
     widget.isActive
@@ -40,6 +44,7 @@ class RootTaskWidgetState extends State<RootTaskWidget> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final taskData = repository.getNotification(widget.task.uid.hashCode);
     //ты писька
     return BlocListener<TasksTreesBloc, TasksTreesState>(
       bloc: widget.parentBloc,
@@ -115,7 +120,16 @@ class RootTaskWidgetState extends State<RootTaskWidget> {
                                       activeChildUid: widget.task.uid));
                                 }
                               },
-                              child: Text(widget.task.name)),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: screenSize.width * 0.05, right: screenSize.width * 0.05),
+                                child: Center( child: Row(
+                                  children: [
+                                    Text(widget.task.name),
+                                    Spacer(),
+                                    if(taskData != null)
+                                      Text('${DateFormat('dd-MM-yyyy').format(taskData.scheduledDate!)}')
+                                  ],),),),
+                              ),
                         )
                       ],
                     ),

@@ -4,5 +4,6 @@ export 'change_tasks_order.dart';
 export 'change_trees_order.dart';
 export 'complete_task_button.dart';
 export 'correcting_task_button.dart';
+export 'data_text_controller.dart';
 export 'delete_task.dart';
 export 'uncomplete_task_button.dart';

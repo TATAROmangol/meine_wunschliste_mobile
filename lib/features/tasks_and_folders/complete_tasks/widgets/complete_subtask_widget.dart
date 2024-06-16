@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/complete_tasks/widgets/widgets.dart';
 
@@ -22,9 +25,18 @@ class CompleteSubtaskWidget extends StatefulWidget {
 }
 
 class CompleteSubtaskWidgetState extends State<CompleteSubtaskWidget> {
+  Color subColor(Color color) {
+    int green = (color.green - 6).clamp(0, 255);
+    int blue = (color.blue - 12).clamp(0, 255);
+
+    return Color.fromARGB(color.alpha, color.red, green, blue);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final UserTheme theme = GetIt.I.get<UserTheme>();
+    final Color currentColor = subColor(theme.blocsColor);
 
     return BlocListener<RootTaskBloc, RootTaskState>(
       bloc: widget.parentBloc,
@@ -42,33 +54,36 @@ class CompleteSubtaskWidgetState extends State<CompleteSubtaskWidget> {
           return Column(
             children: [
               Container(
-                decoration: state is! ShowSubtaskState
-                    ? BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Color(0xFFF4E5).withOpacity(0.5),
-                      )
-                    : BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Color(0xFFF4E5).withOpacity(0.5),
-                        border: const Border(
-                          left: BorderSide(
-                            color: Colors.green,
-                            width: 2.0,
-                          ),
-                          right: BorderSide(
-                            color: Colors.green,
-                            width: 3.0,
-                          ),
-                          bottom: BorderSide(
-                            color: Colors.green,
-                            width: 3.0,
-                          ),
-                          top: BorderSide(
-                            color: Colors.green,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: currentColor,
+                  border: Border(
+                    left: BorderSide(
+                      color: state is! ShowSubtaskState
+                          ? theme.borderColor.withOpacity(0.5)
+                          : theme.borderColor,
+                      width: 2.0,
+                    ),
+                    right: BorderSide(
+                      color: state is! ShowSubtaskState
+                          ? theme.borderColor.withOpacity(0.5)
+                          : theme.borderColor,
+                      width: 3.0,
+                    ),
+                    bottom: BorderSide(
+                      color: state is! ShowSubtaskState
+                          ? theme.borderColor.withOpacity(0.5)
+                          : theme.borderColor,
+                      width: 3.0,
+                    ),
+                    top: BorderSide(
+                      color: state is! ShowSubtaskState
+                          ? theme.borderColor.withOpacity(0.5)
+                          : theme.borderColor,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
                 height: screenSize.height * 0.08,
                 width: screenSize.width * 0.87,
                 margin: EdgeInsets.only(
@@ -82,23 +97,35 @@ class CompleteSubtaskWidgetState extends State<CompleteSubtaskWidget> {
                         children: [
                           Expanded(
                             child: TextButton(
-                                onPressed: () {
-                                  if (state is ShowSubtaskState &&
-                                      state.activeChildUid != '') {
-                                    widget.parentBloc.add(ShowRootTaskEvent(
-                                        parentUid: widget.parentTask.uid,
-                                        activeChildUid: widget.task.uid));
-                                  } else if (state is ShowSubtaskState) {
-                                    widget.parentBloc.add(ShowRootTaskEvent(
-                                        parentUid: widget.parentTask.uid));
-                                  } else {
-                                    widget.parentBloc.add(ShowRootTaskEvent(
-                                        parentUid: widget.parentTask.uid,
-                                        activeChildUid: widget.task.uid));
-                                  }
-                                },
-                                child: Text(widget.task.name)),
-                          )
+                              onPressed: () {
+                                if (state is ShowSubtaskState &&
+                                    state.activeChildUid != '') {
+                                  widget.parentBloc.add(ShowRootTaskEvent(
+                                      parentUid: widget.parentTask.uid,
+                                      activeChildUid: widget.task.uid));
+                                } else if (state is ShowSubtaskState) {
+                                  widget.parentBloc.add(ShowRootTaskEvent(
+                                      parentUid: widget.parentTask.uid));
+                                } else {
+                                  widget.parentBloc.add(ShowRootTaskEvent(
+                                      parentUid: widget.parentTask.uid,
+                                      activeChildUid: widget.task.uid));
+                                }
+                              },
+                              child: Center(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      widget.task.name,
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                        '${DateFormat('dd-MM-yyyy').format(widget.task.closeData!)}')
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
               ),

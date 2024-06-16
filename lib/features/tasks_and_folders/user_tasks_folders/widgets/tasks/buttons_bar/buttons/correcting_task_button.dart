@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:meine_wunschliste/domain/repository.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
+import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/tasks/buttons_bar/buttons/buttons.dart';
 
 class CorrectingTaskButton extends StatefulWidget {
   const CorrectingTaskButton(
@@ -21,12 +26,33 @@ class CorrectingTaskButton extends StatefulWidget {
 class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
   @override
   Widget build(BuildContext context) {
+    final UserTheme theme = GetIt.I.get<UserTheme>();
+    final Repository repository = GetIt.I.get<Repository>();
+
     final TextEditingController nameController =
         TextEditingController(text: widget.task.name);
     final TextEditingController commentController =
         TextEditingController(text: widget.task.comment);
-    DateTime? dateTime;
+
+    var notification = repository.getNotification(widget.task.uid.hashCode);
+    
+    DateTime? selectedDate = notification?.scheduledDate;
+    DataTextController dataTextController = selectedDate == null
+    ? DataTextController('Выбрать дату')
+    : DataTextController('${DateFormat('yyyy-MM-dd').format(selectedDate)}');
+     
     final Size screenSize = MediaQuery.of(context).size;
+
+    Color transformColor(Color color) {
+    int red = color.red;
+    int green = color.green + 28;
+    int blue = color.blue + 34;
+
+    green = green.clamp(0, 255);
+    blue = blue.clamp(0, 255);
+
+    return Color.fromARGB(color.alpha, red, green, blue);
+  }
 
     return GestureDetector(
       child: Container(
@@ -46,52 +72,99 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Изменить Задачу'),
-              content: SizedBox(
-                width: screenSize.width * 0.8,
-                height: screenSize.width * 0.8,
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: nameController,
-                    ),
-                    TextField(
-                      controller: commentController,
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null) {
-                          final TimeOfDay? time = await showTimePicker(
+              title: const Text('Редактировать'),
+              backgroundColor: theme.accentColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(35.0),
+                side: BorderSide(color: theme.borderColor, width: 2.0),
+              ),
+              content: SingleChildScrollView(
+                child: SizedBox(
+                  width: screenSize.width * 0.8,
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Введите название',
+                          filled: true,
+                          fillColor: transformColor(theme.accentColor),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: theme.borderColor,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: theme.borderColor,
+                              width: 2.0,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: theme.textColor,
+                          ),
+                        ),
+                        style: TextStyle(color: theme.textColor),
+                      ),
+                      SizedBox(height: 20.0),
+                      TextField(
+                        controller: commentController,
+                        decoration: InputDecoration(
+                          labelText: 'Введите описание',
+                          filled: true,
+                          fillColor: transformColor(theme.accentColor),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              width: 2.0,
+                            ),
+                          )
+                        ),
+                        maxLines: null,
+                        minLines: 3,
+                      ),
+                      SizedBox(height: 10.0),
+                      TextButton(
+                        onPressed: () async {
+                          final DateTime? picked = await showDatePicker(
                             context: context,
-                            initialTime: TimeOfDay.now(),
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2101),
                           );
-                          if (time != null) {
+                          if (picked != null) {
                             setState(() {
-                              dateTime = DateTime(
-                                picked.year,
-                                picked.month,
-                                picked.day,
-                                time.hour,
-                                time.minute,
-                              );
+                              selectedDate = picked;
                             });
+                            dataTextController.setText('${DateFormat('yyyy-MM-dd').format(selectedDate!)}');
                           }
-                        }
-                      },
-                      child: const Text('Изменить дату и время'),
-                    ),
-                  ],
+                        },
+                        child: ValueListenableBuilder<String>(
+                          valueListenable: dataTextController.textNotifier,
+                          builder: (context, buttonText, _) {
+                            return Text(buttonText);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
+                    nameController.clear();
+                    commentController.clear();
+                    selectedDate = null;
                     Navigator.of(context).pop();
                   },
                   child: const Text('Отмена'),
@@ -105,7 +178,7 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
                             parentUid: widget.parentUid,
                             name: taskName,
                             comment: taskComment,
-                            dateTime: dateTime,
+                            dateTime: selectedDate,
                             task: widget.task))
                         : widget.parentBloc is RootTaskBloc
                             ? widget.parentBloc.add(
@@ -113,18 +186,18 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
                                     parentUid: widget.parentUid,
                                     name: taskName,
                                     comment: taskComment,
-                                    dateTime: dateTime,
+                                    dateTime: selectedDate,
                                     task: widget.task))
                             : widget.parentBloc.add(CorrectingSubtaskChildEvent(
                                 parentUid: widget.parentUid,
                                 name: taskName,
                                 comment: taskComment,
-                                dateTime: dateTime,
+                                dateTime: selectedDate,
                                 task: widget.task));
 
                     nameController.clear();
                     commentController.clear();
-                    dateTime = null;
+                    selectedDate = null;
                     Navigator.of(context).pop();
                   },
                   child: const Text('Изменить'),
@@ -135,5 +208,7 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
         );
       },
     );
+  
+
   }
 }

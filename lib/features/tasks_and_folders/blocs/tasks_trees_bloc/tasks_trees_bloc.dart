@@ -56,6 +56,7 @@ class TasksTreesBloc extends Bloc<TasksTreesEvent, TasksTreesState> {
 
     on<CompleteTasksTreeChildEvent>((event, emit) async {
       var activeFolder = await repository.getActiveFolder();
+      await repository.correctingTask(activeFolder!.uid, Steps.rootTask, event.task, event.task.name, event.task.comment, true, null);
       await repository.moveToCompleteRootTask(activeFolder!.uid, event.task);
       NotificationService.cancelNotification(event.task.uid.hashCode);
       emit(ReloadStatisticRootState());

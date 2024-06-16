@@ -1,18 +1,21 @@
 name: meine_wunschliste
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.3.3 <4.0.0'
+  sdk: ">=3.3.3 <4.0.0"
 
 dependencies:
+  intl:
+  image_picker:
   shared_preferences:
-  flutter_local_notifications: 
-  timezone: 
+  permission_handler:
+  flutter_local_notifications:
+  timezone:
   flutter_colorpicker:
   flutter_phoenix:
-  connectivity_plus: 
+  connectivity_plus:
   firebase_core:
   cloud_firestore:
   firebase_remote_config:
@@ -24,7 +27,7 @@ dependencies:
   uuid:
   get_it:
   get:
-  google_sign_in: 
+  google_sign_in:
   sign_in_with_apple:
   flutter:
     sdk: flutter
@@ -36,21 +39,27 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Kinoble
+      fonts:
+        - asset: assets/fonts/Kinoble-Medium.ttf
+        - asset: assets/fonts/Kinoble-MediumItalic.ttf
+          weight: 500
   assets:
-  - assets/icons/logo.png
-  - assets/icons/show.png
-  - assets/icons/unshow.png
-  - assets/icons/uncomplete.png
-  - assets/icons/add_task.png
-  - assets/icons/delete.png
-  - assets/icons/redact.png
-  - assets/icons/stop.png
-  - assets/icons/order.png
-  - assets/icons/tasks.png
-  - assets/icons/theme_settings.png
-  - assets/icons/add_task_tree.png
-  - assets/icons/add_category.png
-  - assets/icons/complete.png
-  - assets/icons/profile.png
-  - assets/background.jpeg
-  
+    - assets/fonts/
+    - assets/icons/logo.png
+    - assets/icons/show.png
+    - assets/icons/unshow.png
+    - assets/icons/uncomplete.png
+    - assets/icons/add_task.png
+    - assets/icons/delete.png
+    - assets/icons/redact.png
+    - assets/icons/stop.png
+    - assets/icons/order.png
+    - assets/icons/tasks.png
+    - assets/icons/theme_settings.png
+    - assets/icons/add_task_tree.png
+    - assets/icons/add_category.png
+    - assets/icons/complete.png
+    - assets/icons/profile.png
+    - assets/background.jpeg

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 
 class DeleteActiveFolderButton extends StatefulWidget {
@@ -17,6 +19,7 @@ class DeleteActiveFolderButtonState extends State<DeleteActiveFolderButton> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final UserTheme theme = GetIt.I.get<UserTheme>();
     return GestureDetector(
       child: Container(
         height: screenSize.height * 0.04,
@@ -36,6 +39,11 @@ class DeleteActiveFolderButtonState extends State<DeleteActiveFolderButton> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Вы уверенны?'),
+                backgroundColor: theme.accentColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(35.0),
+                side: BorderSide(color: theme.borderColor, width: 2.0),
+              ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {

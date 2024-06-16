@@ -8,10 +8,11 @@ import 'package:meine_wunschliste/features/thems/widgets/change_color.dart';
 
 class ThemsWidgetsView extends StatelessWidget {
   final UserTheme theme = GetIt.I.get<UserTheme>();
-  final List<(ThemeParameters, int)> selectedColors = [];
+  final Set<(ThemeParameters, String)> selectedColors = {};
   final Repository repository = GetIt.I.get<Repository>();
 
-  void addColor((ThemeParameters, int) info) {
+  void addColor((ThemeParameters, String) info) {
+    selectedColors.removeWhere((element) => element.$1 == info.$1);
     selectedColors.add(info);
   }
 
@@ -19,8 +20,8 @@ class ThemsWidgetsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Настройка темы'),
-        backgroundColor: const Color(0xFFFF9648),
+        title: Text('Настройка темы', style: TextStyle(color: theme.textColor)),
+        backgroundColor: theme.accentColor,
         toolbarHeight: MediaQuery.of(context).size.height * 0.05,
       ),
       body: Padding(
@@ -41,36 +42,33 @@ class ThemsWidgetsView extends StatelessWidget {
             ),
             ChangeColor(
               parameterName: "Цвет текста",
-              themeParameters: ThemeParameters.accentColor,
-              startColor: theme.accentColor,
+              themeParameters: ThemeParameters.textColor,
+              startColor: theme.textColor,
               onColorSelected: addColor,
             ),
             ChangeColor(
               parameterName: "Цвет обводок и границ",
-              themeParameters: ThemeParameters.accentColor,
-              startColor: theme.accentColor,
-              onColorSelected: addColor,
-            ),
-            ChangeColor(
-              parameterName: "Цвет обводоки выполненных задач",
-              themeParameters: ThemeParameters.accentColor,
-              startColor: theme.accentColor,
+              themeParameters: ThemeParameters.borderColor,
+              startColor: theme.borderColor,
               onColorSelected: addColor,
             ),
             Row(
               children: [
-                TextButton(
-                    onPressed: () async {
-                      await repository.setTheme();
-                      Phoenix.rebirth(context);
-                    },
-                    child: Text("Стандартная тема")),
-                TextButton(
-                    onPressed: () async {
-                      await repository.changeTheme(selectedColors);
-                      Phoenix.rebirth(context);
-                    },
-                    child: Text("Применить")),
+                ElevatedButton(
+                  onPressed: () async {
+                    await repository.setTheme();
+                    Phoenix.rebirth(context);
+                  },
+                  child: Text("Стандартная тема"),
+                ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () async {
+                    await repository.changeTheme(selectedColors.toList());
+                    Phoenix.rebirth(context);
+                  },
+                  child: Text("Применить"),
+                ),
               ],
             )
           ],
@@ -80,4 +78,3 @@ class ThemsWidgetsView extends StatelessWidget {
     );
   }
 }
-

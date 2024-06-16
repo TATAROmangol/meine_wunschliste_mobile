@@ -12,10 +12,6 @@ class LogOutWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15.0),
-        color: Color(0xFFE0C3).withOpacity(1),
-      ),
       height: screenSize.height * 0.05,
       width: screenSize.width * 0.54,
       margin: EdgeInsets.only(
@@ -24,10 +20,10 @@ class LogOutWidget extends StatelessWidget {
         left: screenSize.width * 0.05,
         right: screenSize.width * 0.05,
       ),
-      child: TextButton(
+      child: 
+      ElevatedButton(
         onPressed: () async {
           await AuthService().logOut(context, syncService);
-          
         },
         child: const Text("Сменить аккаунт"),
       ),

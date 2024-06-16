@@ -1,16 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:realm/realm.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
-    // Инициализация временной зоны
     tz.initializeTimeZones();
-
-    // Инициализация flutter_local_notifications
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     const IOSInitializationSettings initializationSettingsIOS =
@@ -27,22 +26,26 @@ class NotificationService {
   static Future<void> scheduleNotification({
     required String title,
     required String body,
-    required DateTime scheduledDate,
-    int id = 0, // ID уведомления
+    required DateTime? scheduledDate,
+    int id = 0,
   }) async {
-    // Получение текущего часового пояса
-    const String timeZoneName = 'Europe/Moscow';
-    final tz.Location timeZone = tz.getLocation(timeZoneName);
+    if (scheduledDate == null) {
+      print('Scheduled date is null, notification not scheduled.');
+      return;
+    }
 
-    // Преобразование DateTime в TZDateTime с учетом часового пояса
+    print('Scheduled date received: $scheduledDate');
+
     final tz.TZDateTime scheduledDateTime =
-        tz.TZDateTime.from(scheduledDate, timeZone);
+        tz.TZDateTime.from(scheduledDate, tz.local);
+
+    print('Scheduled date in local timezone: $scheduledDateTime');
 
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'your channel id', // ID канала уведомлений
-      title, // Название канала уведомлений
-      body, // Описание канала уведомлений
+      'your channel id',
+      title,
+      body,
       importance: Importance.max,
       priority: Priority.high,
     );
@@ -69,10 +72,7 @@ class NotificationService {
     required String body,
     required DateTime newScheduledDate,
   }) async {
-    // Отмена старого уведомления по его ID
     await cancelNotification(id);
-
-    // Планирование нового уведомления с обновленным временем
     await scheduleNotification(
       id: id,
       title: title,
@@ -82,7 +82,10 @@ class NotificationService {
   }
 
   static Future<void> cancelNotification(int id) async {
-    // Отмена уведомления по его ID
     await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  static Future<void> cancelAllNotifications() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 }

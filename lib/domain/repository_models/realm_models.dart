@@ -2,11 +2,21 @@ import 'package:realm/realm.dart';
 
 part 'realm_models.realm.dart';
 
+
+@RealmModel()
+class _UserNotification {
+  @PrimaryKey()
+  late int id;
+  late String title;
+  late String body;
+  late DateTime? scheduledDate;
+}
+
 @RealmModel()
 class _CustomUserTheme{
   late int? blocsColor;
   late int? borderColor;
-  late int? backgroundColor;
+  late String? imagePath;
   late int? textColor;
   late int? accentColor;
 }
@@ -59,4 +69,5 @@ class _Task {
   late String name;
   late String comment;
   late bool isComplete;
+  late DateTime? closeData;
 }

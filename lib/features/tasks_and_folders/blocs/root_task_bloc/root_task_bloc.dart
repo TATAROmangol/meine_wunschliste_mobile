@@ -48,14 +48,6 @@ class RootTaskBloc extends Bloc<RootTaskEvent, RootTaskState> {
       await repository.correctingTask(event.parentUid, Steps.subtask,
           event.task, event.task.name, event.task.comment, true, null);
       await repository.reloadCompleteChildren(event.parentUid, Steps.subtask);
-      NotificationService.cancelNotification(event.task.uid.hashCode);
-      add(ShowRootTaskEvent(
-          parentUid: event.parentUid, activeChildUid: event.task.uid));
-    });
-    on<UncompleteRootTaskChildEvent>((event, emit) async {
-      await repository.correctingTask(event.parentUid, Steps.subtask,
-          event.task, event.task.name, event.task.comment, false, null);
-      await repository.reloadCompleteChildren(event.parentUid, Steps.subtask);
       add(ShowRootTaskEvent(
           parentUid: event.parentUid, activeChildUid: event.task.uid));
     });

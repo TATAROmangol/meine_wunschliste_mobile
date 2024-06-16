@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import 'package:meine_wunschliste/services/firebase_options.dart';
 import 'package:meine_wunschliste/services/notification_service.dart';
 import 'package:meine_wunschliste/services/sync_service/sync_service.dart';
 import 'package:realm/realm.dart' as realm_dart;
-import 'package:timezone/data/latest.dart' as tz;
 
 import 'domain/repository_models/realm_models.dart';
 
@@ -33,6 +31,7 @@ void main() async {
     SubSubtasks.schema,
     CompleteTasks.schema,
     CustomUserTheme.schema,
+    UserNotification.schema,
     Task.schema,
   ]);
 
@@ -55,17 +54,19 @@ void main() async {
 
   runApp(
     Phoenix(
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   late Future<void> _initializeAppFuture;
 
   @override
@@ -88,13 +89,13 @@ class _MyAppState extends State<MyApp> {
       SubSubtasks.schema,
       CompleteTasks.schema,
       CustomUserTheme.schema,
+      UserNotification.schema,
       Task.schema,
     ]);
 
     final realm = realm_dart.Realm(config);
     final Repository repository = Repository(realm: realm);
-    final UserTheme theme = repository.createTheme();
-
+    final UserTheme userTheme = repository.createTheme();
 
     if (!GetIt.I.isRegistered<Repository>()) {
       GetIt.I.registerSingleton<Repository>(repository);
@@ -107,7 +108,18 @@ class _MyAppState extends State<MyApp> {
     if (GetIt.I.isRegistered<UserTheme>()) {
       GetIt.I.unregister<UserTheme>();
     }
-    GetIt.I.registerSingleton<UserTheme>(theme);
+    GetIt.I.registerSingleton<UserTheme>(userTheme);
+  }
+
+  Color transformColor(Color color) {
+    int red = color.red;
+    int green = color.green + 28;
+    int blue = color.blue + 34;
+
+    green = green.clamp(0, 255);
+    blue = blue.clamp(0, 255);
+
+    return Color.fromARGB(color.alpha, red, green, blue);
   }
 
   @override
@@ -126,14 +138,119 @@ class _MyAppState extends State<MyApp> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
+          final UserTheme userTheme = GetIt.I.get<UserTheme>();
           return MaterialApp(
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              primaryColor: userTheme.textColor,
+              textTheme: TextTheme(
+                displayLarge: TextStyle(
+                  fontFamily: 'Kinoble',
+                  fontWeight: FontWeight.bold,
+                  color: userTheme.textColor,
+                ),
+                displayMedium: TextStyle(
+                  fontFamily: 'Kinoble',
+                  fontWeight: FontWeight.bold,
+                  color: userTheme.textColor,
+                ),
+                displaySmall: TextStyle(
+                  fontFamily: 'Kinoble',
+                  fontWeight: FontWeight.bold,
+                  color: userTheme.textColor,
+                ),
+                headlineLarge: TextStyle(
+                  fontFamily: 'Kinoble',
+                  fontWeight: FontWeight.bold,
+                  color: userTheme.textColor,
+                ),
+                headlineMedium: TextStyle(
+                  fontFamily: 'Kinoble',
+                  fontWeight: FontWeight.bold,
+                  color: userTheme.textColor,
+                ),
+                headlineSmall: TextStyle(
+                  fontFamily: 'Kinoble',
+                  fontWeight: FontWeight.bold,
+                  color: userTheme.textColor,
+                ),
+                titleLarge: TextStyle(
+                  fontFamily: 'Kinoble',
+                  fontWeight: FontWeight.bold,
+                  color: userTheme.textColor,
+                ),
+                titleMedium: TextStyle(
+                  fontFamily: 'Kinoble',
+                  color: userTheme.textColor,
+                ),
+                titleSmall: TextStyle(
+                  fontFamily: 'Kinoble',
+                  color: userTheme.textColor,
+                ),
+                bodyLarge: TextStyle(
+                  fontFamily: 'Kinoble',
+                  color: userTheme.textColor,
+                ),
+                bodyMedium: TextStyle(
+                  fontFamily: 'Kinoble',
+                  color: userTheme.textColor,
+                ),
+                labelLarge: TextStyle(
+                  fontFamily: 'Kinoble',
+                  color: userTheme.textColor,
+                ),
+                bodySmall: TextStyle(
+                  fontFamily: 'Kinoble',
+                  color: userTheme.textColor,
+                ),
+                labelSmall: TextStyle(
+                  fontFamily: 'Kinoble',
+                  color: userTheme.textColor,
+                ),
+              ),
+              buttonTheme: ButtonThemeData(
+                buttonColor: userTheme.textColor, // Цвет фона кнопок
+                textTheme: ButtonTextTheme.primary,
+              ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    transformColor(userTheme.accentColor),
+                  ),
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                    userTheme.textColor,
+                  ),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                  side: MaterialStateProperty.all<BorderSide>(
+                    BorderSide(color: userTheme.borderColor, width: 1.0),
+                  ),
+                ),
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: userTheme.textColor, // Цвет текста TextButton
+                ),
+              ),
+              outlinedButtonTheme: OutlinedButtonThemeData(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: userTheme.textColor, // Цвет текста OutlinedButton
+                  side: BorderSide(color: userTheme.textColor), // Цвет обводки OutlinedButton
+                ),
+              ),
+              iconTheme: IconThemeData(color: userTheme.textColor), // Цвет иконок
+            ),
+
             home: (FirebaseAuth.instance.currentUser != null)
-                ? MainScreen()
+                ? const MainScreen()
                 : AuthView(),
           );
         }
 
-        return MaterialApp(
+        return const  MaterialApp(
           home: Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
@@ -148,6 +265,9 @@ class _MyAppState extends State<MyApp> {
 
 
 
+// import 'dart:io';
+// import 'package:realm/realm.dart';
+// import 'package:path_provider/path_provider.dart';
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   await Firebase.initializeApp(
@@ -164,26 +284,21 @@ class _MyAppState extends State<MyApp> {
 //     Task.schema
 //   ]);
 
-//   final realm = await Realm.open(config);
-//   GetIt.I.registerSingleton<Repository>(Repository(realm: realm));
-//   GetIt.I.registerSingleton<SyncService>(SyncService(realm: realm));
-//   // final Directory directory = await getApplicationDocumentsDirectory();
-//   // final String path = directory.path + '/default.realm';
+//   final Directory directory = await getApplicationDocumentsDirectory();
+//   final String path = directory.path + '/default.realm';
 
-//   // try {
-//   //   final realm = await Realm.open(config);
-//   //   realm.deleteAll();
-//   //   realm.close();
-//   //   GetIt.I.registerSingleton<Repository>(Repository(realm: realm));
-//   // } catch (e) {
-//   //   // Если произошла ошибка миграции, удаляем файл базы данных
-//   //   File(path).deleteSync();
-//   //   print('Deleted realm file due to migration error');
-//   // }
+//   try {
+//     final realm = await Realm.open(config);
+//     realm.deleteAll();
+//     realm.close();
+//     GetIt.I.registerSingleton<Repository>(Repository(realm: realm));
+//   } catch (e) {
+//     // Если произошла ошибка миграции, удаляем файл базы данных
+//     File(path).deleteSync();
+//     print('Deleted realm file due to migration error');
+//   }
 
 //   runApp(MaterialApp(
-//     home: (FirebaseAuth.instance.currentUser != null)
-//         ? SyncView()
-//         : AuthView(),
+//     home:AuthView(),
 //   ));
 // }

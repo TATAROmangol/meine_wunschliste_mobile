@@ -1,7 +1,7 @@
 enum ThemeParameters {
   blocsColor,
   borderColor,
-  backgroundColor,
+  imagePath,
   textColor,
   accentColor,
 }

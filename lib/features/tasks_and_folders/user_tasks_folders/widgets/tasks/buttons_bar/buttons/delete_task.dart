@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 
 class DeleteTaskButton extends StatefulWidget {
@@ -19,6 +21,7 @@ class DeleteTaskButton extends StatefulWidget {
 }
 
 class DeleteTaskButtonState extends State<DeleteTaskButton> {
+  final UserTheme theme = GetIt.I.get<UserTheme>();
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -40,7 +43,14 @@ class DeleteTaskButtonState extends State<DeleteTaskButton> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Вы уверенны?'),
+              title: widget.parentBloc is TasksTreesBloc
+                  ? const Text('Удалить мечту?')
+                  : const Text('Удалить задачу?'),
+              backgroundColor: theme.accentColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(35.0),
+                side: BorderSide(color: theme.borderColor, width: 2.0),
+              ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {

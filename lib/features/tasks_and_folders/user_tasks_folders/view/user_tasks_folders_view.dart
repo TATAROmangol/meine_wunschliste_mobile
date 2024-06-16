@@ -24,7 +24,7 @@ class UserTasksFolders extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Мои мечты'),
+          title: Text('Мои мечты', style: TextStyle(color: theme.textColor)),
           backgroundColor: theme.accentColor,
           toolbarHeight: screenHeight * 0.05,
         ),

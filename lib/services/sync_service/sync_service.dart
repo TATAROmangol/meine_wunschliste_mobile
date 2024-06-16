@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meine_wunschliste/domain/repository.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/services/notification_service.dart';
 import 'package:meine_wunschliste/services/sync_service/convert_methods.dart';
 import 'package:realm/realm.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
@@ -20,6 +21,15 @@ class SyncService {
     final String userId = user.uid;
     final DocumentReference userDoc =
         FirebaseFirestore.instance.collection('users').doc(userId);
+
+    await NotificationService.cancelAllNotifications();
+    final CollectionReference _notificationsCollection =
+        userDoc.collection('Notifications');
+    var snapshotNotifications = await _notificationsCollection.get();
+    var notifications = snapshotNotifications.docs
+        .map((doc) => convertFirestoreNotificationToRealm(
+            doc.data() as Map<String, dynamic>))
+        .toList();
 
     final CollectionReference _subSubtasksCollection =
         userDoc.collection('SubSubtasks');
@@ -61,6 +71,10 @@ class SyncService {
         .toList();
 
     realm.write(() {
+      for (var notification in notifications) {
+        realm.add<UserNotification>(notification);
+        NotificationService.scheduleNotification(title: notification.title, body: notification.body, scheduledDate: notification.scheduledDate);
+      }
       for (var subSubtask in subSubtasks) {
         realm.add<SubSubtasks>(subSubtask);
       }
@@ -89,6 +103,7 @@ class SyncService {
         FirebaseFirestore.instance.collection('users').doc(userId);
 
     // Получаем данные из Realm
+    var realmNotifications = realm.all<UserNotification>().toList();
     var realmSubSubtasks = realm.all<SubSubtasks>().toList();
     var realmSubtasks = realm.all<Subtasks>().toList();
     var realmRootTasks = realm.all<RootTasks>().toList();
@@ -96,11 +111,23 @@ class SyncService {
     var realmCompleteTasks = realm.all<CompleteTasks>().toList();
 
     // Удаляем старые документы из коллекций
+    await _clearFirestoreCollection(userDoc.collection('Notifications'));
+    await NotificationService.cancelAllNotifications();
     await _clearFirestoreCollection(userDoc.collection('SubSubtasks'));
     await _clearFirestoreCollection(userDoc.collection('Subtasks'));
     await _clearFirestoreCollection(userDoc.collection('RootTasks'));
     await _clearFirestoreCollection(userDoc.collection('Folder'));
     await _clearFirestoreCollection(userDoc.collection('CompleteTasks'));
+
+    // Обновляем уведомления
+    for (var notification in realmNotifications) {
+      await userDoc
+          .collection('Notifications')
+          .doc(notification.id.toString())
+          .set(convertRealmNotificationToFirestore(notification));
+
+        NotificationService.scheduleNotification(title: notification.title, body: notification.body, scheduledDate: notification.scheduledDate);
+    }
 
     // Обновляем под-подзадачи
     for (var subSubtask in realmSubSubtasks) {
@@ -153,5 +180,6 @@ class SyncService {
 
   Future<void> clearRealmData() async {
     repository.goClearRepository();
+    NotificationService.cancelAllNotifications();
   }
 }

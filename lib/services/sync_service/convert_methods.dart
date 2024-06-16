@@ -1,5 +1,23 @@
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 
+UserNotification convertFirestoreNotificationToRealm(Map<String, dynamic> firestoreNotification) {
+  return UserNotification(
+    firestoreNotification['id'] as int,
+    firestoreNotification['title'] as String,
+    firestoreNotification['body'] as String,
+    scheduledDate: firestoreNotification['scheduledDate'] as DateTime?,
+  );
+}
+
+Map<String, dynamic> convertRealmNotificationToFirestore(UserNotification realmNotification) {
+  return {
+    'id': realmNotification.id,
+    'title': realmNotification.title,
+    'body': realmNotification.body,
+    'scheduledDate': realmNotification.scheduledDate,
+  };
+}
+
 Folder convertFirestoreFolderToRealm(Map<String, dynamic> firestoreFolder) {
   return Folder(
     firestoreFolder['uid'] as String,

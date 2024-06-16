@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/complete_tasks/widgets/widgets.dart';
 
@@ -33,6 +36,7 @@ class CompleteRootTaskWidgetState extends State<CompleteRootTaskWidget> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final UserTheme theme = GetIt.I.get<UserTheme>();
     //ты писька
     return BlocListener<TasksTreesBloc, TasksTreesState>(
       bloc: widget.parentBloc,
@@ -55,26 +59,26 @@ class CompleteRootTaskWidgetState extends State<CompleteRootTaskWidget> {
                     decoration: !widget.isActive
                         ? BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
-                            color: Color(0xFFFFFF).withOpacity(0.5),
+                            color: theme.blocsColor,
                           )
                         : BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
-                            color: Color(0xFFFFFF).withOpacity(0.5),
-                            border: const Border(
+                            color: theme.blocsColor,
+                            border: Border(
                               left: BorderSide(
-                                color: Colors.green,
+                                color: theme.borderColor,
                                 width: 2.0,
                               ),
                               right: BorderSide(
-                                color: Colors.green,
+                                color: theme.borderColor,
                                 width: 3.0,
                               ),
                               bottom: BorderSide(
-                                color: Colors.green,
+                                color: theme.borderColor,
                                 width: 3.0,
                               ),
                               top: BorderSide(
-                                color: Colors.green,
+                                color: theme.borderColor,
                                 width: 2.0,
                               ),
                             ),
@@ -90,15 +94,27 @@ class CompleteRootTaskWidgetState extends State<CompleteRootTaskWidget> {
                       children: [
                         Expanded(
                           child: TextButton(
-                              onPressed: () {
-                                state is ShowRootTaskState
-                                    ? widget.parentBloc
-                                        .add(ShowCompleteTasksTreesEvent())
-                                    : widget.parentBloc.add(
-                                        ShowCompleteTasksTreesEvent(
-                                            activeChildUid: widget.task.uid));
-                              },
-                              child: Text(widget.task.name)),
+                            onPressed: () {
+                              state is ShowRootTaskState
+                                  ? widget.parentBloc
+                                      .add(ShowCompleteTasksTreesEvent())
+                                  : widget.parentBloc.add(
+                                      ShowCompleteTasksTreesEvent(
+                                          activeChildUid: widget.task.uid));
+                            },
+                            child: Center(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    widget.task.name,
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                      '${DateFormat('dd-MM-yyyy').format(widget.task.closeData!)}')
+                                ],
+                              ),
+                            ),
+                          ),
                         )
                       ],
                     ),

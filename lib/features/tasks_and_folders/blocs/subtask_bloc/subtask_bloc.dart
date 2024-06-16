@@ -49,7 +49,6 @@ class SubtaskBloc extends Bloc<SubtaskEvent, SubtaskState> {
           event.task, event.task.name, event.task.comment, true, null);
       await repository.reloadCompleteChildren(
           event.parentUid, Steps.subSubtask);
-          NotificationService.cancelNotification(event.task.uid.hashCode);
       add(ShowSubtaskEvent(
           parentUid: event.parentUid, activeChildUid: event.task.uid));
     });

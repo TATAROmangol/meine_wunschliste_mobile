@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
+import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/tasks/buttons_bar/buttons/buttons.dart';
 
 class AddTasksTreeButton extends StatefulWidget {
   const AddTasksTreeButton({super.key});
@@ -15,13 +17,32 @@ class AddTasksTreeButtonState extends State<AddTasksTreeButton> {
   final UserTheme theme = GetIt.I.get<UserTheme>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController commentController = TextEditingController();
-  DateTime? dateTime;
+  DataTextController buttonTextController = DataTextController('Выбрать дату');
+  DateTime? selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    buttonTextController = DataTextController('Выбрать дату');
+  }
 
   @override
   void dispose() {
     nameController.dispose();
     commentController.dispose();
+    buttonTextController = DataTextController('Выбрать дату');
     super.dispose();
+  }
+
+  Color transformColor(Color color) {
+    int red = color.red;
+    int green = color.green + 28;
+    int blue = color.blue + 34;
+
+    green = green.clamp(0, 255);
+    blue = blue.clamp(0, 255);
+
+    return Color.fromARGB(color.alpha, red, green, blue);
   }
 
   @override
@@ -53,58 +74,108 @@ class AddTasksTreeButtonState extends State<AddTasksTreeButton> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Добавить Задачу'),
-              content: SizedBox(
-                width: screenSize.width * 0.8,
-                height: screenSize.width * 0.8,
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Введите название',
+              backgroundColor: theme.accentColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(35.0),
+                side: BorderSide(color: theme.borderColor, width: 2.0),
+              ),
+              content: SingleChildScrollView(
+                child: SizedBox(
+                  width: screenSize.width * 0.8,
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Введите название',
+                          filled: true,
+                          fillColor: transformColor(theme.accentColor),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: theme.borderColor,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: theme.borderColor,
+                              width: 2.0,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: theme.textColor,
+                          ),
+                        ),
+                        style: TextStyle(color: theme.textColor),
                       ),
-                    ),
-                    TextField(
-                      controller: commentController,
-                      decoration: const InputDecoration(
-                        labelText: 'Введите описание',
+                      SizedBox(height: 20.0),
+                      TextField(
+                        controller: commentController,
+                        decoration: InputDecoration(
+                          labelText: 'Введите описание',
+                          filled: true,
+                          fillColor: transformColor(theme.accentColor),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: theme.borderColor,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: theme.borderColor,
+                              width: 2.0,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: theme.textColor,
+                          ),
+                        ),
+                        style: TextStyle(color: theme.textColor),
+                        maxLines: null,
+                        minLines: 3,
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null) {
-                          final TimeOfDay? time = await showTimePicker(
+                      SizedBox(height: 10.0),
+                      TextButton(
+                        onPressed: () async {
+                          final DateTime? picked = await showDatePicker(
                             context: context,
-                            initialTime: TimeOfDay.now(),
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2101),
                           );
-                          if (time != null) {
+
+                          if (picked != null) {
                             setState(() {
-                              dateTime = DateTime(
-                                picked.year,
-                                picked.month,
-                                picked.day,
-                                time.hour,
-                                time.minute,
-                              );
+                              selectedDate = DateTime(
+                                  picked.year, picked.month, picked.day, 15, 5);
                             });
+                            buttonTextController.setText(
+                                '${DateFormat('dd-MM-yyyy').format(selectedDate!)}');
                           }
-                        }
-                      },
-                      child: const Text('Выбрать дату и время'),
-                    ),
-                    if (dateTime != null) Text('Дата: ${dateTime.toString()}'),
-                  ],
+                        },
+                        child: ValueListenableBuilder<String>(
+                          valueListenable: buttonTextController.textNotifier,
+                          builder: (context, buttonText, _) {
+                            return Text(buttonText);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
+                    nameController.clear();
+                    commentController.clear();
+                    buttonTextController = DataTextController('Выбрать дату');
+                    selectedDate = null;
                     Navigator.of(context).pop();
                   },
                   child: const Text('Отмена'),
@@ -117,11 +188,12 @@ class AddTasksTreeButtonState extends State<AddTasksTreeButton> {
                       tasksTreeBloc.add(AddTasksTreeEvent(
                           name: taskName,
                           comment: taskComment,
-                          dateTime: dateTime));
+                          dateTime: selectedDate));
                     }
                     nameController.clear();
                     commentController.clear();
-                    dateTime = null;
+                    buttonTextController = DataTextController('Выбрать дату');
+                    selectedDate = null;
                     Navigator.of(context).pop();
                   },
                   child: const Text('Добавить'),

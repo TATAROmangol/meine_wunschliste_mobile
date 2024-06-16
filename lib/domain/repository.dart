@@ -13,25 +13,62 @@ class Repository {
   final Realm realm;
   ActiveFolder activeFolder = ActiveFolder();
 
-  Future<void> changeTheme(List<(ThemeParameters, int)> selectedColors) async {
+  Future<void> notificationRegister(
+      DateTime? selectedDate, Task task, Steps step) async {
+    if (selectedDate != null) {
+      final newNotification = UserNotification(
+        task.uid.hashCode,
+        step is RootTasks
+            ? "Вы успели исполнить мечту?"
+            : "Вы успели достичь цель?",
+        task.name,
+        scheduledDate: selectedDate,
+      );
+
+      realm.write(() {
+        realm.add<UserNotification>(newNotification);
+      });
+
+      await NotificationService.scheduleNotification(
+        title: newNotification.title,
+        body: task.name,
+        scheduledDate: selectedDate,
+        id: task.uid.hashCode,
+      );
+    }
+  }
+
+  Future<void> deleteNotification(int uid) async {
+    final notif = realm.find<UserNotification>(uid);
+    if (notif == null) return;
+    realm.write(() {
+      realm.delete<UserNotification>(notif);
+    });
+  }
+
+  UserNotification? getNotification(int uid) {
+    return realm.find<UserNotification>(uid);
+  }
+
+  Future<void> changeTheme(List<(ThemeParameters, String)> selectedColors) async {
     final themeRepository = realm.all<CustomUserTheme>().first;
     for (var color in selectedColors) {
       realm.write(() {
         switch (color.$1) {
           case ThemeParameters.blocsColor:
-            themeRepository.blocsColor = color.$2;
+            themeRepository.blocsColor = int.parse(color.$2);
             break;
           case ThemeParameters.borderColor:
-            themeRepository.borderColor = color.$2;
+            themeRepository.borderColor = int.parse(color.$2);
             break;
-          case ThemeParameters.backgroundColor:
-            themeRepository.backgroundColor = color.$2;
+          case ThemeParameters.imagePath:
+            themeRepository.imagePath = color.$2;
             break;
           case ThemeParameters.textColor:
-            themeRepository.textColor = color.$2;
+            themeRepository.textColor = int.parse(color.$2);
             break;
           case ThemeParameters.accentColor:
-            themeRepository.accentColor = color.$2;
+            themeRepository.accentColor = int.parse(color.$2);
             break;
         }
       });
@@ -57,17 +94,16 @@ class Repository {
         theme.blocsColor != null ? theme.blocsColor!.toInt() : 0x99FFE0C3;
     int borderColor =
         theme.borderColor != null ? theme.borderColor!.toInt() : 0xFF000000;
-    int backgroundColor = theme.backgroundColor != null
-        ? theme.backgroundColor!.toInt()
-        : 0xFFFFE0C3;
+    String imagePath =
+        theme.imagePath != null ? theme.imagePath! : 'assets/background.jpeg' ;
     int textColor =
-        theme.textColor != null ? theme.textColor!.toInt() : 0xFFFFE0C3;
+        theme.textColor != null ? theme.textColor!.toInt() : 0xFF000000;
     int accentColor =
         theme.accentColor != null ? theme.accentColor!.toInt() : 0xFFFF9648;
     return UserTheme(
         blocsColor: Color(blocsColor),
         borderColor: Color(borderColor),
-        backgroundColor: Color(backgroundColor),
+        imagePath: imagePath,
         textColor: Color(textColor),
         accentColor: Color(accentColor));
   }
@@ -234,6 +270,7 @@ class Repository {
 
   Future<void> moveToCompleteRootTask(String parentUid, Task deleteTask) async {
     var rootTasksRepository = realm.find<RootTasks>(parentUid);
+
     if (rootTasksRepository != null) {
       var tasks = rootTasksRepository.tasks.map((e) => e).toList();
       tasks.remove(deleteTask);
@@ -280,18 +317,10 @@ class Repository {
   Future<void> addTask(Steps step, String parentUid, String name,
       String comment, DateTime? selectedDate) async {
     final uid = Uuid.v4().toString();
-    var tasks = [Task(uid, name, comment, false)];
-    if (selectedDate != null) {
-      NotificationService.scheduleNotification(
-        title: step is RootTasks
-            ? "Вы успели исполнить мечту?"
-            : "Вы успели достичь цель?",
-        body: name,
-        scheduledDate: selectedDate,
-        id: uid.hashCode,
-        
-      );
-    }
+    var newTask = Task(uid, name, comment, false);
+    var tasks = [newTask];
+
+    notificationRegister(selectedDate, newTask, step);
     if (step == Steps.rootTask) {
       realm.write(() {
         var topTasksRepository = realm.find<RootTasks>(parentUid);
@@ -356,14 +385,9 @@ class Repository {
 
   Future<void> correctingTask(String parentUid, Steps step, Task task,
       String name, String comment, bool isComplete, DateTime? dateTime) async {
-    if (dateTime != null) {
-      NotificationService.updateScheduledNotification(
-          id: task.uid.hashCode,
-          title: step is RootTasks
-              ? "Вы успели исполнить мечту?"
-              : "Вы успели достичь цель?",
-          body: task.name,
-          newScheduledDate: dateTime);
+    deleteNotification(task.uid.hashCode);
+    if (!isComplete && dateTime != null) {
+      notificationRegister(dateTime, task, step);
     }
 
     if (step == Steps.rootTask) {
@@ -376,6 +400,7 @@ class Repository {
         tasks[order].name = name;
         tasks[order].comment = comment;
         tasks[order].isComplete = isComplete;
+        tasks[order].closeData = isComplete ? DateTime.now() : null;
         realm.add<RootTasks>(RootTasks(parentUid, tasks: tasks));
       });
     } else if (step == Steps.subtask) {
@@ -389,6 +414,7 @@ class Repository {
         tasks[order].name = name;
         tasks[order].comment = comment;
         tasks[order].isComplete = isComplete;
+        tasks[order].closeData = isComplete ? DateTime.now() : null;
         realm.add<Subtasks>(Subtasks(parentUid, complete, tasks: tasks));
       });
     } else {
@@ -402,6 +428,7 @@ class Repository {
         tasks[order].name = name;
         tasks[order].comment = comment;
         tasks[order].isComplete = isComplete;
+        tasks[order].closeData = isComplete ? DateTime.now() : null;
         realm.add<SubSubtasks>(SubSubtasks(parentUid, complete, tasks: tasks));
       });
     }
@@ -409,7 +436,7 @@ class Repository {
 
   Future<void> deleteTask(String parentUid, Steps step, Task task,
       {bool all = false}) async {
-        NotificationService.cancelNotification(task.uid.hashCode);
+    deleteNotification(task.uid.hashCode);
     return step == Steps.rootTask
         ? _deleteRootTask(parentUid, step, task, all: all)
         : step == Steps.subtask
@@ -419,7 +446,7 @@ class Repository {
 
   Future<void> _deleteRootTask(String parentUid, Steps step, Task deleteTask,
       {bool all = false}) async {
-        NotificationService.cancelNotification(deleteTask.uid.hashCode);
+    NotificationService.cancelNotification(deleteTask.uid.hashCode);
     var subtasksRepository = realm.find<Subtasks>(deleteTask.uid);
     if (subtasksRepository != null) {
       for (var task in subtasksRepository.tasks) {
@@ -442,7 +469,7 @@ class Repository {
 
   Future<void> _deleteSubtaskTask(String parentUid, Steps step, Task deleteTask,
       {bool all = false}) async {
-        NotificationService.cancelNotification(deleteTask.uid.hashCode);
+    NotificationService.cancelNotification(deleteTask.uid.hashCode);
     var subtasksRepository = realm.find<Subtasks>(parentUid);
     if (subtasksRepository != null) {
       realm.write(() {
@@ -466,7 +493,7 @@ class Repository {
   Future<void> _deleteSubSubtaskTask(
       String parentUid, Steps step, Task deleteTask,
       {bool all = false}) async {
-        NotificationService.cancelNotification(deleteTask.uid.hashCode);
+    NotificationService.cancelNotification(deleteTask.uid.hashCode);
     realm.write(() {
       var tasks = realm.find<SubSubtasks>(parentUid)!.tasks;
       if (!all) {
@@ -483,6 +510,7 @@ class Repository {
       realm.deleteAll<RootTasks>();
       realm.deleteAll<CompleteTasks>();
       realm.deleteAll<ActiveFolder>();
+      realm.deleteAll<UserNotification>();
       realm.deleteAll<Folder>();
       activeFolder = ActiveFolder();
     });
