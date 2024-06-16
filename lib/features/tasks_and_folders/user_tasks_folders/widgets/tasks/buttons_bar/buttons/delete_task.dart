@@ -21,45 +21,53 @@ class DeleteTaskButton extends StatefulWidget {
 class DeleteTaskButtonState extends State<DeleteTaskButton> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Вы уверенны?'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Отмена'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.parentBloc is TasksTreesBloc
-                          ? widget.parentBloc
-                              .add(DeleteTasksTreeChildEvent(task: widget.task))
-                          : widget.parentBloc is RootTaskBloc
-                              ? widget.parentBloc.add(DeleteRootTaskChildEvent(
-                                  parentUid: widget.parentUid,
-                                  task: widget.task))
-                              : widget.parentBloc.add(DeleteSubtaskChildEvent(
-                                  parentUid: widget.parentUid,
-                                  task: widget.task));
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Удалить'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
+    final Size screenSize = MediaQuery.of(context).size;
+    return GestureDetector(
+      child: SizedBox(
+        width: screenSize.height * 0.04,
+        height: screenSize.height * 0.04,
+        child: Center(
+          child: Image.asset(
+            'assets/icons/delete.png',
+            width: screenSize.height * 0.04,
+            height: screenSize.height * 0.04,
+            fit: BoxFit.contain,
+          ),
+        ),
       ),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Вы уверенны?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Отмена'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    widget.parentBloc is TasksTreesBloc
+                        ? widget.parentBloc
+                            .add(DeleteTasksTreeChildEvent(task: widget.task))
+                        : widget.parentBloc is RootTaskBloc
+                            ? widget.parentBloc.add(DeleteRootTaskChildEvent(
+                                parentUid: widget.parentUid, task: widget.task))
+                            : widget.parentBloc.add(DeleteSubtaskChildEvent(
+                                parentUid: widget.parentUid,
+                                task: widget.task));
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Удалить'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

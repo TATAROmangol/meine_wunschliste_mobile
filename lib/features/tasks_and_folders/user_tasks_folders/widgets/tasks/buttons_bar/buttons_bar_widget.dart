@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/tasks/buttons_bar/buttons_bar.dart';
 
@@ -25,6 +27,21 @@ class ButtonsBarwidget extends StatefulWidget {
 
 class ButtonsBarwidgetState extends State<ButtonsBarwidget> {
   bool showComment = false;
+  final UserTheme theme = GetIt.I.get<UserTheme>();
+
+  Color subSubColor(Color color) {
+    int green = (color.green - 8).clamp(0, 255);
+    int blue = (color.blue - 20).clamp(0, 255);
+
+    return Color.fromARGB(color.alpha, color.red, green, blue);
+  }
+
+  Color subColor(Color color) {
+    int green = (color.green - 4).clamp(0, 255);
+    int blue = (color.blue - 10).clamp(0, 255);
+
+    return Color.fromARGB(color.alpha, color.red, green, blue);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +53,21 @@ class ButtonsBarwidgetState extends State<ButtonsBarwidget> {
           bottomRight: Radius.circular(10.0),
         ),
         color: widget.currentBloc is RootTaskBloc
-            ? Color(0xFFFFFF).withOpacity(0.5)
+            ? theme.blocsColor
             : widget.currentBloc is SubtaskBloc
-                ? Color(0xFFF4E5).withOpacity(0.5)
-                : Color(0xFFE0C3).withOpacity(0.5),
-        border: const Border(
+                ? subColor(theme.blocsColor)
+                : subSubColor(theme.blocsColor),
+        border: Border(
           left: BorderSide(
-            color: Colors.black,
+            color: theme.borderColor,
             width: 2.0,
           ),
           right: BorderSide(
-            color: Colors.black,
+            color: theme.borderColor,
             width: 3.0,
           ),
           bottom: BorderSide(
-            color: Colors.black,
+            color: theme.borderColor,
             width: 3.0,
           ),
         ),
@@ -75,6 +92,7 @@ class ButtonsBarwidgetState extends State<ButtonsBarwidget> {
                 ),
       child: widget.task.isComplete
           ? Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 UncompleteTaskButton(
                     parentUid: widget.parentUid,
@@ -83,25 +101,14 @@ class ButtonsBarwidgetState extends State<ButtonsBarwidget> {
               ],
             )
           : Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     if (widget.currentBloc is! SubSubtaskBloc)
-                      AddChildTaskButton(
-                          currentBloc: widget.currentBloc, task: widget.task),
-                    if (widget.currentBloc is! SubSubtaskBloc)
                       ChangeChildrenTasksOrderButton(
                           task: widget.task, currentBloc: widget.currentBloc),
-                    showComment
-                        ? IconButton(
-                            onPressed: () =>
-                                setState(() => showComment = !showComment),
-                            icon: const Icon(Icons.airplanemode_active))
-                        : IconButton(
-                            onPressed: () =>
-                                setState(() => showComment = !showComment),
-                            icon: const Icon(Icons.airplanemode_inactive)),
                     DeleteTaskButton(
                         parentBloc: widget.parentBloc,
                         task: widget.task,
@@ -110,21 +117,45 @@ class ButtonsBarwidgetState extends State<ButtonsBarwidget> {
                         parentBloc: widget.parentBloc,
                         parentUid: widget.parentUid,
                         task: widget.task),
-                    widget.childrenComplete
-                        ? CompleteTaskButton(
-                            parentUid: widget.parentUid,
-                            parentBloc: widget.parentBloc,
-                            task: widget.task)
-                        : const Icon(Icons.add_alert)
+                    if (widget.childrenComplete)
+                      CompleteTaskButton(
+                          parentUid: widget.parentUid,
+                          parentBloc: widget.parentBloc,
+                          task: widget.task),
+                    GestureDetector(
+                        child: Container(
+                          height: screenSize.height * 0.04,
+                          width: screenSize.height * 0.04,
+                          margin: EdgeInsets.only(
+                              bottom: screenSize.height * 0.006,
+                              top: screenSize.height * 0.006),
+                          child: Center(
+                            child: Image.asset(
+                              showComment
+                                  ? 'assets/icons/show.png'
+                                  : 'assets/icons/unshow.png',
+                              width: screenSize.height * 0.035,
+                              height: screenSize.height * 0.035,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() => showComment = !showComment);
+                        }),
+                    if (widget.currentBloc is! SubSubtaskBloc)
+                      AddChildTaskButton(
+                          currentBloc: widget.currentBloc,
+                          parentUid: widget.task.uid),
                   ],
                 ),
                 if (showComment)
                   Container(
                     width: screenSize.width * 0.78,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
                         top: BorderSide(
-                          color: Colors.black,
+                          color: theme.borderColor,
                           width: 2.0,
                         ),
                       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/tasks/buttons_bar/buttons_bar_widget.dart';
 
@@ -22,9 +24,19 @@ class SubSubtaskWidget extends StatefulWidget {
 }
 
 class SubSubtaskWidgetState extends State<SubSubtaskWidget> {
+  final UserTheme theme = GetIt.I.get<UserTheme>();
+
+  Color subSubColor(Color color) {
+    int green = (color.green - 12).clamp(0, 255);
+    int blue = (color.blue - 24).clamp(0, 255);
+
+    return Color.fromARGB(color.alpha, color.red, green, blue);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final Color currentColor = subSubColor(theme.blocsColor);
 
     return BlocListener<SubtaskBloc, SubtaskState>(
       bloc: widget.parentBloc,
@@ -45,29 +57,29 @@ class SubSubtaskWidgetState extends State<SubSubtaskWidget> {
                     state is ShowSubSubtaskState || widget.parentTask.isComplete
                         ? BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
-                            color: Color(0xFFE0C3).withOpacity(0.5),
-                            border: const Border(
+                            color: currentColor,
+                            border: Border(
                               left: BorderSide(
-                                color: Colors.black,
+                                color: theme.borderColor,
                                 width: 2.0,
                               ),
                               right: BorderSide(
-                                color: Colors.black,
+                                color: theme.borderColor,
                                 width: 3.0,
                               ),
                               bottom: BorderSide(
-                                color: Colors.black,
+                                color: theme.borderColor,
                                 width: 3.0,
                               ),
                               top: BorderSide(
-                                color: Colors.black,
+                                color: theme.borderColor,
                                 width: 2.0,
                               ),
                             ),
                           )
                         : BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
-                            color: Color(0xFFE0C3).withOpacity(0.5),
+                            color: currentColor,
                           ),
                 height: screenSize.height * 0.07,
                 width: screenSize.width * 0.84,

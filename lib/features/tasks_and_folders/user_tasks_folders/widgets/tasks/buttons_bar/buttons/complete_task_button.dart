@@ -17,18 +17,29 @@ class CompleteTaskButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
+    final Size screenSize = MediaQuery.of(context).size;
+    return GestureDetector(
+      child: SizedBox(
+        width: screenSize.height * 0.04,
+        height: screenSize.height * 0.04,
+        child: Center(
+          child: Image.asset(
+            'assets/icons/complete.png',
+            width: screenSize.height * 0.04,
+            height: screenSize.height * 0.04,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+      onTap: () {
         parentBloc is TasksTreesBloc
-            ? parentBloc.add(
-                CompleteTasksTreeChildEvent(task: task))
+            ? parentBloc.add(CompleteTasksTreeChildEvent(task: task))
             : parentBloc is RootTaskBloc
                 ? parentBloc.add(CompleteRootTaskChildEvent(
                     parentUid: parentUid, task: task))
                 : parentBloc.add(CompleteSubtaskaskChildEvent(
                     parentUid: parentUid, task: task));
       },
-      icon: const Icon(Icons.add_task),
     );
   }
 }

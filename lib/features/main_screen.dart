@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 import 'package:meine_wunschliste/features/custom_bottom_navigation_bar.dart';
 import 'package:meine_wunschliste/features/profile/view/profile_view.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/complete_tasks/view/complete_tasks_view.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/view/view.dart';
+import 'package:meine_wunschliste/features/thems/view/thems_view.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,8 +20,9 @@ class MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     const ProfileView(),
-    const UserTasksFolders(),
+    ThemsWidgetsView(),
     const CompleteTasksView(),
+    const UserTasksFolders(),
   ];
 
   void _onTabTappedInit(int index, TasksTreesBloc initBloc) {

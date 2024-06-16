@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/tasks/buttons_bar/buttons_bar_widget.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/widgets.dart';
@@ -24,10 +26,19 @@ class SubtaskWidget extends StatefulWidget {
 
 class SubtaskWidgetState extends State<SubtaskWidget> {
   bool showComment = false;
+  final UserTheme theme = GetIt.I.get<UserTheme>();
+
+  Color subColor(Color color) {
+    int green = (color.green - 6).clamp(0, 255);
+    int blue = (color.blue - 12).clamp(0, 255);
+
+    return Color.fromARGB(color.alpha, color.red, green, blue);
+  }
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final Color currentColor = subColor(theme.blocsColor);
 
     return BlocListener<RootTaskBloc, RootTaskState>(
       bloc: widget.parentBloc,
@@ -48,26 +59,26 @@ class SubtaskWidgetState extends State<SubtaskWidget> {
                 decoration: state is! ShowSubtaskState
                     ? BoxDecoration(
                         borderRadius: BorderRadius.circular(15.0),
-                        color: Color(0xFFF4E5).withOpacity(0.5),
+                        color: currentColor,
                       )
                     : BoxDecoration(
                         borderRadius: BorderRadius.circular(15.0),
-                        color: Color(0xFFF4E5).withOpacity(0.5),
-                        border: const Border(
+                        color: currentColor,
+                        border: Border(
                           left: BorderSide(
-                            color: Colors.black,
+                            color: theme.borderColor,
                             width: 2.0,
                           ),
                           right: BorderSide(
-                            color: Colors.black,
+                            color: theme.borderColor,
                             width: 3.0,
                           ),
                           bottom: BorderSide(
-                            color: Colors.black,
+                            color: theme.borderColor,
                             width: 3.0,
                           ),
                           top: BorderSide(
-                            color: Colors.black,
+                            color: theme.borderColor,
                             width: 2.0,
                           ),
                         ),

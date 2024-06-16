@@ -15,11 +15,23 @@ class RenameActiveFolderButton extends StatefulWidget {
 class RenameActiveFolderButtonState extends State<RenameActiveFolderButton> {
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
     final TextEditingController textController =
         TextEditingController(text: widget.currentName);
     final foldersBloc = BlocProvider.of<FoldersBloc>(context);
     return GestureDetector(
-      child: const Icon(Icons.change_circle),
+      child: Container(
+        height: screenSize.height * 0.04,
+        width: screenSize.height * 0.04,
+        child: Center(
+          child: Image.asset(
+            'assets/icons/redact.png',
+            width: screenSize.height * 0.035,
+            height: screenSize.height * 0.035,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
       onTap: () {
         showDialog(
           context: context,

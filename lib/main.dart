@@ -1,19 +1,58 @@
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:meine_wunschliste/features/auth/view/auth_view.dart';
-import 'package:meine_wunschliste/features/features.dart';
-import 'package:meine_wunschliste/features/main_screen.dart';
-import 'package:meine_wunschliste/services/sync_service/sync_service.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get_it/get_it.dart';
-import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/view/user_tasks_folders_view.dart';
-import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
 import 'package:meine_wunschliste/domain/repository.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
+import 'package:meine_wunschliste/features/auth/view/auth_view.dart';
+import 'package:meine_wunschliste/features/main_screen.dart';
 import 'package:meine_wunschliste/services/firebase_options.dart';
+import 'package:meine_wunschliste/services/notification_service.dart';
+import 'package:meine_wunschliste/services/sync_service/sync_service.dart';
 import 'package:realm/realm.dart' as realm_dart;
+import 'package:timezone/data/latest.dart' as tz;
 
-void main() {
+import 'domain/repository_models/realm_models.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await NotificationService.initialize();
+
+  final config = realm_dart.Configuration.local([
+    Folder.schema,
+    ActiveFolder.schema,
+    RootTasks.schema,
+    Subtasks.schema,
+    SubSubtasks.schema,
+    CompleteTasks.schema,
+    CustomUserTheme.schema,
+    Task.schema,
+  ]);
+
+  final realm = realm_dart.Realm(config);
+  final Repository repository = Repository(realm: realm);
+  final UserTheme theme = repository.createTheme();
+
+  if (!GetIt.I.isRegistered<Repository>()) {
+    GetIt.I.registerSingleton<Repository>(repository);
+  }
+
+  if (!GetIt.I.isRegistered<SyncService>()) {
+    GetIt.I.registerSingleton<SyncService>(SyncService(realm: realm));
+  }
+
+  if (GetIt.I.isRegistered<UserTheme>()) {
+    GetIt.I.unregister<UserTheme>();
+  }
+  GetIt.I.registerSingleton<UserTheme>(theme);
+
   runApp(
     Phoenix(
       child: MyApp(),
@@ -21,7 +60,20 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Future<void> _initializeAppFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAppFuture = initializeApp();
+  }
+
   Future<void> initializeApp() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(
@@ -35,24 +87,33 @@ class MyApp extends StatelessWidget {
       Subtasks.schema,
       SubSubtasks.schema,
       CompleteTasks.schema,
+      CustomUserTheme.schema,
       Task.schema,
     ]);
 
     final realm = realm_dart.Realm(config);
+    final Repository repository = Repository(realm: realm);
+    final UserTheme theme = repository.createTheme();
+
 
     if (!GetIt.I.isRegistered<Repository>()) {
-      GetIt.I.registerSingleton<Repository>(Repository(realm: realm));
+      GetIt.I.registerSingleton<Repository>(repository);
     }
 
     if (!GetIt.I.isRegistered<SyncService>()) {
       GetIt.I.registerSingleton<SyncService>(SyncService(realm: realm));
     }
+
+    if (GetIt.I.isRegistered<UserTheme>()) {
+      GetIt.I.unregister<UserTheme>();
+    }
+    GetIt.I.registerSingleton<UserTheme>(theme);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: initializeApp(),
+      future: _initializeAppFuture,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return MaterialApp(
@@ -66,7 +127,9 @@ class MyApp extends StatelessWidget {
 
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
-            home: (FirebaseAuth.instance.currentUser != null) ? MainScreen() : AuthView(),
+            home: (FirebaseAuth.instance.currentUser != null)
+                ? MainScreen()
+                : AuthView(),
           );
         }
 

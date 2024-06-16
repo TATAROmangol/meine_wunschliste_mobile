@@ -8,6 +8,8 @@ environment:
 
 dependencies:
   shared_preferences:
+  flutter_local_notifications: 
+  timezone: 
   flutter_colorpicker:
   flutter_phoenix:
   connectivity_plus: 
@@ -36,4 +38,19 @@ flutter:
   uses-material-design: true
   assets:
   - assets/icons/logo.png
+  - assets/icons/show.png
+  - assets/icons/unshow.png
+  - assets/icons/uncomplete.png
+  - assets/icons/add_task.png
+  - assets/icons/delete.png
+  - assets/icons/redact.png
+  - assets/icons/stop.png
+  - assets/icons/order.png
+  - assets/icons/tasks.png
+  - assets/icons/theme_settings.png
+  - assets/icons/add_task_tree.png
+  - assets/icons/add_category.png
+  - assets/icons/complete.png
+  - assets/icons/profile.png
   - assets/background.jpeg
+  

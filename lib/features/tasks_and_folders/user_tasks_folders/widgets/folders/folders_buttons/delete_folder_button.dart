@@ -13,13 +13,24 @@ class DeleteActiveFolderButton extends StatefulWidget {
 }
 
 class DeleteActiveFolderButtonState extends State<DeleteActiveFolderButton> {
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () {
+    final Size screenSize = MediaQuery.of(context).size;
+    return GestureDetector(
+      child: Container(
+        height: screenSize.height * 0.04,
+        width: screenSize.height * 0.04,
+        child: Center(
+          child: Image.asset(
+            'assets/icons/delete.png',
+            width: screenSize.height * 0.035,
+            height: screenSize.height * 0.035,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+        onTap: () {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -43,8 +54,6 @@ class DeleteActiveFolderButtonState extends State<DeleteActiveFolderButton> {
               );
             },
           );
-        },
-      ),
-    );
+        },);
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
-import 'package:meine_wunschliste/domain/repository_models/steps.dart';
+import 'package:meine_wunschliste/domain/steps.dart';
 import 'package:meine_wunschliste/domain/repository.dart';
+import 'package:meine_wunschliste/services/notification_service.dart';
 
 part 'root_task_event.dart';
 part 'root_task_state.dart';
@@ -25,7 +26,7 @@ class RootTaskBloc extends Bloc<RootTaskEvent, RootTaskState> {
     });
     on<AddRootTaskChildEvent>((event, emit) async {
       repository.addTask(
-          Steps.subtask, event.parentUid, event.name, event.comment);
+          Steps.subtask, event.parentUid, event.name, event.comment, event.dateTime);
       add(ShowRootTaskEvent(parentUid: event.parentUid));
     });
     on<EndChangeRootTaskOrderChildrenEvent>((event, emit) async {
@@ -39,20 +40,21 @@ class RootTaskBloc extends Bloc<RootTaskEvent, RootTaskState> {
     });
     on<CorrectingRootTaskChildEvent>((event, emit) async {
       repository.correctingTask(event.parentUid, Steps.subtask, event.task,
-          event.name, event.comment, event.task.isComplete);
+          event.name, event.comment, event.task.isComplete, event.dateTime);
       add(ShowRootTaskEvent(
           parentUid: event.parentUid, activeChildUid: event.task.uid));
     });
     on<CompleteRootTaskChildEvent>((event, emit) async {
       await repository.correctingTask(event.parentUid, Steps.subtask,
-          event.task, event.task.name, event.task.comment, true);
+          event.task, event.task.name, event.task.comment, true, null);
       await repository.reloadCompleteChildren(event.parentUid, Steps.subtask);
+      NotificationService.cancelNotification(event.task.uid.hashCode);
       add(ShowRootTaskEvent(
           parentUid: event.parentUid, activeChildUid: event.task.uid));
     });
     on<UncompleteRootTaskChildEvent>((event, emit) async {
       await repository.correctingTask(event.parentUid, Steps.subtask,
-          event.task, event.task.name, event.task.comment, false);
+          event.task, event.task.name, event.task.comment, false, null);
       await repository.reloadCompleteChildren(event.parentUid, Steps.subtask);
       add(ShowRootTaskEvent(
           parentUid: event.parentUid, activeChildUid: event.task.uid));

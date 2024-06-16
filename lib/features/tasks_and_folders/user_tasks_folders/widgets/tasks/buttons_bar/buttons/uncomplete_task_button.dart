@@ -16,15 +16,27 @@ class UncompleteTaskButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
+    final Size screenSize = MediaQuery.of(context).size;
+    return GestureDetector(
+      child: SizedBox(
+        width: screenSize.height * 0.04,
+        height: screenSize.height * 0.04,
+        child: Center(
+          child: Image.asset(
+            'assets/icons/uncomplete.png',
+            width: screenSize.height * 0.04,
+            height: screenSize.height * 0.04,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+      onTap: () {
         parentBloc is RootTaskBloc
                 ? parentBloc.add(UncompleteRootTaskChildEvent(
                     parentUid: parentUid, task: task))
                 : parentBloc.add(UncompleteSubtaskaskChildEvent(
                     parentUid: parentUid, task: task));
       },
-      icon: const Icon(Icons.auto_delete_sharp),
     );
   }
 }

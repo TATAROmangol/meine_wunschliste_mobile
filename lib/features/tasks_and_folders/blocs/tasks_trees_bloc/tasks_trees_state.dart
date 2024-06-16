@@ -9,19 +9,20 @@ class CloseTasksTreesState extends TasksTreesState {
   final List<Task> children;
 }
 
-class OrderTasksTreesState extends TasksTreesState {
-  OrderTasksTreesState({required this.children});
-  final List<Task> children;
+class ChangeOrderTasksTreesState extends TasksTreesState {
+  ChangeOrderTasksTreesState();
 }
 
 class ShowTasksTreesState extends TasksTreesState {
   ShowTasksTreesState(
       {required this.children,
       required this.parentUid,
-      required this.activeChildUid});
+      required this.activeChildUid,
+      required this.changeOrder});
   final List<Task> children;
   final String parentUid;
   final String activeChildUid;
+  final bool changeOrder;
 }
 
 class ShowCompleteTasksTreesState extends TasksTreesState {

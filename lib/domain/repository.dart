@@ -1,5 +1,10 @@
+import 'dart:ui';
+
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
-import 'package:meine_wunschliste/domain/repository_models/steps.dart';
+import 'package:meine_wunschliste/domain/steps.dart';
+import 'package:meine_wunschliste/domain/theme_parameters.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
+import 'package:meine_wunschliste/services/notification_service.dart';
 import 'package:realm/realm.dart';
 
 class Repository {
@@ -7,6 +12,65 @@ class Repository {
 
   final Realm realm;
   ActiveFolder activeFolder = ActiveFolder();
+
+  Future<void> changeTheme(List<(ThemeParameters, int)> selectedColors) async {
+    final themeRepository = realm.all<CustomUserTheme>().first;
+    for (var color in selectedColors) {
+      realm.write(() {
+        switch (color.$1) {
+          case ThemeParameters.blocsColor:
+            themeRepository.blocsColor = color.$2;
+            break;
+          case ThemeParameters.borderColor:
+            themeRepository.borderColor = color.$2;
+            break;
+          case ThemeParameters.backgroundColor:
+            themeRepository.backgroundColor = color.$2;
+            break;
+          case ThemeParameters.textColor:
+            themeRepository.textColor = color.$2;
+            break;
+          case ThemeParameters.accentColor:
+            themeRepository.accentColor = color.$2;
+            break;
+        }
+      });
+    }
+  }
+
+  Future<void> setTheme() async {
+    realm.write(() {
+      realm.deleteAll<CustomUserTheme>();
+      realm.add<CustomUserTheme>(CustomUserTheme());
+    });
+  }
+
+  UserTheme createTheme() {
+    if (realm.all<CustomUserTheme>().isEmpty) {
+      realm.write(() => {
+            realm.add<CustomUserTheme>(CustomUserTheme()),
+          });
+    }
+
+    var theme = realm.all<CustomUserTheme>().first;
+    int blocsColor =
+        theme.blocsColor != null ? theme.blocsColor!.toInt() : 0x99FFE0C3;
+    int borderColor =
+        theme.borderColor != null ? theme.borderColor!.toInt() : 0xFF000000;
+    int backgroundColor = theme.backgroundColor != null
+        ? theme.backgroundColor!.toInt()
+        : 0xFFFFE0C3;
+    int textColor =
+        theme.textColor != null ? theme.textColor!.toInt() : 0xFFFFE0C3;
+    int accentColor =
+        theme.accentColor != null ? theme.accentColor!.toInt() : 0xFFFF9648;
+    return UserTheme(
+        blocsColor: Color(blocsColor),
+        borderColor: Color(borderColor),
+        backgroundColor: Color(backgroundColor),
+        textColor: Color(textColor),
+        accentColor: Color(accentColor));
+  }
 
   //папки
   Future<List<Folder>> getFolders() async {
@@ -39,7 +103,7 @@ class Repository {
       var activeFolderRep = realm.all<ActiveFolder>();
       if (activeFolderRep.isEmpty) {
         realm.write(() => realm.add<ActiveFolder>(ActiveFolder()));
-        return ActiveFolder().folder;
+        return realm.all<ActiveFolder>().first.folder;
       }
       return activeFolderRep.first.folder;
     }
@@ -70,17 +134,15 @@ class Repository {
     final rootTasksRepository = realm.find<RootTasks>(currentFolder.uid);
 
     for (var task in tasks) {
-      _deleteRootTask(currentFolder.uid, Steps.rootTask, task, all: true);
+      await _deleteRootTask(currentFolder.uid, Steps.rootTask, task, all: true);
     }
 
     realm.write(() {
       if (rootTasksRepository != null) {
         realm.delete<RootTasks>(rootTasksRepository);
       }
-
-      final currentFolder = realm.find<Folder>(activeFolder.folder!.uid)!;
-      realm.all<ActiveFolder>().first.folder = null;
-      activeFolder.folder = null;
+      realm.deleteAll<ActiveFolder>();
+      activeFolder = ActiveFolder();
       realm.delete<Folder>(currentFolder);
     });
   }
@@ -215,35 +277,49 @@ class Repository {
     }
   }
 
-  Future<void> addTask(
-      Steps step, String parentUid, String name, String comment) async {
-    var tasks = [Task(Uuid.v4().toString(), name, comment, false)];
-    step == Steps.rootTask
-        ? realm.write(() {
-            var topTasksRepository = realm.find<RootTasks>(parentUid);
-            if (topTasksRepository != null) {
-              tasks.addAll(topTasksRepository.tasks);
-              realm.delete<RootTasks>(topTasksRepository);
-            }
-            realm.add<RootTasks>(RootTasks(parentUid, tasks: tasks));
-          })
-        : step == Steps.subtask
-            ? realm.write(() {
-                var topTasksRepository = realm.find<Subtasks>(parentUid);
-                if (topTasksRepository != null) {
-                  tasks.addAll(topTasksRepository.tasks);
-                  realm.delete<Subtasks>(topTasksRepository);
-                }
-                realm.add<Subtasks>(Subtasks(parentUid, tasks: tasks, 0));
-              })
-            : realm.write(() {
-                var topTasksRepository = realm.find<SubSubtasks>(parentUid);
-                if (topTasksRepository != null) {
-                  tasks.addAll(topTasksRepository.tasks);
-                  realm.delete<SubSubtasks>(topTasksRepository);
-                }
-                realm.add<SubSubtasks>(SubSubtasks(parentUid, tasks: tasks, 0));
-              });
+  Future<void> addTask(Steps step, String parentUid, String name,
+      String comment, DateTime? selectedDate) async {
+    final uid = Uuid.v4().toString();
+    var tasks = [Task(uid, name, comment, false)];
+    if (selectedDate != null) {
+      NotificationService.scheduleNotification(
+        title: step is RootTasks
+            ? "Вы успели исполнить мечту?"
+            : "Вы успели достичь цель?",
+        body: name,
+        scheduledDate: selectedDate,
+        id: uid.hashCode,
+        
+      );
+    }
+    if (step == Steps.rootTask) {
+      realm.write(() {
+        var topTasksRepository = realm.find<RootTasks>(parentUid);
+        if (topTasksRepository != null) {
+          tasks.addAll(topTasksRepository.tasks);
+          realm.delete<RootTasks>(topTasksRepository);
+        }
+        realm.add<RootTasks>(RootTasks(parentUid, tasks: tasks));
+      });
+    } else if (step == Steps.subtask) {
+      realm.write(() {
+        var topTasksRepository = realm.find<Subtasks>(parentUid);
+        if (topTasksRepository != null) {
+          tasks.addAll(topTasksRepository.tasks);
+          realm.delete<Subtasks>(topTasksRepository);
+        }
+        realm.add<Subtasks>(Subtasks(parentUid, tasks: tasks, 0));
+      });
+    } else {
+      realm.write(() {
+        var topTasksRepository = realm.find<SubSubtasks>(parentUid);
+        if (topTasksRepository != null) {
+          tasks.addAll(topTasksRepository.tasks);
+          realm.delete<SubSubtasks>(topTasksRepository);
+        }
+        realm.add<SubSubtasks>(SubSubtasks(parentUid, tasks: tasks, 0));
+      });
+    }
   }
 
   Future<void> changeTasksOrder(
@@ -279,7 +355,17 @@ class Repository {
   }
 
   Future<void> correctingTask(String parentUid, Steps step, Task task,
-      String name, String comment, bool isComplete) async {
+      String name, String comment, bool isComplete, DateTime? dateTime) async {
+    if (dateTime != null) {
+      NotificationService.updateScheduledNotification(
+          id: task.uid.hashCode,
+          title: step is RootTasks
+              ? "Вы успели исполнить мечту?"
+              : "Вы успели достичь цель?",
+          body: task.name,
+          newScheduledDate: dateTime);
+    }
+
     if (step == Steps.rootTask) {
       var repository = realm.find<RootTasks>(parentUid)!;
       var tasks = await getTasks(Steps.rootTask, parentUid);
@@ -323,6 +409,7 @@ class Repository {
 
   Future<void> deleteTask(String parentUid, Steps step, Task task,
       {bool all = false}) async {
+        NotificationService.cancelNotification(task.uid.hashCode);
     return step == Steps.rootTask
         ? _deleteRootTask(parentUid, step, task, all: all)
         : step == Steps.subtask
@@ -332,6 +419,7 @@ class Repository {
 
   Future<void> _deleteRootTask(String parentUid, Steps step, Task deleteTask,
       {bool all = false}) async {
+        NotificationService.cancelNotification(deleteTask.uid.hashCode);
     var subtasksRepository = realm.find<Subtasks>(deleteTask.uid);
     if (subtasksRepository != null) {
       for (var task in subtasksRepository.tasks) {
@@ -354,6 +442,7 @@ class Repository {
 
   Future<void> _deleteSubtaskTask(String parentUid, Steps step, Task deleteTask,
       {bool all = false}) async {
+        NotificationService.cancelNotification(deleteTask.uid.hashCode);
     var subtasksRepository = realm.find<Subtasks>(parentUid);
     if (subtasksRepository != null) {
       realm.write(() {
@@ -377,6 +466,7 @@ class Repository {
   Future<void> _deleteSubSubtaskTask(
       String parentUid, Steps step, Task deleteTask,
       {bool all = false}) async {
+        NotificationService.cancelNotification(deleteTask.uid.hashCode);
     realm.write(() {
       var tasks = realm.find<SubSubtasks>(parentUid)!.tasks;
       if (!all) {

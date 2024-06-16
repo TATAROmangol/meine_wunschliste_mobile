@@ -19,10 +19,14 @@ class EndChangeRootTaskOrderChildrenEvent extends RootTaskEvent {
 
 class AddRootTaskChildEvent extends RootTaskEvent {
   AddRootTaskChildEvent(
-      {required this.name, required this.comment, required this.parentUid});
+      {required this.name,
+      required this.comment,
+      required this.parentUid,
+      required this.dateTime});
   final String name;
   final String comment;
   final String parentUid;
+  final DateTime? dateTime;
 }
 
 class DeleteRootTaskChildEvent extends RootTaskEvent {
@@ -31,13 +35,13 @@ class DeleteRootTaskChildEvent extends RootTaskEvent {
   final Task task;
 }
 
-class CompleteRootTaskChildEvent extends RootTaskEvent{
+class CompleteRootTaskChildEvent extends RootTaskEvent {
   CompleteRootTaskChildEvent({required this.parentUid, required this.task});
   final String parentUid;
   final Task task;
 }
 
-class UncompleteRootTaskChildEvent extends RootTaskEvent{
+class UncompleteRootTaskChildEvent extends RootTaskEvent {
   UncompleteRootTaskChildEvent({required this.parentUid, required this.task});
   final String parentUid;
   final Task task;
@@ -49,9 +53,11 @@ class CorrectingRootTaskChildEvent extends RootTaskEvent {
     required this.comment,
     required this.task,
     required this.parentUid,
+    required this.dateTime,
   });
   final String name;
   final String comment;
   final Task task;
   final String parentUid;
+  final DateTime? dateTime;
 }

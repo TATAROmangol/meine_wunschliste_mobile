@@ -54,7 +54,7 @@ class TaskTreeViewState extends State<TaskTreeView> {
         if (state is ShowTasksTreesState) {
           final children = getRootTasksWidgets(state, tasksTreesBloc);
           return Flexible(
-            child: state.activeChildUid == ''
+            child: state.activeChildUid == '' && state.changeOrder
                 ? ReorderableListView.builder(
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
@@ -68,8 +68,8 @@ class TaskTreeViewState extends State<TaskTreeView> {
                       final Task topTask = state.children.removeAt(oldIndex);
                       state.children.insert(newIndex, topTask);
 
-                      tasksTreesBloc.add(
-                          ChangeOrderTasksTreesEvent(children: state.children));
+                      tasksTreesBloc.add(ChangeOrderTasksTreesEvent(
+                          children: state.children));
                     },
                     proxyDecorator:
                         (Widget child, int index, Animation<double> animation) {

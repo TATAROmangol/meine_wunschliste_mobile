@@ -3,16 +3,17 @@ import 'package:realm/realm.dart';
 part 'realm_models.realm.dart';
 
 @RealmModel()
-class _ActiveFolder {
-  _Folder? folder;
+class _CustomUserTheme{
+  late int? blocsColor;
+  late int? borderColor;
+  late int? backgroundColor;
+  late int? textColor;
+  late int? accentColor;
 }
 
 @RealmModel()
-class _UserTheme{
-  late int? blocsColor;
-  late int? borderColor;
-  late int? textColor;
-  late int? appBarsColor;
+class _ActiveFolder {
+  _Folder? folder;
 }
 
 @RealmModel()

@@ -7,6 +7,109 @@ part of 'realm_models.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
+class CustomUserTheme extends _CustomUserTheme
+    with RealmEntity, RealmObjectBase, RealmObject {
+  CustomUserTheme({
+    int? blocsColor,
+    int? borderColor,
+    int? backgroundColor,
+    int? textColor,
+    int? accentColor,
+  }) {
+    RealmObjectBase.set(this, 'blocsColor', blocsColor);
+    RealmObjectBase.set(this, 'borderColor', borderColor);
+    RealmObjectBase.set(this, 'backgroundColor', backgroundColor);
+    RealmObjectBase.set(this, 'textColor', textColor);
+    RealmObjectBase.set(this, 'accentColor', accentColor);
+  }
+
+  CustomUserTheme._();
+
+  @override
+  int? get blocsColor => RealmObjectBase.get<int>(this, 'blocsColor') as int?;
+  @override
+  set blocsColor(int? value) => RealmObjectBase.set(this, 'blocsColor', value);
+
+  @override
+  int? get borderColor => RealmObjectBase.get<int>(this, 'borderColor') as int?;
+  @override
+  set borderColor(int? value) =>
+      RealmObjectBase.set(this, 'borderColor', value);
+
+  @override
+  int? get backgroundColor =>
+      RealmObjectBase.get<int>(this, 'backgroundColor') as int?;
+  @override
+  set backgroundColor(int? value) =>
+      RealmObjectBase.set(this, 'backgroundColor', value);
+
+  @override
+  int? get textColor => RealmObjectBase.get<int>(this, 'textColor') as int?;
+  @override
+  set textColor(int? value) => RealmObjectBase.set(this, 'textColor', value);
+
+  @override
+  int? get accentColor => RealmObjectBase.get<int>(this, 'accentColor') as int?;
+  @override
+  set accentColor(int? value) =>
+      RealmObjectBase.set(this, 'accentColor', value);
+
+  @override
+  Stream<RealmObjectChanges<CustomUserTheme>> get changes =>
+      RealmObjectBase.getChanges<CustomUserTheme>(this);
+
+  @override
+  CustomUserTheme freeze() =>
+      RealmObjectBase.freezeObject<CustomUserTheme>(this);
+
+  EJsonValue toEJson() {
+    return <String, dynamic>{
+      'blocsColor': blocsColor.toEJson(),
+      'borderColor': borderColor.toEJson(),
+      'backgroundColor': backgroundColor.toEJson(),
+      'textColor': textColor.toEJson(),
+      'accentColor': accentColor.toEJson(),
+    };
+  }
+
+  static EJsonValue _toEJson(CustomUserTheme value) => value.toEJson();
+  static CustomUserTheme _fromEJson(EJsonValue ejson) {
+    return switch (ejson) {
+      {
+        'blocsColor': EJsonValue blocsColor,
+        'borderColor': EJsonValue borderColor,
+        'backgroundColor': EJsonValue backgroundColor,
+        'textColor': EJsonValue textColor,
+        'accentColor': EJsonValue accentColor,
+      } =>
+        CustomUserTheme(
+          blocsColor: fromEJson(blocsColor),
+          borderColor: fromEJson(borderColor),
+          backgroundColor: fromEJson(backgroundColor),
+          textColor: fromEJson(textColor),
+          accentColor: fromEJson(accentColor),
+        ),
+      _ => raiseInvalidEJson(ejson),
+    };
+  }
+
+  static final schema = () {
+    RealmObjectBase.registerFactory(CustomUserTheme._);
+    register(_toEJson, _fromEJson);
+    return SchemaObject(
+        ObjectType.realmObject, CustomUserTheme, 'CustomUserTheme', [
+      SchemaProperty('blocsColor', RealmPropertyType.int, optional: true),
+      SchemaProperty('borderColor', RealmPropertyType.int, optional: true),
+      SchemaProperty('backgroundColor', RealmPropertyType.int, optional: true),
+      SchemaProperty('textColor', RealmPropertyType.int, optional: true),
+      SchemaProperty('accentColor', RealmPropertyType.int, optional: true),
+    ]);
+  }();
+
+  @override
+  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
+}
+
 class ActiveFolder extends _ActiveFolder
     with RealmEntity, RealmObjectBase, RealmObject {
   ActiveFolder({

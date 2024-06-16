@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/folders_bloc/folders_bloc.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/tasks_trees_bloc/tasks_trees_bloc.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/user_tasks_folders/widgets/folders/folders.dart';
@@ -21,6 +23,7 @@ class _FolderBarState extends State<FolderBar> {
 
   @override
   Widget build(BuildContext context) {
+    final UserTheme theme = GetIt.I.get<UserTheme>();
     final Size screenSize = MediaQuery.of(context).size;
     final FoldersBloc foldersBloc = BlocProvider.of<FoldersBloc>(context);
     final TasksTreesBloc tasksTreesBloc =
@@ -33,10 +36,10 @@ class _FolderBarState extends State<FolderBar> {
           children: [
             Container(
               height: screenSize.height * 0.05,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(
-                    color: Color.fromRGBO(0, 0, 0, 1),
+                    color: theme.borderColor,
                     width: 1,
                   ),
                 ),

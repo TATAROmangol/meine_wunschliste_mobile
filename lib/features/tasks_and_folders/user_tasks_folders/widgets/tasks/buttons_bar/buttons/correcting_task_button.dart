@@ -25,10 +25,22 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
         TextEditingController(text: widget.task.name);
     final TextEditingController commentController =
         TextEditingController(text: widget.task.comment);
+    DateTime? dateTime;
     final Size screenSize = MediaQuery.of(context).size;
 
     return GestureDetector(
-      child: const Icon(Icons.abc),
+      child: Container(
+        width: screenSize.height * 0.04,
+        height: screenSize.height * 0.04,
+        child: Center(
+          child: Image.asset(
+            'assets/icons/redact.png',
+            width: screenSize.height * 0.035,
+            height: screenSize.height * 0.035,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
       onTap: () {
         showDialog(
           context: context,
@@ -45,6 +57,34 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
                     ),
                     TextField(
                       controller: commentController,
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2101),
+                        );
+                        if (picked != null) {
+                          final TimeOfDay? time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (time != null) {
+                            setState(() {
+                              dateTime = DateTime(
+                                picked.year,
+                                picked.month,
+                                picked.day,
+                                time.hour,
+                                time.minute,
+                              );
+                            });
+                          }
+                        }
+                      },
+                      child: const Text('Изменить дату и время'),
                     ),
                   ],
                 ),
@@ -65,6 +105,7 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
                             parentUid: widget.parentUid,
                             name: taskName,
                             comment: taskComment,
+                            dateTime: dateTime,
                             task: widget.task))
                         : widget.parentBloc is RootTaskBloc
                             ? widget.parentBloc.add(
@@ -72,18 +113,21 @@ class CorrectingTaskButtonState extends State<CorrectingTaskButton> {
                                     parentUid: widget.parentUid,
                                     name: taskName,
                                     comment: taskComment,
+                                    dateTime: dateTime,
                                     task: widget.task))
                             : widget.parentBloc.add(CorrectingSubtaskChildEvent(
                                 parentUid: widget.parentUid,
                                 name: taskName,
                                 comment: taskComment,
+                                dateTime: dateTime,
                                 task: widget.task));
 
                     nameController.clear();
                     commentController.clear();
+                    dateTime = null;
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Добавить'),
+                  child: const Text('Изменить'),
                 ),
               ],
             );

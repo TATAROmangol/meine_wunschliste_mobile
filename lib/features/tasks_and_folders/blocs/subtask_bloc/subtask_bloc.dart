@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meine_wunschliste/domain/repository_models/realm_models.dart';
-import 'package:meine_wunschliste/domain/repository_models/steps.dart';
+import 'package:meine_wunschliste/domain/steps.dart';
 import 'package:meine_wunschliste/domain/repository.dart';
+import 'package:meine_wunschliste/services/notification_service.dart';
 
 part 'subtask_event.dart';
 part 'subtask_state.dart';
@@ -24,8 +25,8 @@ class SubtaskBloc extends Bloc<SubtaskEvent, SubtaskState> {
       emit(CloseSubtaskState());
     });
     on<AddSubtaskChildEvent>((event, emit) async {
-      repository.addTask(
-          Steps.subSubtask, event.parentUid, event.name, event.comment);
+      repository.addTask(Steps.subSubtask, event.parentUid, event.name,
+          event.comment, event.dateTime);
       add(ShowSubtaskEvent(parentUid: event.parentUid));
     });
     on<EndChangeSubtaskOrderChildrenEvent>((event, emit) async {
@@ -35,8 +36,9 @@ class SubtaskBloc extends Bloc<SubtaskEvent, SubtaskState> {
     });
     on<CorrectingSubtaskChildEvent>((event, emit) async {
       repository.correctingTask(event.parentUid, Steps.subSubtask, event.task,
-          event.name, event.comment, event.task.isComplete);
-      add(ShowSubtaskEvent(parentUid: event.parentUid, activeChildUid: event.task.uid));
+          event.name, event.comment, event.task.isComplete, event.dateTime);
+      add(ShowSubtaskEvent(
+          parentUid: event.parentUid, activeChildUid: event.task.uid));
     });
     on<DeleteSubtaskChildEvent>((event, emit) async {
       repository.deleteTask(event.parentUid, Steps.subSubtask, event.task);
@@ -44,15 +46,16 @@ class SubtaskBloc extends Bloc<SubtaskEvent, SubtaskState> {
     });
     on<CompleteSubtaskaskChildEvent>((event, emit) async {
       await repository.correctingTask(event.parentUid, Steps.subSubtask,
-          event.task, event.task.name, event.task.comment, true);
+          event.task, event.task.name, event.task.comment, true, null);
       await repository.reloadCompleteChildren(
           event.parentUid, Steps.subSubtask);
+          NotificationService.cancelNotification(event.task.uid.hashCode);
       add(ShowSubtaskEvent(
           parentUid: event.parentUid, activeChildUid: event.task.uid));
     });
     on<UncompleteSubtaskaskChildEvent>((event, emit) async {
       await repository.correctingTask(event.parentUid, Steps.subSubtask,
-          event.task, event.task.name, event.task.comment, false);
+          event.task, event.task.name, event.task.comment, false, null);
       await repository.reloadCompleteChildren(
           event.parentUid, Steps.subSubtask);
       add(ShowSubtaskEvent(

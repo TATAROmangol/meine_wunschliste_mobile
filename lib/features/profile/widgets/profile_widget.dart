@@ -43,10 +43,6 @@ class ProfileWidget extends StatelessWidget {
           if (displayName != null)
             Text(
               displayName,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
             ),
         ],
       ),

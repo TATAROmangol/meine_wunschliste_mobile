@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final Function(int, TasksTreesBloc) onInit;
   final Function(int, TasksTreesBloc) onReload;
+  final UserTheme theme = GetIt.I.get<UserTheme>();
 
-  const CustomBottomNavigationBar({
+  CustomBottomNavigationBar({
     required this.currentIndex,
     required this.onInit,
     required this.onReload,
@@ -21,25 +24,50 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return ClipPath(
       clipper: BottomAppBarClipper(),
       child: Container(
-        height: screenSize.height * 0.07,
-        color: const Color(0xFFFF9648),
+        height: screenSize.height * 0.075,
+        color: theme.accentColor,
         child: Align(
           alignment: Alignment.topCenter,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(
-                icon: Icon(Icons.add),
+              Spacer(),
+              TextButton(
+                child: Image.asset(
+                    width: screenSize.height * 0.035,
+                    height: screenSize.height * 0.035,
+                    'assets/icons/profile.png'),
                 onPressed: () => onReload(0, reloadBloc),
               ),
-              IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () => onInit(1, reloadBloc),
+              Spacer(),
+              TextButton(
+                child: Image.asset(
+                    width: screenSize.height * 0.035,
+                    height: screenSize.height * 0.035,
+                    'assets/icons/theme_settings.png'),
+                onPressed: () => onReload(1, reloadBloc),
               ),
-              IconButton(
-                icon: Icon(Icons.search),
+              Spacer(),
+              Image.asset(
+                  height: screenSize.height * 0.055, 'assets/icons/logo.png'),
+              Spacer(),
+              TextButton(
+                child: Image.asset(
+                    width: screenSize.height * 0.035,
+                    height: screenSize.height * 0.035,
+                    'assets/icons/complete.png'),
                 onPressed: () => onInit(2, reloadBloc),
               ),
+              Spacer(),
+              TextButton(
+                
+                child: Image.asset(
+                    width: screenSize.height * 0.035,
+                    height: screenSize.height * 0.035,
+                    'assets/icons/tasks.png'),
+                onPressed: () => onInit(3, reloadBloc),
+              ),
+              Spacer(),
             ],
           ),
         ),

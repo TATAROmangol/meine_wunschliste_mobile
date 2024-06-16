@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:meine_wunschliste/domain/user_theme.dart';
 import 'package:meine_wunschliste/features/tasks_and_folders/blocs/blocs.dart';
 
 class AddFolderButton extends StatefulWidget {
@@ -20,10 +22,29 @@ class AddFolderButtonState extends State<AddFolderButton> {
 
   @override
   Widget build(BuildContext context) {
+    final UserTheme theme = GetIt.I.get<UserTheme>();
+    final Size screenSize = MediaQuery.of(context).size;
     final foldersBloc = BlocProvider.of<FoldersBloc>(context);
     final tasksTreeBloc = BlocProvider.of<TasksTreesBloc>(context);
+
     return GestureDetector(
-      child: const Icon(Icons.folder_copy_outlined),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          color: theme.accentColor,
+        ),
+        height: screenSize.height * 0.045,
+        width: screenSize.height * 0.045,
+        margin: const EdgeInsets.only(bottom: 5),
+        child: Center(
+          child: Image.asset(
+            'assets/icons/add_category.png',
+            width: screenSize.height * 0.035,
+            height: screenSize.height * 0.035,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
       onTap: () {
         showDialog(
           context: context,

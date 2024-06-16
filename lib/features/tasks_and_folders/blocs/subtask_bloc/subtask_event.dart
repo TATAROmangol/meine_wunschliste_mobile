@@ -5,8 +5,11 @@ class SubtaskEvent {}
 class CloseSubtaskEvent extends SubtaskEvent {}
 
 class ShowSubtaskEvent extends SubtaskEvent {
-  ShowSubtaskEvent({required this.parentUid, this.activeChildUid = '', this.showComment = false});
-  
+  ShowSubtaskEvent(
+      {required this.parentUid,
+      this.activeChildUid = '',
+      this.showComment = false});
+
   final String parentUid;
   final String activeChildUid;
   final bool showComment;
@@ -21,10 +24,14 @@ class EndChangeSubtaskOrderChildrenEvent extends SubtaskEvent {
 
 class AddSubtaskChildEvent extends SubtaskEvent {
   AddSubtaskChildEvent(
-      {required this.name, required this.comment, required this.parentUid});
+      {required this.name,
+      required this.comment,
+      required this.parentUid,
+      required this.dateTime});
   final String name;
   final String comment;
   final String parentUid;
+  final DateTime? dateTime;
 }
 
 class CorrectingSubtaskChildEvent extends SubtaskEvent {
@@ -33,20 +40,22 @@ class CorrectingSubtaskChildEvent extends SubtaskEvent {
     required this.comment,
     required this.task,
     required this.parentUid,
+    required this.dateTime,
   });
   final String name;
   final String comment;
   final Task task;
   final String parentUid;
+  final DateTime? dateTime;
 }
 
-class CompleteSubtaskaskChildEvent extends SubtaskEvent{
+class CompleteSubtaskaskChildEvent extends SubtaskEvent {
   CompleteSubtaskaskChildEvent({required this.parentUid, required this.task});
   final String parentUid;
   final Task task;
 }
 
-class UncompleteSubtaskaskChildEvent extends SubtaskEvent{
+class UncompleteSubtaskaskChildEvent extends SubtaskEvent {
   UncompleteSubtaskaskChildEvent({required this.parentUid, required this.task});
   final String parentUid;
   final Task task;
